@@ -1,4 +1,0 @@
-NoClassDeffoundError (org/hamcrest/SelfDescribing) - make sure Java Libraries in the Project Structure are set up correctly. 
-						     may have to do with junit specifically
-class that implements an interface with a generic, should look like:
-	public class ArrayHeapMinPQTest<T> implements ExtrinsicMinPQ<T> (put generic with the interface)
