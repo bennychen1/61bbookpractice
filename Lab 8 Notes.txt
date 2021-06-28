@@ -1,0 +1,16 @@
+Should avoid creating generic arrays like ArrayList<T>[], instead do ArrrayList<ArrayList<T>>
+
+If you create an instance variable like ArrayList<> someList, have to initialize it inside the constructor before using it:
+		someList = new ArrayList<T>();
+
+Why the hashmap is fast: look at get method - first narrow down search to a specific bucket (keyIndex). 
+
+A class implements an interface. An interface can extend another interface (wouldn't implement). 
+
+If class or a superclass extends Iterable interface, have to override the iterator() method which returns an Iterator object. 
+	customize the Itertor object that will be returned by having a nested class that implements Iterator
+		write the hasNext and next methods
+
+	ConcurrentModificationException: iterating through a hashset and removing the keys.
+		create a copy of the hashset to iterate through. 
+

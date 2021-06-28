@@ -1,0 +1,63 @@
+Look at SLList and ALList - very similar
+Write the word util function for SLList 
+	to make the function for ALlist, just change the paramter
+Overloading - same function just different paramter types
+	repetitive
+	what if you make other types of lists?
+Hpernym -> Hyponym "is-a" relationships
+ALlist and SLlist can be put under List
+Create interface List61b
+	look at what functions both ALList and SLlist can do
+	what should List61bs be able to do?
+Then create implements - create things that are List61bs
+Called implementation inheritance - inherit signatures
+Avoid variables in interfaces - variables in interfaces are static (same for the entire class)
+Don't need to put access modifiers for interface methods
+@Override - put after method description. 
+	sub-class implements a method of the superclass of the same signature (same name, parameters, and parameter type)
+The sub-class inherits all the methods from every class above it
+If you want the superclassv(hyponym) to define how a sub-class (hypernym) should behave with a specific method, use the default keyword
+	default public int method(int x)
+	Called implementation inheritance  - inherit method signature and code
+	subclasses don't need to have that method
+	not always advisable to use implementation inheritance - multiple superclasses with the same default method but different implementation
+Dyanmic selection - when an object calls a method that is overridden in the subclass, it will call the method of it's dynamic type
+	Static type = compile-time type. Object's memory box
+	Dyanmic type - what the object is referring to
+	Only for overriding, not overloading
+		overloading - chooses base on static type
+Extends - inheritance between classes
+	inherit all members (methods and variables)
+	can't access private members
+	implementation inheritance since implementation is done at the superclass
+	every subclass must have a constructor that calls to the superclass's constructor
+		if X extends Y, X is-a Y, so when creating an X, a Y must first be created, then the qualities of X are installed
+		if not explicitly stated, then default call is super() (no argument constructor of the superclass)
+		in VengefulSLList, need to call the superclass constructor because sentinel should not be null
+			SLList constructor initializes the sentinel
+	every class that does not extend some other class implicitly extends Object
+	interfaces don't implicitly extend Object
+Encapsulation - with a class, you only interact with it's methods (interface) but you don't know how the class makes those methods work
+			ArrayDeque - print - don't need to know that it is looping through an array
+				could be using an array or could be using a list
+			VengefulSLList - print removed items - don't need to know that it is printing from a SLList
+			Example: in a movie and there's a plant. don't need to know if its a real plant or artificial because the effect is the same
+			Using private access enforces abstraction
+			Implementation inheritance - if part of the subclasses function uses a function in the superclass, then changing the implementation of 
+				the superclass's method could impact the subclass' function. 
+				breaking encapsulation by going into the implementation of the superclass function
+				Dynamic selection - always uses the dyanmic type's function
+Don't need to unit test private methods since they can't be called by a user
+Override a function, ok to change the parameter names
+If the dynamic type doesn't have a function, you go up the hierarchy and use the first function you run into
+During compiling, only the static type is considered
+Left hand side (static type) should be equal to or higher in heirarchy than the right hand side
+	RHS is-a LHS
+	otherwise, compiler error
+Method calls have compile-time types equal to their delcared type (what they output according to the signature)
+Casting only gets past the type check of the compiler
+Casting (y) function(x) - y must have a is-a relationship with the type of the output of function
+Higher order function - a function that takes a function as data (as an argument)
+Subtype polymorphism - let Java select what functions to run for an object (like s.addFirst(3))
+			versus higher order functions (like addFirst(s, 3)).
+

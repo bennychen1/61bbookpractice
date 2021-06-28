@@ -1,0 +1,20 @@
+Autoboxing - implicit conversion between wrappers and primitive types
+	int -> Integer (boxing)
+	Integer -> int (unboxing)
+	no autoboxing or unboxing for arrays
+Widening and narrowing 
+	wider to narrower
+		if a method takes in a long as an argument and a short x is passed in, then x is implicitly cast to an int
+			short can be widened to a long - long is wider than a short
+	narrower to wider
+		if a method takes in a short as an argument and a long x is passed in, then x must be explicitly cast to a short
+			(short) x
+Immutability - refers to instance variables that cannot change after instantiation
+	private String s = "grape" would be immutable if the class has no methods that would change the value
+		s is private so it can't be accessed outside of the class
+	use keyword final to make a instance variable immutable - the variable can't be changed after instantiation
+	final List<String> x = new ArrayList<>(); the referece (pointer of x) is immutable 
+		but the list itself (the object it points to) is mutable (x.add("word") would change the object)
+	Strings are immutable - string.concatenate returns a new String, does not change string. 
+	Gurantees a behavior/trait for the object, limits possible bugs with changing variable values
+	Need to create a new object to change a property

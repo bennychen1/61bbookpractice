@@ -1,0 +1,2 @@
+How to import your own classes if they sit in a different folder?
+	For now, just copy and paste them into the same folder
