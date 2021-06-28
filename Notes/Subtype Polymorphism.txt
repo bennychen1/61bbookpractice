@@ -1,2 +1,0 @@
-If you have x.addFirst - letting the object select which addFirst method to use based on x's dynamic type
-	as opposed to addFirst(x)

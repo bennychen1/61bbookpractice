@@ -1,3 +1,0 @@
-Interface inheritance:
-	develops a contract for what a class should be able to do
-	allows us to pass a class as an argument of a function - exampel: isPalindrome in Project 1b Palindrome.java
