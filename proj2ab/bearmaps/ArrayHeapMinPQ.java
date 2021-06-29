@@ -48,25 +48,12 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new IllegalArgumentException();
         }
 
-        if (this.size == 0) {
-            keys.set(1, new Node(item, priority));
-        } else {
-            int leftMostIndex = 2;
+        int indexToAdd = findLeftMost();
 
-            while (leftMostIndex < keys.size() && keys.get(leftMostIndex) != null) {
-                leftMostIndex = leftMostIndex * 2;
-            }
+        this.keys.set(indexToAdd, new Node(item, priority));
 
-            if (leftMostIndex >= keys.size()) {
-                for (int i = 0; i < leftMostIndex - keys.size() + 1; i = i + 1) {
-                    keys.add(null);
-                }
-            }
+        swapUp(indexToAdd);
 
-
-
-
-        }
     }
 
 
@@ -80,7 +67,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T getSmallest() {
-        return null;
+        return this.keys.get(1).key;
     }
 
     @Override
@@ -123,34 +110,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /** Find the left most possible position to add into
      * while still maintaining the completeness of the heap. **/
     private int findLeftMost() {
-        int leftMostIndex = 1;
 
-        while (leftMostIndex < this.keys.size()) {
-            Node curNode = this.keys.get(leftMostIndex);
-            if (curNode == null) {
-                break;
-            } else {
-                int tryLeft = leftChild(leftMostIndex);
-                int tryRight = rightChild(leftMostIndex);
-
-                if (tryLeft == -1 || this.keys.get(tryLeft) == null) {
-                    leftMostIndex = leftMostIndex * 2;
-                    break;
-                }
-
-                if (tryRight == -1 || this.keys.get(tryRight) == null) {
-                    leftMostIndex = leftMostIndex * 2 + 1;
-                    break;
-                }
-
-                if (this.keys.get(tryLeft) != null && this.keys.get(tryRight) != null) {
-                    leftMostIndex = leftMostIndex * 2 + 1;
-                    break;
-                }
-
-                leftMostIndex = leftMostIndex * 2;
-            }
-        }
+        int leftMostIndex = findLeftMostHelper(1);
 
         /** Add to ArrayList so there isn't an index out of bounds exception. **/
         if (leftMostIndex >= this.keys.size()) {
@@ -160,6 +121,20 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
 
         return leftMostIndex;
+    }
+
+    /** Helper function for findLeftMost.
+     * Returns the left most available position from INDEX.
+     */
+    private int findLeftMostHelper(int index) {
+        if (index > this.keys.size() || this.keys.get(index) == null) {
+            return index;
+        }
+
+        int leftMostOnLeft = findLeftMostHelper(index * 2);
+        int leftMostOnRight = findLeftMostHelper(index * 2 + 1);
+
+        return Math.min(leftMostOnLeft, leftMostOnRight);
     }
 
     /** Returns the parent index of the item at INDEX. **/
