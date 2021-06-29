@@ -143,6 +143,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
                     break;
                 }
 
+                if (this.keys.get(tryLeft) != null && this.keys.get(tryRight) != null) {
+                    leftMostIndex = leftMostIndex * 2 + 1;
+                    break;
+                }
+
                 leftMostIndex = leftMostIndex * 2;
             }
         }
