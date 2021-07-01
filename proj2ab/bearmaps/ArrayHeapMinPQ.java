@@ -3,6 +3,9 @@ package bearmaps;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 /** Implements a min heap using an array representation of a binary tree. **/
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
@@ -16,6 +19,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /** Number of items in the Heap. **/
     int size;
 
+    /** Set containing the key values in the ArrayHeapMinPQ **/
+    Set keySet;
+
     public ArrayHeapMinPQ() {
         keys = new ArrayList<>();
 
@@ -24,6 +30,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
 
         this.size = 0;
+
+        keySet = new HashSet(){};
     }
 
     /** Represents the Nodes of the tree. Stores key and the priority.  */
@@ -44,15 +52,33 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * IllegalArgumentException if item is already present.
      * You may assume that item is never null. */
     public void add(T item, double priority) {
-        if (keys.contains(item)) {
+        if (this.contains(item)) {
             throw new IllegalArgumentException();
         }
 
-        int indexToAdd = findLeftMost();
+        /**
+        if (this.size + 1 > this.keys.size() - 1) {
+            this.keys.add(null);
+        }  **/
 
-        this.keys.set(indexToAdd, new Node(item, priority));
+        int indexToAdd;
+
+        if (size == 0) {
+            indexToAdd = 1;
+            this.keys.set(1, new Node(item, priority));
+        } else if (size <= 9) {
+            indexToAdd = size;
+            this.keys.set(size, new Node(item, priority));
+        } else {
+            indexToAdd = size;
+            this.keys.add(new Node(item, priority));
+        }
 
         swapUp(indexToAdd);
+
+        this.size = size + 1;
+
+        this.keySet.add(item);
 
     }
 
@@ -61,7 +87,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     /* Returns true if the PQ contains the given item. */
     public boolean contains(T item) {
-        return false;
+        return this.keySet.contains(item);
     }
 
     @Override
@@ -97,21 +123,33 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         Node curNode = this.keys.get(index);
         Node parentNode = this.keys.get(parentIndex);
 
-        while (curNode.priority < parentNode.priority) {
+        while (curIndex >= 1 && curNode.priority < parentNode.priority) {
             this.keys.set(curIndex, parentNode);
             this.keys.set(parentIndex, curNode);
 
             curIndex = parentIndex;
             curNode = this.keys.get(curIndex);
             parentNode = this.keys.get(parentOf(curIndex));
+            parentIndex = parentOf(curIndex);
+
+            T x = curNode.key;
+            T y = parentNode.key;
         }
     }
 
     /** Find the left most possible position to add into
      * while still maintaining the completeness of the heap. **/
-    private int findLeftMost() {
+    private int leftMost() {
 
-        int leftMostIndex = findLeftMostHelper(1);
+        int leftMostIndex;
+
+        if (this.keys.get(this.size - 1) != null) {
+            leftMostIndex = this.size + 1;
+        } else {
+            leftMostIndex = this.size;
+        }
+
+
 
         /** Add to ArrayList so there isn't an index out of bounds exception. **/
         if (leftMostIndex >= this.keys.size()) {
@@ -123,19 +161,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         return leftMostIndex;
     }
 
-    /** Helper function for findLeftMost.
-     * Returns the left most available position from INDEX.
-     */
-    private int findLeftMostHelper(int index) {
-        if (index > this.keys.size() || this.keys.get(index) == null) {
-            return index;
-        }
 
-        int leftMostOnLeft = findLeftMostHelper(index * 2);
-        int leftMostOnRight = findLeftMostHelper(index * 2 + 1);
-
-        return Math.min(leftMostOnLeft, leftMostOnRight);
-    }
 
     /** Returns the parent index of the item at INDEX. **/
     private int parentOf(int index) {
