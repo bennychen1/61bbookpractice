@@ -65,6 +65,29 @@ public class ArrayHeapMinPQTest {
         a.removeSmallest();
     }
 
+    @Test
+    public void testRemoveSmallest() {
+        ArrayHeapMinPQ<String> a = createArrayMinHeapPQ();
+
+        a.add("Blue", 1);
+        String r1 = a.removeSmallest();
+
+        a.add("Red", 10);
+        a.add("Silver", 6);
+
+        String r2 = a.removeSmallest();
+
+        assertEquals("Blue", r1);
+        assertEquals("Green", r2);
+
+        a.add("Peach", 9);
+
+        String r3 = a.removeSmallest();
+
+        assertEquals("Yellow", r3);
+
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void testGetEmpty() {
         ArrayHeapMinPQ<String> a = createArrayMinHeapPQ();
@@ -118,27 +141,30 @@ public class ArrayHeapMinPQTest {
 
     @Test
     public void testRemoveSmallestSpped() {
-        ArrayHeapMinPQ<Integer> a100 = createArrayMinHeapPQ(100);
-        ArrayHeapMinPQ<Integer> a1000 = createArrayMinHeapPQ(1000);
+        int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
+        double[] runTimes = new double[6];
 
-        Stopwatch s1 = new Stopwatch();
-
-        for (int i = 0; i < 100; i = i + 1) {
-            a100.removeSmallest();
+        for (int i = 0; i < 6; i = i + 1) {
+            ExtrinsicMinPQ<Integer> a = createArrayMinHeapPQ(inputs[i]);
+            Stopwatch s = new Stopwatch();
+            removeMinHeap(a);
+            double elapsedTime = s.elapsedTime();
+            runTimes[i] = elapsedTime;
         }
 
-        double elapsed100 = s1.elapsedTime();
+        double[] runTimesNaive = new double[6];
 
-        Stopwatch s2 = new Stopwatch();
-
-        for (int i = 0; i < 1000; i = i + 1) {
-            a1000.removeSmallest();
+        for (int i = 0; i < 6; i = i + 1) {
+            ExtrinsicMinPQ<Integer> a = createNaiveMinHeapPQ(inputs[i]);
+            Stopwatch s = new Stopwatch();
+            removeMinHeap(a);
+            double elapsedTime = s.elapsedTime();
+            runTimesNaive[i] = elapsedTime;
         }
 
-        double elapsed1000 = s2.elapsedTime();
 
-        assertTrue(String.format("Time for 100 items was %f, while time for 1000 items was %f",
-                elapsed100, elapsed1000), elapsed1000/elapsed100 <= 15);
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
     }
 
     private ArrayHeapMinPQ<String> createArrayMinHeapPQ() {
@@ -168,5 +194,11 @@ public class ArrayHeapMinPQTest {
         }
 
         return a;
+    }
+
+    private <T> void removeMinHeap(ExtrinsicMinPQ<T> e) {
+        for (int i = 0; i < e.size(); i = i + 1) {
+            e.removeSmallest();
+        }
     }
 }

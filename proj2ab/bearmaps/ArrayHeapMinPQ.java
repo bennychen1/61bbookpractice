@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /** Implements a min heap using an array representation of a binary tree. **/
@@ -53,7 +54,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * You may assume that item is never null. */
     public void add(T item, double priority) {
         if (this.contains(item)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(String.format("The ArrayMinHeapPQ already has an item" +
+                    "%s", item.getClass().getSimpleName(), item));
         }
 
         /**
@@ -66,12 +68,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (size == 0) {
             indexToAdd = 1;
             this.keys.set(1, new Node(item, priority));
-        } else if (size <= 9) {
-            indexToAdd = size;
-            this.keys.set(size, new Node(item, priority));
         } else {
-            indexToAdd = size;
-            this.keys.add(new Node(item, priority));
+            indexToAdd = size + 1;
+            this.keys.add(null);
+            this.keys.set(size + 1, new Node(item, priority));
         }
 
         swapUp(indexToAdd);
@@ -93,13 +93,35 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T getSmallest() {
+        if (size == 0) {
+            throw(new NoSuchElementException("The ArrayHeapMinPQ is empty"));
+        }
+
         return this.keys.get(1).key;
     }
 
     @Override
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T removeSmallest() {
-        return null;
+        if (size == 0) {
+            throw(new NoSuchElementException("The ArrayHeapMinPQ is empty"));
+        }
+
+        T toReturn = this.keys.get(1).key;
+
+        if (size == 1) {
+            this.keys.set(1, null);
+        } else {
+
+            swap(1, size);
+
+            this.keys.set(size, null);
+
+            swimDown(1);
+        }
+
+        this.size = this.size - 1;
+        return toReturn;
     }
 
     @Override
@@ -175,19 +197,75 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /** Returns the left child of the item at INDEX. If leaf node, return -1. **/
     private int leftChild(int index) {
         if (index * 2 >= this.keys.size()) {
-            return -1;
+            return 0;
         } else {
             return index * 2;
+        }
+    }
+
+    /** Returns the right most index of the heap. **/
+    private int rightMost() {
+        if (size % 2 == 0) {
+            return size - 1;
+        } else {
+            return size;
         }
     }
 
     /** Returns the right child of the item at INDEX. If leaf node, return -1. **/
     private int rightChild(int index) {
         if ((index * 2) + 1 >= this.keys.size()) {
-            return -1;
+            return 0;
         } else {
             return (index * 2) + 1;
         }
+    }
+
+    /** Swaps the node at index A with the node at index B. **/
+    private void swap(int A, int B) {
+        Node a = this.keys.get(A);
+        this.keys.set(A, this.keys.get(B));
+        this.keys.set(B, a);
+    }
+
+    /** Swap the node at INDEX down until it is smaller than both its left and right children nodes. **/
+    private void swimDown(int index) {
+        int curIndex = index;
+
+        int indexToSwap = index;
+
+        Node curNode = this.keys.get(curIndex);
+        Node left = this.keys.get(leftChild(index));
+        Node right = this.keys.get(rightChild(index));
+
+        /* Right can only be null if left is also null, so loop only stops when
+            * both left and right are null
+            * left has a node but right is null
+            * the priority of the current node is smaller than the priority of both child nodes
+        */
+        while (left != null && right != null && curNode.priority < left.priority
+                && curNode.priority < right.priority) {
+            if (left.priority <= right.priority) {
+                indexToSwap = leftChild(curIndex);
+            } else {
+                indexToSwap = rightChild(curIndex);
+            }
+
+            swap(curIndex, indexToSwap);
+
+            curIndex = indexToSwap;
+
+            indexToSwap = leftChild(curIndex);
+            left = this.keys.get(leftChild(curIndex));
+            right = this.keys.get(rightChild(curIndex));
+        }
+
+        if (left != null && right == null) {
+            swap(curIndex, indexToSwap);
+        }
+
+
+
     }
 
 
