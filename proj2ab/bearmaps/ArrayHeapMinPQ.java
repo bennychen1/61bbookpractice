@@ -180,6 +180,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             this.keys.set(curIndex, parentNode);
             this.keys.set(parentIndex, curNode);
 
+            curNode.setIndex(parentIndex);
+            parentNode.setIndex(curIndex);
+
             curIndex = parentIndex;
             curNode = this.keys.get(curIndex);
             parentNode = this.keys.get(parentOf(curIndex));
