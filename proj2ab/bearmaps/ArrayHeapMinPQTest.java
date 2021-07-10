@@ -1,15 +1,19 @@
 package bearmaps;
 
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 import edu.princeton.cs.algs4.Stopwatch;
+
+import java.util.ArrayList;
 
 public class ArrayHeapMinPQTest {
 
@@ -85,6 +89,7 @@ public class ArrayHeapMinPQTest {
         String r3 = a.removeSmallest();
 
         assertEquals("Yellow", r3);
+        assertEquals("Silver", a.getSmallest());
 
     }
 
@@ -109,6 +114,58 @@ public class ArrayHeapMinPQTest {
         a.changePriority("Blue", 1);
 
         assertEquals("Blue", a.getSmallest());
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testChangePriorityException() {
+        ArrayHeapMinPQ<String> a = createArrayMinHeapPQ();
+
+        a.add("Silver", 3);
+
+        a.removeSmallest();
+        a.removeSmallest();
+
+        a.changePriority("Silver", 1);
+    }
+
+    @Test
+    public void testChangePrioritySpeed() {
+
+        int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
+        double[] runTimes = new double[6];
+
+        for (int i = 0; i < 6; i = i + 1) {
+            ArrayHeapMinPQ<Integer> a = createArrayMinHeapPQ(inputs[i]);
+            int numberItemsToChange = 1 + (int)(Math.random() * (inputs[i] - 1) + 1);
+            ArrayList<Integer> itemsToChange = new ArrayList<>();
+            ArrayList<Integer> aItems = new ArrayList<>();
+            aItems.addAll(a.getKeySet());
+            for (int j = 0; j < numberItemsToChange; j = j + 1) {
+                int randomIndex = (int)(Math.random() * inputs[i] + 1);
+                itemsToChange.add(aItems.get(randomIndex));
+                aItems.remove(randomIndex);
+            }
+            Stopwatch s = new Stopwatch();
+            for (int k = 0; k < numberItemsToChange; k = k + 1) {
+                a.changePriority(aItems.get(k), Math.random() * 1000);
+            }
+            double elapsedTime = s.elapsedTime();
+            runTimes[i] = elapsedTime;
+        }
+
+        double[] runTimesNaive = new double[6];
+
+        for (int i = 0; i < 6; i = i + 1) {
+            Stopwatch s = new Stopwatch();
+            createNaiveMinHeapPQ(inputs[i]);
+            double elapsedTime = s.elapsedTime();
+            runTimesNaive[i] = elapsedTime;
+        }
+
+
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
+
     }
 
     @Test
@@ -154,7 +211,7 @@ public class ArrayHeapMinPQTest {
 
         double[] runTimesNaive = new double[6];
 
-        for (int i = 0; i < 6; i = i + 1) {
+        for (int i = 0; i < 4; i = i + 1) {
             ExtrinsicMinPQ<Integer> a = createNaiveMinHeapPQ(inputs[i]);
             Stopwatch s = new Stopwatch();
             removeMinHeap(a);
