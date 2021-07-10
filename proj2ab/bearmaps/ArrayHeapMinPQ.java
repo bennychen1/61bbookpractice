@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Hashtable;
 
 /** Implements a min heap using an array representation of a binary tree. **/
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
@@ -21,7 +22,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     int size;
 
     /** Set containing the key values in the ArrayHeapMinPQ **/
-    Set keySet;
+    private Set keySet;
+
+    /** Hashtable to store the nodes. **/
+    private Hashtable<T, Node> nodes;
 
     public ArrayHeapMinPQ() {
         keys = new ArrayList<>();
@@ -33,6 +37,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         this.size = 0;
 
         keySet = new HashSet(){};
+        nodes = new Hashtable<>();
     }
 
     /** Represents the Nodes of the tree. Stores key and the priority.  */
@@ -40,10 +45,16 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
         T key;
         double priority;
+        int index;
 
-        Node(T key, double priority) {
+        Node(T key, double priority, int index) {
             this.key = key;
             this.priority = priority;
+            this.index = index;
+        }
+
+        void setIndex(int index) {
+            this.index = index;
         }
 
     }
@@ -64,14 +75,17 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }  **/
 
         int indexToAdd;
+        Node nodeToAdd;
 
         if (size == 0) {
             indexToAdd = 1;
-            this.keys.set(1, new Node(item, priority));
+            nodeToAdd = new Node(item, priority, 1);
+        this.keys.set(1, nodeToAdd);
         } else {
             indexToAdd = size + 1;
             this.keys.add(null);
-            this.keys.set(size + 1, new Node(item, priority));
+            nodeToAdd = new Node(item, priority, indexToAdd);
+            this.keys.set(size + 1, nodeToAdd);
         }
 
         swapUp(indexToAdd);
@@ -79,6 +93,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         this.size = size + 1;
 
         this.keySet.add(item);
+        this.nodes.put(item, nodeToAdd);
 
     }
 
@@ -120,6 +135,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             swimDown(1);
         }
 
+        this.keySet.remove(toReturn);
         this.size = this.size - 1;
         return toReturn;
     }
@@ -134,7 +150,22 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /* Changes the priority of the given item. Throws NoSuchElementException if the item
      * doesn't exist. */
     public void changePriority(T item, double priority) {
-        return;
+        if (!keySet.contains(item)) {
+            throw(new NoSuchElementException(String.format("The ArrayMinHeapPQ does not have item %s",
+                    item.getClass().getSimpleName(), item)));
+        }
+
+        Node nodeToChange = this.nodes.get(item);
+        nodeToChange.priority = priority;
+
+        swapUp(nodeToChange.index);
+        swimDown(nodeToChange.index);
+
+    }
+
+    /** Returns the keySet for testing. **/
+    public Set getKeySet() {
+        return this.keySet;
     }
 
     /** Switch the item at INDEX until it is smaller than it's parent. **/
@@ -224,6 +255,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /** Swaps the node at index A with the node at index B. **/
     private void swap(int A, int B) {
         Node a = this.keys.get(A);
+        Node b = this.keys.get(B);
+        a.setIndex(B);
+        b.setIndex(A);
         this.keys.set(A, this.keys.get(B));
         this.keys.set(B, a);
     }

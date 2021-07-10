@@ -15,6 +15,7 @@ import edu.princeton.cs.algs4.Stopwatch;
 
 import java.util.ArrayList;
 
+
 public class ArrayHeapMinPQTest {
 
     @Test
@@ -114,7 +115,34 @@ public class ArrayHeapMinPQTest {
         a.changePriority("Blue", 1);
 
         assertEquals("Blue", a.getSmallest());
+
+        a.add("Silver", 11);
+        a.add("White", 5);
+        a.add("Red", 3);
+        a.add("Peach", 20);
+        a.add("Purple", 9);
+        a.add("Brown", 3);
+
+        a.changePriority("Yellow", 1);
+
+        a.removeSmallest();
+        String r1 = a.removeSmallest();
+
+        assertEquals("Yellow", r1);
+
+        a.changePriority("Silver", 1);
+
+        String r2 = a.removeSmallest();
+
+        assertEquals("Silver", r2);
+
+        a.changePriority("Green", 25);
+
+        String r3 = a.removeSmallest();
+
+        assertEquals("Brown", r3);
     }
+
 
     @Test(expected = NoSuchElementException.class)
     public void testChangePriorityException() {
@@ -137,14 +165,16 @@ public class ArrayHeapMinPQTest {
         for (int i = 0; i < 6; i = i + 1) {
             ArrayHeapMinPQ<Integer> a = createArrayMinHeapPQ(inputs[i]);
             int numberItemsToChange = 1 + (int)(Math.random() * (inputs[i] - 1) + 1);
+
             ArrayList<Integer> itemsToChange = new ArrayList<>();
             ArrayList<Integer> aItems = new ArrayList<>();
             aItems.addAll(a.getKeySet());
+
             for (int j = 0; j < numberItemsToChange; j = j + 1) {
-                int randomIndex = (int)(Math.random() * inputs[i] + 1);
+                int randomIndex = (int)(Math.random() * inputs[i]);
                 itemsToChange.add(aItems.get(randomIndex));
-                aItems.remove(randomIndex);
             }
+
             Stopwatch s = new Stopwatch();
             for (int k = 0; k < numberItemsToChange; k = k + 1) {
                 a.changePriority(aItems.get(k), Math.random() * 1000);
@@ -197,7 +227,7 @@ public class ArrayHeapMinPQTest {
     }
 
     @Test
-    public void testRemoveSmallestSpped() {
+    public void testRemoveSmallestSpeed() {
         int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
         double[] runTimes = new double[6];
 
