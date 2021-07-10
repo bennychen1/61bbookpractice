@@ -243,8 +243,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             * left has a node but right is null
             * the priority of the current node is smaller than the priority of both child nodes
         */
-        while (left != null && right != null && curNode.priority < left.priority
-                && curNode.priority < right.priority) {
+        while (left != null && right != null) {
             if (left.priority <= right.priority) {
                 indexToSwap = leftChild(curIndex);
             } else {
@@ -255,12 +254,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
             curIndex = indexToSwap;
 
-            indexToSwap = leftChild(curIndex);
+            /* curNode = this.keys.get(curIndex); */
+
+            /* indexToSwap = leftChild(curIndex); */
             left = this.keys.get(leftChild(curIndex));
             right = this.keys.get(rightChild(curIndex));
         }
 
-        if (left != null && right == null) {
+        if (left != null && right == null && curNode.priority > left.priority) {
+            indexToSwap = leftChild(curIndex);
             swap(curIndex, indexToSwap);
         }
 
