@@ -266,8 +266,8 @@ public class ArrayHeapMinPQTest {
 
     @Test
     public void testRandomized() {
-        int numberOfNodes = 1000 + (int) Math.random() * 9000;
-        int numberOfRemoveSmallest = 5 + (int) Math.random() * (numberOfNodes - 5);
+        int numberOfNodes = (int) (1000 + Math.random() * 9000);
+        int numberOfRemoveSmallest = (int) (5 + Math.random() * (numberOfNodes - 5));
 
         ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
         NaiveMinPQ<Integer> n = new NaiveMinPQ<>();
