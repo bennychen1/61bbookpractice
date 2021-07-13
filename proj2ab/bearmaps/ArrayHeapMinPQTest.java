@@ -287,6 +287,41 @@ public class ArrayHeapMinPQTest {
         }
 
         assertEquals(aSmallest, nSmallest);
+
+    }
+
+    @Test
+    public void testRandomizedChangePriorities(){
+
+        int numberOfNodes = (int) (1000 + Math.random() * 9000);
+        int numberOfRemoveSmallest = (int) (5 + Math.random() * (numberOfNodes - 5));
+        int numberChangePriorities = (int) (10 + Math.random() * 30);
+
+        ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        NaiveMinPQ<Integer> n = new NaiveMinPQ<>();
+
+        for (int i = 0; i < numberOfNodes; i = i + 1) {
+            double randomValue = Math.random() * 100;
+            a.add(i, randomValue);
+            n.add(i, randomValue);
+        }
+
+        Integer aSmallest = null;
+        Integer nSmallest = null;
+
+        for (int i = 0; i < numberChangePriorities; i = i + 1) {
+            double randomValue = Math.random() * 100;
+            int nodeToChange = (int) (Math.random() * (numberOfNodes));
+            a.changePriority(nodeToChange, randomValue);
+            n.changePriority(nodeToChange, randomValue);
+        }
+
+        for (int j = 0; j < numberOfRemoveSmallest; j = j + 1) {
+            aSmallest = a.removeSmallest();
+            nSmallest = n.removeSmallest();
+        }
+
+        assertEquals(aSmallest, nSmallest);
     }
 
     private ArrayHeapMinPQ<String> createArrayMinHeapPQ() {
