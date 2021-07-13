@@ -94,6 +94,15 @@ public class ArrayHeapMinPQTest {
 
     }
 
+    @Test
+    public void testRemoveSmallestTwoItems() {
+        ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        a.add(3, 3);
+        a.add(1, 1);
+
+        assertEquals(1, (int) a.removeSmallest());
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void testGetEmpty() {
         ArrayHeapMinPQ<String> a = createArrayMinHeapPQ();
@@ -161,37 +170,38 @@ public class ArrayHeapMinPQTest {
 
         int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
         double[] runTimes = new double[6];
+        double[] runTimesNaive = new double[6];
+
 
         for (int i = 0; i < 6; i = i + 1) {
-            ArrayHeapMinPQ<Integer> a = createArrayMinHeapPQ(inputs[i]);
-            int numberItemsToChange = 1 + (int)(Math.random() * (inputs[i] - 1) + 1);
-
-            ArrayList<Integer> itemsToChange = new ArrayList<>();
-            ArrayList<Integer> aItems = new ArrayList<>();
-            aItems.addAll(a.getKeySet());
-
-            for (int j = 0; j < numberItemsToChange; j = j + 1) {
-                int randomIndex = (int)(Math.random() * inputs[i]);
-                itemsToChange.add(aItems.get(randomIndex));
+            int numberItemsToChange = 1 + (int) (Math.random() * (inputs[i] - 1) + 1);
+            ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+            NaiveMinPQ<Integer> npq = new NaiveMinPQ<>();
+            ArrayList<Integer> randomInputs = new ArrayList<>();
+            for (int j = 0; j < inputs[i]; j = j + 1) {
+                a.add(j, Math.random() * 1000);
+                npq.add(j, Math.random() * 1000);
+                randomInputs.add(j);
             }
+
 
             Stopwatch s = new Stopwatch();
             for (int k = 0; k < numberItemsToChange; k = k + 1) {
-                a.changePriority(aItems.get(k), Math.random() * 1000);
+                int randomIndex = (int) (Math.random() * inputs[i]);
+                a.changePriority(randomInputs.get(randomIndex), Math.random() * 1000);
             }
+
             double elapsedTime = s.elapsedTime();
             runTimes[i] = elapsedTime;
+
+            Stopwatch sNaive = new Stopwatch();
+            for (int k = 0; k < numberItemsToChange; k = k + 1) {
+                int randomIndex = (int) Math.random() * inputs[i];
+                npq.changePriority(randomInputs.get(randomIndex), Math.random() * 1000);
+            }
+            double elapsedTimeNaive = sNaive.elapsedTime();
+            runTimesNaive[i] = elapsedTimeNaive;
         }
-
-        double[] runTimesNaive = new double[6];
-
-        for (int i = 0; i < 6; i = i + 1) {
-            Stopwatch s = new Stopwatch();
-            createNaiveMinHeapPQ(inputs[i]);
-            double elapsedTime = s.elapsedTime();
-            runTimesNaive[i] = elapsedTime;
-        }
-
 
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
@@ -252,6 +262,31 @@ public class ArrayHeapMinPQTest {
 
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
+    }
+
+    @Test
+    public void testRandomized() {
+        int numberOfNodes = 1000 + (int) Math.random() * 9000;
+        int numberOfRemoveSmallest = 5 + (int) Math.random() * (numberOfNodes - 5);
+
+        ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+        NaiveMinPQ<Integer> n = new NaiveMinPQ<>();
+
+        for (int i = 0; i < numberOfNodes; i = i + 1) {
+            double randomValue = Math.random() * 100;
+            a.add(i, randomValue);
+            n.add(i, randomValue);
+        }
+
+        Integer aSmallest = null;
+        Integer nSmallest = null;
+
+        for (int j = 0; j < numberOfRemoveSmallest; j = j + 1) {
+            aSmallest = a.removeSmallest();
+            nSmallest = n.removeSmallest();
+        }
+
+        assertEquals(aSmallest, nSmallest);
     }
 
     private ArrayHeapMinPQ<String> createArrayMinHeapPQ() {
