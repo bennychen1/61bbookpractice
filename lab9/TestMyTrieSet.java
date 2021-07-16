@@ -54,6 +54,59 @@ public class TestMyTrieSet {
         }
     }
 
+    @Test
+    public void testAddAndContainsAndClear() {
+        MyTrieSet t = new MyTrieSet();
+
+        String[] s = new String[]{"ball", "bang", "ban", "bale", "angle"};
+
+        for (String s1 : s) {
+            t.add(s1);
+        }
+
+        for (String s1 : s) {
+            assertTrue(t.contains(s1));
+        }
+
+        assertFalse(t.contains("all"));
+
+        t.clear();
+
+        assertFalse(t.contains("ball"));
+
+        t.add("green");
+
+        assertTrue(t.contains("green"));
+    }
+
+    @Test
+    public void testKeysWithPrefixAndLongestPrefix() {
+        MyTrieSet t = new MyTrieSet();
+
+        String[] words = new String[]{"automobile", "automatic", "car", "walk",
+                "approach", "autonomous", "authentic"};
+
+        String[] autoWords = new String[]{"automobile", "automatic", "autonomous"};
+
+        for (String w : words) {
+            t.add(w);
+        }
+
+        List<String> wordsInTrie = t.keysWithPrefix("auto");
+
+        for (String w : autoWords) {
+            assertTrue(wordsInTrie.contains(w));
+        }
+
+        t.add("carp");
+
+        assertNull(t.longestPrefixOf("autotune"));
+        assertEquals("carp", t.longestPrefixOf("carpet"));
+
+
+
+    }
+
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests(TestMyTrieSet.class);
     }
