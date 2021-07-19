@@ -80,6 +80,74 @@ public class TestMyTrieSet {
     }
 
     @Test
+    public void testKeysWithPrefix() {
+        MyTrieSet t = new MyTrieSet();
+
+        String[] words = new String[]{"circumnavigate", "circumscribe", "circum",
+                "pear","circumvent", "circus"};
+
+        String[] circumWords = new String[]{"circumnavigate", "circum","circumscribe", "circumvent"};
+
+        for (String w : words) {
+            t.add(w);
+        }
+
+        List<String> circumPrefix = t.keysWithPrefix("circum");
+
+        assertFalse(circumPrefix.contains("circus"));
+
+        for (String w : circumWords) {
+            assertTrue(t.contains(w));
+        }
+    }
+
+    @Test
+    public void testLongPrefixBasic() {
+        MyTrieSet t = new MyTrieSet();
+
+        t.add("car");
+        t.add("carpet");
+        t.add("carpus");
+        t.add("carpenter");
+
+        assertEquals("car", t.longestPrefixOf("carp"));
+        assertEquals("car", t.longestPrefixOf("carpe"));
+    }
+
+    @Test
+    public void testLongestPrefix() {
+        MyTrieSet t = new MyTrieSet();
+
+        String[] words = new String[] {"water", "plant", "ca", "dog", "car", "pants"
+                , "canada", "waterhole"};
+
+        for (String w : words) {
+            t.add(w);
+        }
+
+        String carpetPrefix = t.longestPrefixOf("carpet");
+
+        assertEquals("car", carpetPrefix);
+
+        String canadasPrefix = t.longestPrefixOf("canadas");
+
+        assertEquals("canada", canadasPrefix);
+
+        String wateringPrefix = t.longestPrefixOf("watering");
+
+        assertEquals("water", wateringPrefix);
+
+        t.add("waterin");
+        assertEquals("waterin", t.longestPrefixOf("watering"));
+
+        String calPrefix = t.longestPrefixOf("cal");
+
+        assertEquals("ca", calPrefix);
+
+        assertEquals("", t.longestPrefixOf("pant"));
+    }
+
+    @Test
     public void testKeysWithPrefixAndLongestPrefix() {
         MyTrieSet t = new MyTrieSet();
 
@@ -98,13 +166,24 @@ public class TestMyTrieSet {
             assertTrue(wordsInTrie.contains(w));
         }
 
+        t.add("hello-to");
+
+        wordsInTrie = t.keysWithPrefix("auto");
+
+        assertFalse(wordsInTrie.contains("hello-to"));
+        assertFalse(wordsInTrie.contains("hello"));
+
+        wordsInTrie = t.keysWithPrefix("autom");
+
+        assertTrue(wordsInTrie.contains("automobile"));
+        assertTrue(wordsInTrie.contains("automatic"));
+        assertFalse(wordsInTrie.contains("autonomous"));
+
+
         t.add("carp");
 
-        assertNull(t.longestPrefixOf("autotune"));
+        assertEquals("", t.longestPrefixOf("autotune"));
         assertEquals("carp", t.longestPrefixOf("carpet"));
-
-
-
     }
 
     public static void main(String[] args) {
