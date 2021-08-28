@@ -3,6 +3,7 @@ package bearmaps.hw4.slidingpuzzle;
 import bearmaps.hw4.LazySolver;
 import bearmaps.hw4.ShortestPathsSolver;
 import bearmaps.hw4.SolutionPrinter;
+import bearmaps.hw4.AStarSolver;
 
 /**
  * Showcases how the AStarSolver can be used for solving sliding puzzles.
@@ -19,7 +20,7 @@ public class DemoSlidingPuzzleSolution {
 
         BoardGraph spg = new BoardGraph();
 
-        ShortestPathsSolver<Board> solver = new LazySolver<>(spg, start, goal, 20);
+        ShortestPathsSolver<Board> solver = new AStarSolver<>(spg, start, goal, 20);
         SolutionPrinter.summarizeSolution(solver, "\n");
     }
 }
