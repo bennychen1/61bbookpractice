@@ -19,6 +19,8 @@ import java.util.Map;
 
 import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
 import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.ROOT_ULLAT;
+import static bearmaps.proj2c.utils.Constants.ROOT_LRLAT;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -49,6 +51,29 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     @Override
     protected Map<String, Double> parseRequestParams(Request request) {
         return getRequestParams(request, REQUIRED_RASTER_REQUEST_PARAMS);
+    }
+
+    /**
+     * The lonDpp of each depth D. Index 0 is the lonDPP of depth 0, 1 is lonDPP of depth 1, etc.
+     * **/
+    private double[] depthLonDPP;
+
+    /**
+     * Find the midpoint longitude of depth D
+     * **/
+    private double midPoint(int D) {
+        if (D == 0) {
+            return (ROOT_ULLAT + ROOT_LRLAT) / 2;
+        }
+
+        return (ROOT_ULLAT + midPoint(D - 1)) / 2;
+    }
+
+    /**
+     * The lonDPP of depth D.
+     * */
+    private double lonDPP(int D) {
+        return (ROOT_ULLAT + midPoint(D)) / 256;
     }
 
     /**
@@ -84,11 +109,19 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        System.out.println(requestParams);
+        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+        //System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        /*System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+                + "your browser."); */
+        /* Compute LDPP of the query box from request params.
+        How is requestParams guaranteed to have the necessary params? done at Line 33 APIRouteHandler
+        Check the length of requestParams to make sure it has everything? Use parseRequestParams at top*/
+
+        double requestlondpp = (requestParams.get("lrlon") - requestParams.get("ullon"))
+                / requestParams.get("w");
+
+
         return results;
     }
 
