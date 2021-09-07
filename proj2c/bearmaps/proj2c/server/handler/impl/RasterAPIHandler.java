@@ -17,10 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
-import static bearmaps.proj2c.utils.Constants.ROOT_ULLAT;
-import static bearmaps.proj2c.utils.Constants.ROOT_LRLAT;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -56,7 +53,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     /**
      * The lonDpp of each depth D. Index 0 is the lonDPP of depth 0, 1 is lonDPP of depth 1, etc.
      * **/
-    private double[] depthLonDPP;
+    private double[] depthLonDPP = {lonDPP(0), lonDPP(1), lonDPP(2), lonDPP(3)
+            , lonDPP(4), lonDPP(5), lonDPP(6), lonDPP(7)};
 
     /**
      * Find the midpoint longitude of depth D
@@ -73,7 +71,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      * The lonDPP of depth D.
      * */
     private double lonDPP(int D) {
-        return (ROOT_ULLAT + midPoint(D)) / 256;
+        return (midPoint(D) - ROOT_ULLAT) / 256;
     }
 
     /**
@@ -120,6 +118,27 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         double requestlondpp = (requestParams.get("lrlon") - requestParams.get("ullon"))
                 / requestParams.get("w");
+
+        // Find the right depth
+        int depth = 0;
+
+        while (requestlondpp <= depthLonDPP[depth]) {
+            if (depth == 7) {
+                break;
+            }
+            depth = depth + 1;
+        }
+
+        int totalNumTiles;
+
+        if (depth == 0) {
+            totalNumTiles = 1;
+        } else {
+            Double numAsDouble = Math.pow(4, depth);
+            totalNumTiles = numAsDouble.intValue();
+        }
+
+        double eachTileLon = (ROOT_ULLON - ROOT_LRLON) / totalNumTiles;
 
 
         return results;
