@@ -171,10 +171,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
         for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
             /**
-            hashmap
             for each j
-                add to i in the hashmap
-            go through the hashmap and put the dD_xX_yY in the images string
+                can just add depthString + xi + yj to the images array
              **/
 
         }
