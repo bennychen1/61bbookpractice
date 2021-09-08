@@ -116,8 +116,15 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         How is requestParams guaranteed to have the necessary params? done at Line 33 APIRouteHandler
         Check the length of requestParams to make sure it has everything? Use parseRequestParams at top*/
 
-        double requestlondpp = (requestParams.get("lrlon") - requestParams.get("ullon"))
-                / requestParams.get("w");
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double lrlat = requestParams.get("lrlat");
+        double ullat = requestParams.get("ullat");
+        double w = requestParams.get("w");
+
+
+
+        double requestlondpp = (lrlon - ullon) / w;
 
         // Find the right depth
         int depth = 0;
@@ -147,15 +154,32 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         // Longitude is y-cooridnate, determine j (index within an array)
         // Latitiude is x-coordinate, determine i (which array from 2d array)
-        Double startTileIndexJDouble = Math.abs((ROOT_ULLON - requestParams.get("ullon"))) / totalNumTiles;
-        Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - requestParams.get("ullat")) / totalNumTiles;
-        Double endTileIndexJDouble = Math.abs((ROOT_ULLON - requestParams.get("lrlon"))) / totalNumTiles;
-        Double endTileIndexIDouble = Math.abs(ROOT_ULLAT - requestParams.get("lrlat")) / totalNumTiles;
+        Double startTileIndexJDouble = Math.abs((ROOT_ULLON - ullon) / eachTileLon;
+        Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
+        Double endTileIndexJDouble = Math.abs((ROOT_ULLON - lrlon) / eachTileLon;
+        Double endTileIndexIDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
 
-        int startTileIndexJ = startTileIndexJDouble.intValue();
+        int startTileIndexJ = startTileIndexJDouble.intValue(); //Tile number
         int startTileIndexI = startTileIndexJDouble.intValue();
         int endTileIndexJ = startTileIndexJDouble.intValue();
         int endTileIndexI = startTileIndexJDouble.intValue();
+
+        String[][] images = new String[][]{};
+
+        String depthString = "d" + String.valueOf(depth);
+
+        // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
+        for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
+            /**
+            hashmap
+            for each j
+                add to i in the hashmap
+            go through the hashmap and put the dD_xX_yY in the images string
+             **/
+
+        }
+
+
 
         return results;
     }
