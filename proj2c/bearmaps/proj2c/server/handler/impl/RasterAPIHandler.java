@@ -129,6 +129,10 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             depth = depth + 1;
         }
 
+        if (depth != 0 || depth != 7) {
+            depth = depth - 1;
+        }
+
         int totalNumTiles;
 
         if (depth == 0) {
@@ -138,8 +142,20 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             totalNumTiles = numAsDouble.intValue();
         }
 
-        double eachTileLon = (ROOT_ULLON - ROOT_LRLON) / totalNumTiles;
+        double eachTileLon = Math.abs((ROOT_ULLON - ROOT_LRLON)) / totalNumTiles;
+        double eachTileLat = Math.abs((ROOT_ULLAT - ROOT_LRLAT)) / totalNumTiles;
 
+        // Longitude is y-cooridnate, determine j (index within an array)
+        // Latitiude is x-coordinate, determine i (which array from 2d array)
+        Double startTileIndexJDouble = Math.abs((ROOT_ULLON - requestParams.get("ullon"))) / totalNumTiles;
+        Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - requestParams.get("ullat")) / totalNumTiles;
+        Double endTileIndexJDouble = Math.abs((ROOT_ULLON - requestParams.get("lrlon"))) / totalNumTiles;
+        Double endTileIndexIDouble = Math.abs(ROOT_ULLAT - requestParams.get("lrlat")) / totalNumTiles;
+
+        int startTileIndexJ = startTileIndexJDouble.intValue();
+        int startTileIndexI = startTileIndexJDouble.intValue();
+        int endTileIndexJ = startTileIndexJDouble.intValue();
+        int endTileIndexI = startTileIndexJDouble.intValue();
 
         return results;
     }
