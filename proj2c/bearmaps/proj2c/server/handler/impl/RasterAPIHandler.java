@@ -61,17 +61,20 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      * **/
     private double midPoint(int D) {
         if (D == 0) {
-            return (ROOT_ULLAT + ROOT_LRLAT) / 2;
+            return (ROOT_ULLON + ROOT_LRLON) / 2;
         }
 
-        return (ROOT_ULLAT + midPoint(D - 1)) / 2;
+        return (ROOT_ULLON + midPoint(D - 1)) / 2;
     }
 
     /**
      * The lonDPP of depth D.
      * */
     private double lonDPP(int D) {
-        return (midPoint(D) - ROOT_ULLAT) / 256;
+        if (D == 0) {
+            return (ROOT_LRLON - ROOT_ULLON) / 256;
+        }
+        return (midPoint(D - 1) - ROOT_ULLON) / 256;
     }
 
     /**
@@ -114,7 +117,11 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
                 + "your browser."); */
         /* Compute LDPP of the query box from request params.
         How is requestParams guaranteed to have the necessary params? done at Line 33 APIRouteHandler
-        Check the length of requestParams to make sure it has everything? Use parseRequestParams at top*/
+        Check the length of requestParams to make sure it has everything? Use parseRequestParams at top
+        i = longitude (x coordinate)
+        j = latitude (y coordinate)
+        In 2-D array, y constant in a given array - so j determines which array
+        */
 
         double lrlon = requestParams.get("lrlon");
         double ullon = requestParams.get("ullon");
@@ -133,18 +140,14 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         double requestlondpp = (lrlon - ullon) / w;
 
-        // Find the right depth
+        // Find the right depth - the greatest depth LonDPP that is less than request LonDPP
         int depth = 0;
 
-        while (requestlondpp <= depthLonDPP[depth]) { // stop once depth Lon DPP is > request LonDPP
+        while (requestlondpp <= depthLonDPP[depth]) { // stop once depth Lon DPP is < request LonDPP
             if (depth == 7) {
                 break;
             }
             depth = depth + 1;
-        }
-
-        if (depth != 0 || depth != 7) { // Go back one to the depth LonDPP less than request LonDPP
-            depth = depth - 1;
         }
 
         results.put("depth", depth);
@@ -159,46 +162,62 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         }
 
         // Each tile will cover the total lon/lat divided by the number of tiles
+        // Invariant: |LRLON| > |ULLON|, ULLAT > LRLAT
         // If left lat to right lat goes from 0 to 1, and there are 10x10 tiles, then each tile = 0.1 lat
-        double eachTileLon = Math.abs((ROOT_ULLON - ROOT_LRLON)) / totalNumTiles;
-        double eachTileLat = Math.abs((ROOT_ULLAT - ROOT_LRLAT)) / totalNumTiles;
+        double eachTileLon = (ROOT_LRLON - ROOT_ULLON) / Math.sqrt(totalNumTiles);
+        double eachTileLat = (ROOT_ULLAT - ROOT_LRLAT) / Math.sqrt(totalNumTiles);
 
-        // Longitude is y-cooridnate, determine j (index within an array)
-        // Latitiude is x-coordinate, determine i (which array from 2d array)
+        // Longitude is x-cooridnate, determine j (index within an array)
+        // Latitiude is y-coordinate, determine i (which array from 2d array)
         //How many tiles to get to the requested lon and lat from the root if each tile covers for example
         // 0.1 lat and 0.1 lon.
         //Example: depth has 10 tiles. User request starts at lon 0.25 then I need to get to tile 2
                 // (0.25 - 0) / 0.1 = 2
-        Double startTileIndexJDouble = Math.abs(ROOT_ULLON - ullon) / eachTileLon;
-        Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
-        Double endTileIndexJDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
-        Double endTileIndexIDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
+        Double startTileIndexIDouble = Math.abs(ROOT_ULLON - ullon) / eachTileLon;
+        Double startTileIndexJDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
+        Double endTileIndexIDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
+        Double endTileIndexJDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
 
         int startTileIndexJ = startTileIndexJDouble.intValue(); //Tile number
-        int startTileIndexI = startTileIndexJDouble.intValue();
-        int endTileIndexJ = startTileIndexJDouble.intValue();
-        int endTileIndexI = startTileIndexJDouble.intValue();
+        int startTileIndexI = startTileIndexIDouble.intValue();
+        int endTileIndexJ = endTileIndexJDouble.intValue();
+        int endTileIndexI = endTileIndexIDouble.intValue();
+
+        // Raster ul and lr lon and lat.
+        // If I start at tile 2, then lon is 0.2 (2 * 0.1)
+        // If I stop at tile 3, then lon is 0.4 (0.1 * (3+1))
+        double rasterullon = startTileIndexI * eachTileLon + ROOT_ULLON;
+        double rasterullat = startTileIndexJ * eachTileLat * -1 + ROOT_ULLAT;
+        double rasterlrlon = (endTileIndexI + 1) * eachTileLon + ROOT_ULLON;
+        double rasterlrlat = (endTileIndexJ + 1) * eachTileLat * -1 + ROOT_ULLAT;
+
+        results.put("raster_ul_lon", rasterullon);
+        results.put("raster_ul_lat", rasterullat);
+        results.put("raster_lr_lon", rasterlrlon);
+        results.put("raster_lr_lat", rasterlrlat);
 
         // If starting tile lon-wise is 1, and end tile is 3, then there should be 3 -2 + 1 = 3 tiles (1, 2, 3)
-        String[][] images = new String[endTileIndexI - startTileIndexI + 1][endTileIndexJ - startTileIndexJ +1];
+        String[][] images = new String[endTileIndexJ - startTileIndexJ + 1][endTileIndexI - startTileIndexI +1];
 
         String depthString = "d" + String.valueOf(depth);
 
         // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
-        int images_indexI = 0;
-        for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
-            int imagesIndexJ = 0;
-            for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
-                images[images_indexI][j] = depthString + String.valueOf(i) + String.valueOf(j);
-                imagesIndexJ = imagesIndexJ + 1;
+        int imagesIndexJ = 0;
+        for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
+            int imagesIndexI = 0;
+            for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
+                images[imagesIndexJ][imagesIndexI] = depthString + "_x" + i + "_y" + j + ".png";
+                imagesIndexI = imagesIndexI + 1;
             }
-            images_indexI = images_indexI + 1;
+            imagesIndexJ = imagesIndexJ + 1;
             /**
             for each j
                 can just add depthString + xi + yj to the images array
              **/
 
         }
+
+        results.put("render_grid", images);
 
         return results;
     }
