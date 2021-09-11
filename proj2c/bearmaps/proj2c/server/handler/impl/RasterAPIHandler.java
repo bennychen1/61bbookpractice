@@ -122,6 +122,13 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double ullat = requestParams.get("ullat");
         double w = requestParams.get("w");
 
+        boolean query_success = true;
+
+        if (ullon < ROOT_ULLON || ullat > ROOT_ULLAT // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
+                || lrlon > ROOT_LRLON || lrlat < ROOT_LRLAT) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
+            query_success = false;
+        } 
+
 
 
         double requestlondpp = (lrlon - ullon) / w;
@@ -154,9 +161,9 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         // Longitude is y-cooridnate, determine j (index within an array)
         // Latitiude is x-coordinate, determine i (which array from 2d array)
-        Double startTileIndexJDouble = Math.abs((ROOT_ULLON - ullon) / eachTileLon;
+        Double startTileIndexJDouble = Math.abs(ROOT_ULLON - ullon) / eachTileLon;
         Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
-        Double endTileIndexJDouble = Math.abs((ROOT_ULLON - lrlon) / eachTileLon;
+        Double endTileIndexJDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
         Double endTileIndexIDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
 
         int startTileIndexJ = startTileIndexJDouble.intValue(); //Tile number
@@ -164,20 +171,25 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         int endTileIndexJ = startTileIndexJDouble.intValue();
         int endTileIndexI = startTileIndexJDouble.intValue();
 
-        String[][] images = new String[][]{};
+        String[][] images = new String[endTileIndexI - startTileIndexI][endTileIndexJ - startTileIndexJ];
 
         String depthString = "d" + String.valueOf(depth);
 
         // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
+        int images_indexI = 0;
         for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
+            int imagesIndexJ = 0;
+            for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
+                images[images_indexI][j] = depthString + String.valueOf(i) + String.valueOf(j);
+                imagesIndexJ = imagesIndexJ + 1;
+            }
+            images_indexI = images_indexI + 1;
             /**
             for each j
                 can just add depthString + xi + yj to the images array
              **/
 
         }
-
-
 
         return results;
     }
