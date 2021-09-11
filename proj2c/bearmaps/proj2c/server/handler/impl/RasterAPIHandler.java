@@ -127,40 +127,48 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         if (ullon < ROOT_ULLON || ullat > ROOT_ULLAT // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
                 || lrlon > ROOT_LRLON || lrlat < ROOT_LRLAT) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
             query_success = false;
-        } 
+        }
 
-
+        results.put("query_success", query_success);
 
         double requestlondpp = (lrlon - ullon) / w;
 
         // Find the right depth
         int depth = 0;
 
-        while (requestlondpp <= depthLonDPP[depth]) {
+        while (requestlondpp <= depthLonDPP[depth]) { // stop once depth Lon DPP is > request LonDPP
             if (depth == 7) {
                 break;
             }
             depth = depth + 1;
         }
 
-        if (depth != 0 || depth != 7) {
+        if (depth != 0 || depth != 7) { // Go back one to the depth LonDPP less than request LonDPP
             depth = depth - 1;
         }
+
+        results.put("depth", depth);
 
         int totalNumTiles;
 
         if (depth == 0) {
             totalNumTiles = 1;
         } else {
-            Double numAsDouble = Math.pow(4, depth);
+            Double numAsDouble = Math.pow(4, depth); // example: depth 3 grid is divided into 64 even tiles
             totalNumTiles = numAsDouble.intValue();
         }
 
+        // Each tile will cover the total lon/lat divided by the number of tiles
+        // If left lat to right lat goes from 0 to 1, and there are 10x10 tiles, then each tile = 0.1 lat
         double eachTileLon = Math.abs((ROOT_ULLON - ROOT_LRLON)) / totalNumTiles;
         double eachTileLat = Math.abs((ROOT_ULLAT - ROOT_LRLAT)) / totalNumTiles;
 
         // Longitude is y-cooridnate, determine j (index within an array)
         // Latitiude is x-coordinate, determine i (which array from 2d array)
+        //How many tiles to get to the requested lon and lat from the root if each tile covers for example
+        // 0.1 lat and 0.1 lon.
+        //Example: depth has 10 tiles. User request starts at lon 0.25 then I need to get to tile 2
+                // (0.25 - 0) / 0.1 = 2
         Double startTileIndexJDouble = Math.abs(ROOT_ULLON - ullon) / eachTileLon;
         Double startTileIndexIDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
         Double endTileIndexJDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
@@ -171,7 +179,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         int endTileIndexJ = startTileIndexJDouble.intValue();
         int endTileIndexI = startTileIndexJDouble.intValue();
 
-        String[][] images = new String[endTileIndexI - startTileIndexI][endTileIndexJ - startTileIndexJ];
+        // If starting tile lon-wise is 1, and end tile is 3, then there should be 3 -2 + 1 = 3 tiles (1, 2, 3)
+        String[][] images = new String[endTileIndexI - startTileIndexI + 1][endTileIndexJ - startTileIndexJ +1];
 
         String depthString = "d" + String.valueOf(depth);
 
