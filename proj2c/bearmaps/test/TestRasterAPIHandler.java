@@ -68,9 +68,12 @@ public class TestRasterAPIHandler {
         expectedResults.put("render_grid", render_grid);
         expectedResults.put("query_success", query_success);
 
-        assertEquals("Your results did not match the expected results for input "
-                + mapToString(requestParams) + ".\n", expectedResults, rasterer.processRequest(requestParams, null));
+        String msg = "Your results did not match the expected results for input "
+                + mapToString(requestParams) + ".\n";
 
+        Map<String, Object> actual = rasterer.processRequest(requestParams, null);
+
+        checkParamsMap(msg, expectedResults, actual);
     }
 
     @Test
