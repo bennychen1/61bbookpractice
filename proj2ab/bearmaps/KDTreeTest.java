@@ -39,7 +39,7 @@ public class KDTreeTest {
 
         for (int i = 0; i < 1000; i = i + 1) {
             points.add(new Point(r.nextInt(), r.nextInt()));
-            points.add(new Point(r.nextInt(), r.nextInt()));
+            pointsToTest.add(new Point(r.nextInt(), r.nextInt()));
         }
 
         NaivePointSet n = new NaivePointSet(points);
@@ -68,7 +68,7 @@ public class KDTreeTest {
         double[] timeKDTree = new double[6];
         double[] timeNaivePointSet = new double[6];
 
-        for (int i = 0; i < 6; i = i + 1) {
+        for (int i = 0; i < 5; i = i + 1) {
             Stopwatch s1 = new Stopwatch();
             for (int j = 0; j < numberOfNearest[i]; j = j + 1) {
                 k.nearest(r.nextInt(), r.nextInt());

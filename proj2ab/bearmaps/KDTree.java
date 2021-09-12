@@ -36,7 +36,7 @@ public class KDTree implements PointSet {
 
         KDTree toAdd = new KDTree(pointSet,  this.compareTo.nextComparator());
 
-        if (this.compareTo.compare(addPoint, this.p) == 0) {
+        if (this.compareTo.compare(addPoint, this.p) <= 0) {
             if (this.left == null) {
                 this.left = toAdd;
             } else {
@@ -111,6 +111,7 @@ public class KDTree implements PointSet {
     public Point nearest(double x, double y) {
 
         Point[] bestPoint = new Point[]{this.p};
+        /*Point bestPoint = new Point(this.p.getX(), this.p.getY());*/
         double[] bestDistance = new double[] {Point.distance(this.p, new Point(x, y))};
 
         return nearestHelper(new Point(x, y), bestDistance, bestPoint);
@@ -120,6 +121,7 @@ public class KDTree implements PointSet {
 
         if (Double.compare(Point.distance(this.p, newPoint), bestDistance[0]) < 0) {
             bestDistance[0] = Point.distance(this.p, newPoint);
+            /*curBestPoint[0] = this.p;*/
             curBestPoint[0] = this.p;
         }
 
@@ -182,3 +184,5 @@ public class KDTree implements PointSet {
         assertTrue(k.contains(p6));
     }
 }
+
+/** nearestHelper - arguments are objects so that the information can be saved and updated. **/
