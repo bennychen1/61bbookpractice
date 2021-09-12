@@ -36,6 +36,44 @@ public class TestRasterAPIHandler {
     }
 
     @Test
+    public void testFromHTML() {
+        Map<String, Double> requestParams = new HashMap<>();
+
+        requestParams.put("lrlon", -122.20908713544797);
+        requestParams.put("ullon", -122.3027284165759);
+        requestParams.put("lrlat", 37.848731523430196);
+        requestParams.put("ullat", 37.88708748276975);
+        requestParams.put("w", 305.0);
+        requestParams.put("height", 300.0);
+
+        double raster_ul_lon=-122.2998046875;
+        int depth=1;
+        double raster_lr_lon=-122.2119140625;
+        double raster_lr_lat=37.82280243352756;
+        String[][]render_grid= new String[2][2];
+        render_grid[0][0] = "d1_x0_y0.png";
+        render_grid[0][1] = "d1_x1_y0.png";
+        render_grid[1][0] = "d1_x0_y1.png";
+        render_grid[1][1] = "d1_x1_y1.png";
+        double raster_ul_lat=37.892195547244356;
+        boolean query_success=true;
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put("raster_ul_lon", raster_ul_lon);
+        expectedResults.put("depth", depth);
+        expectedResults.put("raster_ul_lat", raster_ul_lat);
+        expectedResults.put("raster_lr_lat", raster_lr_lat);
+        expectedResults.put("raster_lr_lon", raster_lr_lon);
+        expectedResults.put("render_grid", render_grid);
+        expectedResults.put("query_success", query_success);
+
+        assertEquals("Your results did not match the expected results for input "
+                + mapToString(requestParams) + ".\n", expectedResults, rasterer.processRequest(requestParams, null));
+
+    }
+
+    @Test
     public void testProcessRequests() throws Exception {
         List<Map<String, Double>> testParams = paramsFromFile();
         List<Map<String, Object>> expectedResults = resultsFromFile();
