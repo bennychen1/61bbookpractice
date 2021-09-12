@@ -131,6 +131,16 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         boolean query_success = true;
 
+        // Query_success is false if the WHOLE requested box is outside of the ROOT rectangle
+            // ULLON is east of ROOT LRLON OR LRLON is West of ROOT ULLON OR
+                // ULLAT is south of ROOT LRLAT or LRLAT is north of ROOT ULLAT
+        // Can have partial result like so:
+            // If requested lrlon is east of ROOT LRLon, then j should stop at sqrt(numTiles) - 1
+                // 64 squares, 0-7 tile number, then j should stop at 7
+            // If requested ullon is west of ROOT ULLON, then j should start at 0.
+            // If request ullat north of ROOT ULat, i should start at 0
+            // If request lrlat south of ROOT LRLAT, i should stop at sqrt(numTiles) - 1
+        // Why raster  lr lat does not match up
         if (ullon < ROOT_ULLON || ullat > ROOT_ULLAT // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
                 || lrlon > ROOT_LRLON || lrlat < ROOT_LRLAT) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
             query_success = false;
