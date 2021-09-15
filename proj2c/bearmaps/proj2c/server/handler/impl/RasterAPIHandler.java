@@ -188,6 +188,24 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         Double endTileIndexIDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
         Double endTileIndexJDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
 
+        //Check if starts or ends exceed ROOT boundaries
+        if (ullon < ROOT_ULLON) {
+            startTileIndexIDouble = 0.0;
+        }
+
+        if (lrlon > ROOT_LRLON) {
+            endTileIndexIDouble = Math.sqrt(totalNumTiles) - 1;
+        }
+
+        if (ullat > ROOT_ULLAT) {
+            startTileIndexJDouble = 0.0;
+        }
+
+        if (lrlat < ROOT_LRLAT) {
+            endTileIndexJDouble = Math.sqrt(totalNumTiles) - 1;
+        }
+
+
         int startTileIndexJ = startTileIndexJDouble.intValue(); //Tile number
         int startTileIndexI = startTileIndexIDouble.intValue();
         int endTileIndexJ = endTileIndexJDouble.intValue();
