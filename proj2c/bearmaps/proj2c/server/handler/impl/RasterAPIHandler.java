@@ -141,8 +141,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             // If request ullat north of ROOT ULat, i should start at 0
             // If request lrlat south of ROOT LRLAT, i should stop at sqrt(numTiles) - 1
         // Why raster  lr lat does not match up
-        if (ullon < ROOT_ULLON || ullat > ROOT_ULLAT // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
-                || lrlon > ROOT_LRLON || lrlat < ROOT_LRLAT) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
+        if (ullon > ROOT_LRLON || lrlon < ROOT_ULLON // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
+                || ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT || ullat < lrlat || ullon > lrlon) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
             query_success = false;
         }
 
