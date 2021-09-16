@@ -131,6 +131,17 @@ public class TestRasterAPIHandler {
         assertEquals(ROOT_ULLAT, results.get("raster_ul_lat"));
         assertEquals(ROOT_LRLAT, results.get("raster_lr_lat"));
 
+        requestParams.put("lrlon", -122.2930);
+        requestParams.put("ullon", -122.4555);
+        requestParams.put("ullat", 37.8712);
+        requestParams.put("lrlat", 37.8362);
+        requestParams.put("w", 325.0);
+
+        results = rasterer.processRequest(requestParams, null);
+
+        assertEquals(0, results.get("depth"));
+        assertArrayEquals(new String[][]{{"d0_x0_y0"}}, (String[][]) results.get("render_grid"));
+
     }
 
     private List<Map<String, Double>> paramsFromFile() throws Exception {
