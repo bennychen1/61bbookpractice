@@ -144,6 +144,14 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         if (ullon > ROOT_LRLON || lrlon < ROOT_ULLON // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
                 || ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT || ullat < lrlat || ullon > lrlon) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
             query_success = false;
+            results.put("render_grid", 1);
+            results.put("raster_ul_lon", 2);
+            results.put("raster_lr_lon", 2);
+            results.put("raster_ul_lat", 2);
+            results.put("raster_lr_lat", 2);
+            results.put("depth", 1);
+            results.put("query_succes", false);
+            return results;
         }
 
         results.put("query_success", query_success);
@@ -227,22 +235,27 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         // If starting tile lon-wise is 1, and end tile is 3, then there should be 3 -2 + 1 = 3 tiles (1, 2, 3)
         String[][] images = new String[endTileIndexJ - startTileIndexJ + 1][endTileIndexI - startTileIndexI +1];
 
-        String depthString = "d" + String.valueOf(depth);
+        if (depth == 0) {
+            images[0] = new String[]{"d0_x0_y0"};
+        } else {
 
-        // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
-        int imagesIndexJ = 0;
-        for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
-            int imagesIndexI = 0;
-            for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
-                images[imagesIndexJ][imagesIndexI] = depthString + "_x" + i + "_y" + j + ".png";
-                imagesIndexI = imagesIndexI + 1;
+            String depthString = "d" + String.valueOf(depth);
+
+            // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
+            int imagesIndexJ = 0;
+            for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
+                int imagesIndexI = 0;
+                for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
+                    images[imagesIndexJ][imagesIndexI] = depthString + "_x" + i + "_y" + j + ".png";
+                    imagesIndexI = imagesIndexI + 1;
+                }
+                imagesIndexJ = imagesIndexJ + 1;
+                /**
+                 for each j
+                 can just add depthString + xi + yj to the images array
+                 **/
+
             }
-            imagesIndexJ = imagesIndexJ + 1;
-            /**
-            for each j
-                can just add depthString + xi + yj to the images array
-             **/
-
         }
 
         results.put("render_grid", images);
