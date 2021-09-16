@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.StringJoiner;
 import java.util.Arrays;
 
+import static bearmaps.proj2c.utils.Constants.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -90,6 +91,46 @@ public class TestRasterAPIHandler {
                          + mapToString(params) + ".\n";
             checkParamsMap(msg, expected, actual);
         }
+    }
+
+    @Test
+    public void testCornerCases() throws Exception {
+        double ullon = -122.4;
+        double ullat = 37.877266154010954;
+        double lrlon = -122.22275132672245;
+        double lrlat = 37.85829260830337;
+        double w = 613.0;
+        double h = 676.0;
+
+        Map<String, Double> requestParams = new HashMap<>();
+        requestParams.put("ullon", ullon);
+        requestParams.put("ullat", ullat);
+        requestParams.put("lrlon", lrlon);
+        requestParams.put("lrlat", lrlat);
+        requestParams.put("w", w);
+        requestParams.put("h", h);
+
+        Map<String, Object> results = rasterer.processRequest(requestParams, null);
+
+        // Should start at left edge
+        assertEquals(ROOT_ULLON, results.get("raster_ul_lon"));
+
+        requestParams.put("ullon", -122.3125);
+        requestParams.put("lrlon", -121.0562);
+
+        results = rasterer.processRequest(requestParams, null);
+
+        // Should end at right edge
+        assertEquals(ROOT_LRLON, results.get("raster_lr_lon"));
+
+        requestParams.put("ullat", 38.2);
+        requestParams.put("lrlat", 36.2);
+
+        results = rasterer.processRequest(requestParams, null);
+
+        assertEquals(ROOT_ULLAT, results.get("raster_ul_lat"));
+        assertEquals(ROOT_LRLAT, results.get("raster_lr_lat"));
+
     }
 
     private List<Map<String, Double>> paramsFromFile() throws Exception {
