@@ -14,11 +14,28 @@ import java.util.*;
  * @author Alan Yao, Josh Hug, ________
  */
 public class AugmentedStreetMapGraph extends StreetMapGraph {
+    //super(dbPath) - populates nodes and neighbors instance variables from StreetMapGraph
+        // nodes - each long like 318886222 is a vertex in the graph (key in the hashmap)
+            // maps to a Node object that will have the lat, lon, and name if there is one
+        // neighbors - long (vertex) as the key, then a set of edges to its neighbors
+
+    // dbPath contains the vertices and their locations
+
+    HashMap<Long, Point> nodeToPoint;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
+        // Own comment: separates the node from the vertices itself - maybe useful for the point set.
+                // actually won't have nodes and neighbors from the StreetMapGraph since they are private
+                // need to use the public get methods
         // You might find it helpful to uncomment the line below:
-        // List<Node> nodes = this.getNodes();
+        List<Node> nodes = this.getNodes();
+
+        for (Node n : nodes) {
+            nodeToPoint.put(n.id(), new Point(n.lon(), n.lat()));
+        }
+
+
     }
 
 
