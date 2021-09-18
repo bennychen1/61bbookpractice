@@ -148,6 +148,7 @@ public class TestRasterAPIHandler {
 
         results = rasterer.processRequest(requestParams, null);
         assertEquals(0, results.get("depth"));
+        assertArrayEquals(new String[][]{{"d0_x0_y0"}}, (String[][]) results.get("render_grid"));
 
     }
 
