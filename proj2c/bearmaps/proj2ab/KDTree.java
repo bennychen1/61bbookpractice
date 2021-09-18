@@ -1,8 +1,7 @@
-package bearmaps;
+package bearmaps.proj2ab;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
 import static org.junit.Assert.assertTrue;
 
 public class KDTree implements PointSet {

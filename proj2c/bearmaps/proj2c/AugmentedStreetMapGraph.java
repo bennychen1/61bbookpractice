@@ -21,7 +21,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
 
     // dbPath contains the vertices and their locations
 
-    HashMap<Long, Point> nodeToPoint;
+    HashMap<Point, Node> nodeToPoint;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -32,8 +32,12 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Node> nodes = this.getNodes();
 
         for (Node n : nodes) {
-            nodeToPoint.put(n.id(), new Point(n.lon(), n.lat()));
+            nodeToPoint.put(new Point(n.lon(), n.lat()), n);
         }
+
+        //have a KDTree instance variable and put the points in a KDTree
+        // closest would just be KDTree nearest - need to account for the nodes without neighbors
+        // don't add nodes without neighbors to the tree
 
 
     }
