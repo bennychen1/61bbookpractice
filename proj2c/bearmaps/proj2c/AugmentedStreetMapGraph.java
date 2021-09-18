@@ -1,8 +1,10 @@
 package bearmaps.proj2c;
 
+import bearmaps.hw4.WeightedEdge;
 import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.Point;
+import bearmaps.proj2ab.KDTree;
 
 import java.util.*;
 
@@ -22,6 +24,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     // dbPath contains the vertices and their locations
 
     HashMap<Point, Node> nodeToPoint;
+    KDTree k;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -29,11 +32,24 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 // actually won't have nodes and neighbors from the StreetMapGraph since they are private
                 // need to use the public get methods
         // You might find it helpful to uncomment the line below:
+        this.nodeToPoint = new HashMap<>();
         List<Node> nodes = this.getNodes();
 
         for (Node n : nodes) {
             nodeToPoint.put(new Point(n.lon(), n.lat()), n);
         }
+
+        ArrayList<Point> pointList = new ArrayList<>();
+
+        for (Point p : nodeToPoint.keySet()) {
+            Node n = this.nodeToPoint.get(p);
+            List<WeightedEdge<Long>> adjacentVertices = this.neighbors(n.id());
+            if (adjacentVertices.size() != 0) {
+                pointList.add(p);
+            }
+        }
+
+        this.k = new KDTree(pointList);
 
         //have a KDTree instance variable and put the points in a KDTree
         // closest would just be KDTree nearest - need to account for the nodes without neighbors
@@ -51,7 +67,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-        return 0;
+        Point p =  this.k.nearest(lon, lat);
+        return this.nodeToPoint.get(p).id();
     }
 
 

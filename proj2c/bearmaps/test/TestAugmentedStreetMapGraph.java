@@ -8,7 +8,7 @@ public class TestAugmentedStreetMapGraph {
     private static final String OSM_DB_PATH = "../library-sp19/data/proj2c_xml/berkeley-2019.osm.xml";
 
     @Test
-    public static void testClosest() {
+    public void testClosest() {
         AugmentedStreetMapGraph a = new AugmentedStreetMapGraph(OSM_DB_PATH);
 
         long location1 = 318886232;
