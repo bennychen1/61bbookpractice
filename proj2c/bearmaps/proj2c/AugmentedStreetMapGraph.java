@@ -5,6 +5,8 @@ import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.Point;
 import bearmaps.proj2ab.KDTree;
+import bearmaps.proj2ab.PointSet;
+import bearmaps.proj2ab.WeirdPointSet;
 
 import java.util.*;
 
@@ -24,7 +26,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     // dbPath contains the vertices and their locations
 
     HashMap<Point, Node> nodeToPoint;
-    KDTree k;
+    PointSet k;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -49,7 +51,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             }
         }
 
-        this.k = new KDTree(pointList);
+        this.k = new WeirdPointSet(pointList);
 
         //have a KDTree instance variable and put the points in a KDTree
         // closest would just be KDTree nearest - need to account for the nodes without neighbors
