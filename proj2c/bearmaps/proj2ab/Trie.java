@@ -1,4 +1,7 @@
 package bearmaps.proj2ab;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class Trie {
@@ -31,7 +34,7 @@ public class Trie {
         // find where to start
         int curChar = 0;
 
-        while (curNode.links.containsKey(key.charAt(curChar)) && curChar < key.length()) {
+        while (curChar < key.length() && curNode.links.containsKey(key.charAt(curChar))) {
             curChar = curChar + 1;
             curNode = this.root.links.get(key.charAt(curChar));
         }
@@ -45,5 +48,38 @@ public class Trie {
 
         // Add last character
         curNode.links.put(key.charAt(curChar), new Node(key.charAt(curChar), true));
+    }
+
+    // Handle length 0 in AugmentedStreetMapGraph
+    List<String> keysWithPrefix(String prefix) {
+        int curChar = 0;
+        Node curNode = this.root;
+        // find where to start
+        while (curChar < prefix.length() && curNode.links.containsKey(prefix.charAt(curChar))) {
+            curChar = curChar + 1;
+            curNode = curNode.links.get(prefix.charAt(curChar));
+        }
+        ArrayList<String> toReturn = new ArrayList<>();
+
+        if (curChar != prefix.length()) {
+            return toReturn;
+        }
+
+        if (curNode.isKey) {
+            toReturn.add(prefix);
+        }
+
+        if (curChar == prefix.length()) {
+            for (Character c : curNode.links.keySet()) {
+                String s = createString();
+                toReturn.add(s);
+            }
+        }
+
+        return toReturn;
+    }
+
+    private String createString() {
+        return null;
     }
 }
