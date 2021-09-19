@@ -4,16 +4,12 @@ import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 import edu.princeton.cs.algs4.Stopwatch;
-
-import java.util.ArrayList;
 
 
 public class ArrayHeapMinPQTest {
@@ -165,6 +161,7 @@ public class ArrayHeapMinPQTest {
         a.changePriority("Silver", 1);
     }
 
+    // Speed Test - O(logN) where N is the number of points in the data structure
     @Test
     public void testChangePrioritySpeed() {
 
@@ -209,60 +206,94 @@ public class ArrayHeapMinPQTest {
 
     }
 
+    // Shouldn't compare the speed of just the Add function between my implementation and naive implementation
+    // Naive implementation - add just adds to a list
+    // If you test with the adding after the initial number of inputs, run time decreases as the number of initial inputs increases
+        // might have to do with the proportion - numInputs + someFixedX - sumFixedX/numInputs gets smaller as numInputs increases
     @Test
     public void testAddSpeed() {
 
         int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
-        double[] runTimes = new double[6];
+        double[] runTimes = new double[inputs.length];
+        double[] naiveRunTimes = new double[inputs.length];
 
-        for (int i = 0; i < 6; i = i + 1) {
+        for (int i = 0; i < inputs.length; i = i + 1) {
+            int numInputs = inputs[i];
+            ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+            NaiveMinPQ<Integer> n = new NaiveMinPQ<>();
             Stopwatch s = new Stopwatch();
-            createArrayMinHeapPQ(inputs[i]);
-            double elapsedTime = s.elapsedTime();
-            runTimes[i] = elapsedTime;
-        }
+            for (int j = 0; j < numInputs; j = j + 1) {
+                a.add(j, Math.random() * 1000);
+               // n.add(j, Math.random() * 1000);
+            }
 
-        double[] runTimesNaive = new double[6];
+            runTimes[i] = s.elapsedTime();
 
-        for (int i = 0; i < 6; i = i + 1) {
-            Stopwatch s = new Stopwatch();
-            createNaiveMinHeapPQ(inputs[i]);
-            double elapsedTime = s.elapsedTime();
-            runTimesNaive[i] = elapsedTime;
+            /**
+            ArrayList<Integer> randomInputs = new ArrayList<>();
+
+            for (int t = numInputs; t < numInputs + 10000; t = t + 1) {
+                randomInputs.add(t);
+            }
+
+            Collections.shuffle(randomInputs);
+
+            Stopwatch sAPQ = new Stopwatch();
+            for (int k = 0; k < randomInputs.size(); k = k + 1) {
+                a.add(randomInputs.get(k), Math.random() * 1000);
+            }
+
+            runTimes[i] = sAPQ.elapsedTime();
+
+            Stopwatch sNPQ = new Stopwatch();
+            for (int k = 0; k < randomInputs.size(); k = k + 1) {
+                n.add(randomInputs.get(k), Math.random() * 1000);
+            }
+
+            naiveRunTimes[i] = sNPQ.elapsedTime(); **/
         }
 
 
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
-        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(naiveRunTimes));
 
     }
 
     @Test
     public void testRemoveSmallestSpeed() {
-        int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
-        double[] runTimes = new double[6];
+        int[] inputs = new int[]{10, 100, 1000, 10000, 100000};
+        double[] runTimes = new double[inputs.length];
+        double[] naiveRunTimes = new double[inputs.length];
 
-        for (int i = 0; i < 6; i = i + 1) {
-            ExtrinsicMinPQ<Integer> a = createArrayMinHeapPQ(inputs[i]);
-            Stopwatch s = new Stopwatch();
-            removeMinHeap(a);
-            double elapsedTime = s.elapsedTime();
-            runTimes[i] = elapsedTime;
-        }
+        for (int i = 0; i < inputs.length; i = i + 1) {
+            int numInputs = inputs[i];
+            ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
+            NaiveMinPQ<Integer> n = new NaiveMinPQ<>();
+            ArrayList<Integer> randomInputs = new ArrayList<>();
+            for (int j = 0; j < numInputs; j = j + 1) {
+                a.add(j, Math.random() * 1000);
+                n.add(j, Math.random() * 1000);
+                randomInputs.add(j);
+            }
 
-        double[] runTimesNaive = new double[6];
+            Stopwatch sAPQ = new Stopwatch();
+            for (int k = 0; k < numInputs; k = k + 1) {
+                a.removeSmallest();
+            }
 
-        for (int i = 0; i < 4; i = i + 1) {
-            ExtrinsicMinPQ<Integer> a = createNaiveMinHeapPQ(inputs[i]);
-            Stopwatch s = new Stopwatch();
-            removeMinHeap(a);
-            double elapsedTime = s.elapsedTime();
-            runTimesNaive[i] = elapsedTime;
+            runTimes[i] = sAPQ.elapsedTime();
+
+            Stopwatch sNPQ = new Stopwatch();
+            for (int k = 0; k < numInputs; k = k + 1) {
+                n.removeSmallest();
+            }
+
+            naiveRunTimes[i] = sNPQ.elapsedTime();
         }
 
 
         System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
-        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
+        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(naiveRunTimes));
     }
 
     @Test
