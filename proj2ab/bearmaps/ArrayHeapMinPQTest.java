@@ -168,43 +168,44 @@ public class ArrayHeapMinPQTest {
     @Test
     public void testChangePrioritySpeed() {
 
-        int[] inputs = new int[]{10, 100, 1000, 10000, 100000, 1000000};
+        int[] numPoints = new int[]{10, 100, 1000, 10000, 100000, 1000000};
         double[] runTimes = new double[6];
         double[] runTimesNaive = new double[6];
 
-
-        for (int i = 0; i < 6; i = i + 1) {
-            int numberItemsToChange = 1 + (int) (Math.random() * (inputs[i] - 1) + 1);
+        for (int i = 0; i < numPoints.length; i = i + 1) {
+            int thisManyPoints = numPoints[i];
             ArrayHeapMinPQ<Integer> a = new ArrayHeapMinPQ<>();
             NaiveMinPQ<Integer> npq = new NaiveMinPQ<>();
             ArrayList<Integer> randomInputs = new ArrayList<>();
-            for (int j = 0; j < inputs[i]; j = j + 1) {
+
+            for (int j = 0; j < thisManyPoints; j = j + 1) {
                 a.add(j, Math.random() * 1000);
                 npq.add(j, Math.random() * 1000);
                 randomInputs.add(j);
             }
 
-
-            Stopwatch s = new Stopwatch();
-            for (int k = 0; k < numberItemsToChange; k = k + 1) {
-                int randomIndex = (int) (Math.random() * inputs[i]);
+            Stopwatch sAPQ = new Stopwatch();
+            for (int k = 0; k < 1000000; k = k + 1) {
+                // Random int between a and b = (int) (Math.random() * ((b - a) + 1))
+                int randomIndex = (int)(Math.random() * thisManyPoints);
                 a.changePriority(randomInputs.get(randomIndex), Math.random() * 1000);
             }
 
-            double elapsedTime = s.elapsedTime();
-            runTimes[i] = elapsedTime;
+            runTimes[i] = sAPQ.elapsedTime();
 
-            Stopwatch sNaive = new Stopwatch();
-            for (int k = 0; k < numberItemsToChange; k = k + 1) {
-                int randomIndex = (int) Math.random() * inputs[i];
+            Stopwatch sNPQ = new Stopwatch();
+            for (int k = 0; k < 1000000; k = k + 1) {
+                // Random int between a and b = (int) (Math.random() * ((b - a) + 1))
+                int randomIndex = (int)(Math.random() * thisManyPoints);
                 npq.changePriority(randomInputs.get(randomIndex), Math.random() * 1000);
             }
-            double elapsedTimeNaive = sNaive.elapsedTime();
-            runTimesNaive[i] = elapsedTimeNaive;
+
+            runTimesNaive[i] = sNPQ.elapsedTime();
+
         }
 
-        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimes));
-        System.out.println("Run times for" + Arrays.toString(inputs) + "are: " + Arrays.toString(runTimesNaive));
+        System.out.println("Run times for" + Arrays.toString(numPoints) + "are: " + Arrays.toString(runTimes));
+        System.out.println("Run times for" + Arrays.toString(numPoints) + "are: " + Arrays.toString(runTimesNaive));
 
     }
 
