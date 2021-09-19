@@ -52,39 +52,47 @@ public class KDTreeTest {
 
     @Test
     public void testKDTreeSpeed() {
-        ArrayList<Point> points = new ArrayList<>();
+        int[] numPoints = new int[]{10, 100, 1000, 10000, 100000};
+        double[] timeKDTree = new double[numPoints.length];
+        double[] timeNaivePointSet = new double[numPoints.length];
 
-        Random r = new Random();
+        ArrayList<Point> callsToNearest = new ArrayList<>();
 
-        for (int i = 0; i < 10000; i = i + 1) {
-            points.add(new Point(r.nextInt(), r.nextInt()));
+        Random pointsToCall = new Random();
+
+        for (int i = 0; i < 10000000; i = i + 1) {
+            callsToNearest.add(new Point(pointsToCall.nextInt(), pointsToCall.nextInt()));
         }
 
-        KDTree k = new KDTree(points);
-        NaivePointSet n = new NaivePointSet(points);
-
-        int[] numberOfNearest = new int[]{10, 100, 1000, 10000, 100000, 1000000};
-
-        double[] timeKDTree = new double[6];
-        double[] timeNaivePointSet = new double[6];
-
-        for (int i = 0; i < 5; i = i + 1) {
-            Stopwatch s1 = new Stopwatch();
-            for (int j = 0; j < numberOfNearest[i]; j = j + 1) {
-                k.nearest(r.nextInt(), r.nextInt());
+        for (int i = 0; i < numPoints.length; i = i + 1) {
+            int thisManyPoints = numPoints[i];
+            ArrayList<Point> points = new ArrayList<>();
+            for (int j = 0; j < thisManyPoints; j = j + 1) {
+                points.add(new Point(pointsToCall.nextInt(), pointsToCall.nextInt()));
             }
+
+            KDTree k = new KDTree(points);
+            NaivePointSet nPS = new NaivePointSet(points);
+
+            Stopwatch s1 = new Stopwatch();
+            for (Point p : points) {
+                k.nearest(p.getX(), p.getY());
+            }
+
             timeKDTree[i] = s1.elapsedTime();
 
             Stopwatch s2 = new Stopwatch();
-            for (int j = 0; j < numberOfNearest[i]; j = j + 1) {
-                n.nearest(r.nextInt(), r.nextInt());
+            for (Point p : points) {
+                nPS.nearest(p.getX(), p.getY());
             }
-             timeNaivePointSet[i] = s2.elapsedTime();
+
+            timeNaivePointSet[i] = s2.elapsedTime();
+
         }
 
-        System.out.println("Time to run KDTree nearest for " + Arrays.toString(numberOfNearest) +
+        System.out.println("Time to run KDTree nearest for " + Arrays.toString(numPoints) +
                 " " + Arrays.toString(timeKDTree));
-        System.out.println("Time to run NaivePointSet nearest for " + Arrays.toString(numberOfNearest) +
+        System.out.println("Time to run NaivePointSet nearest for " + Arrays.toString(numPoints) +
                 " " + Arrays.toString(timeNaivePointSet));
     }
 }
