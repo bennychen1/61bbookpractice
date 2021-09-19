@@ -150,7 +150,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             results.put("raster_ul_lat", 2);
             results.put("raster_lr_lat", 2);
             results.put("depth", 1);
-            results.put("query_succes", false);
+            results.put("query_success", false);
             return results;
         }
 
