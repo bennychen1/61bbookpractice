@@ -40,11 +40,14 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         // You might find it helpful to uncomment the line below:
         this.nodeToPoint = new HashMap<>();
         List<Node> nodes = this.getNodes();
+        this.cleanStringToActual = new HashMap<>();
+        this.t = new Trie();
 
         for (Node n : nodes) {
             nodeToPoint.put(new Point(n.lon(), n.lat()), n);
             if (n.name() != null) {
                 cleanStringToActual.put(n.name(), cleanString(n.name()));
+                t.add(cleanString(n.name()));
             }
         }
 
@@ -90,7 +93,12 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        ArrayList<String> prefixResults = (ArrayList<String>) this.t.keysWithPrefix(prefix);
+        ArrayList<String> toReturn = new ArrayList<>();
+        for (String s : prefixResults) {
+            toReturn.add(this.cleanStringToActual.get(s));
+        }
+        return toReturn;
     }
 
     /**
