@@ -35,15 +35,20 @@ public class Trie {
         int curChar = 0;
 
         while (curChar < key.length() && curNode.links.containsKey(key.charAt(curChar))) {
+            curNode = curNode.links.get(key.charAt(curChar));
             curChar = curChar + 1;
-            curNode = this.root.links.get(key.charAt(curChar));
+        }
+
+        if (curChar == key.length()) {
+            curNode.isKey = true;
+            return;
         }
 
         // Add up to last character
         while (curChar < key.length() - 1) {
             curNode.links.put(key.charAt(curChar), new Node(key.charAt(curChar), false));
-            curChar = curChar + 1;
             curNode = curNode.links.get(key.charAt(curChar));
+            curChar = curChar + 1;
         }
 
         // Add last character
@@ -56,8 +61,8 @@ public class Trie {
         Node curNode = this.root;
         // find where to start
         while (curChar < prefix.length() && curNode.links.containsKey(prefix.charAt(curChar))) {
-            curChar = curChar + 1;
             curNode = curNode.links.get(prefix.charAt(curChar));
+            curChar = curChar + 1;
         }
         ArrayList<String> toReturn = new ArrayList<>();
 
@@ -69,17 +74,22 @@ public class Trie {
             toReturn.add(prefix);
         }
 
-        if (curChar == prefix.length()) {
-            for (Character c : curNode.links.keySet()) {
-                String s = createString();
-                toReturn.add(s);
-            }
+        for (Character c : curNode.links.keySet()) {
+            ArrayList<String> result = new ArrayList<>();
+            toReturn.addAll(createString(prefix, curNode.links.get(c), result));
         }
 
         return toReturn;
     }
 
-    private String createString() {
-        return null;
+    private List<String> createString(String s, Node curNode,ArrayList<String> result) {
+        if (curNode.isKey) {
+            result.add(s + curNode.c);
+        }
+
+        for (Character c : curNode.links.keySet()) {
+            createString(s + curNode.c, curNode.links.get(c), result);
+        }
+        return result;
     }
 }
