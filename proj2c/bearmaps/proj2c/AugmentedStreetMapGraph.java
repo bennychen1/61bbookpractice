@@ -93,7 +93,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        ArrayList<String> prefixResults = (ArrayList<String>) this.t.keysWithPrefix(prefix);
+        ArrayList<String> prefixResults = (ArrayList<String>) this.t.keysWithPrefix(cleanString(prefix));
         ArrayList<String> toReturn = new ArrayList<>();
         for (String s : prefixResults) {
             toReturn.add(this.cleanStringToActual.get(s));
