@@ -24,11 +24,11 @@ public class Trie {
         }
     }
 
-    Trie() {
+    public Trie() {
         this.root = new Node(Character.MIN_VALUE, false);
     }
 
-    void add(String key) {
+    public void add(String key) {
         Node curNode = this.root;
 
         // find where to start
@@ -56,7 +56,7 @@ public class Trie {
     }
 
     // Handle length 0 in AugmentedStreetMapGraph
-    List<String> keysWithPrefix(String prefix) {
+    public List<String> keysWithPrefix(String prefix) {
         int curChar = 0;
         Node curNode = this.root;
         // find where to start
