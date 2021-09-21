@@ -46,7 +46,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         for (Node n : nodes) {
             nodeToPoint.put(new Point(n.lon(), n.lat()), n);
             if (n.name() != null) {
-                cleanStringToActual.put(n.name(), cleanString(n.name()));
+                cleanStringToActual.put(cleanString(n.name()), n.name());
                 t.add(cleanString(n.name()));
             }
         }
