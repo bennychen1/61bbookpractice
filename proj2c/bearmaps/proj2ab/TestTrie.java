@@ -46,6 +46,9 @@ public class TestTrie {
         result.add("stack");
         result.add("st");
 
+        // If you use assertEquals(two arraylist), it will consider the order which makes sense since an ArrayList is an array.
+        // Use workaround or use a different data structure (hash set)
+
         ArrayList<String> actual = (ArrayList<String>)t.keysWithPrefix("st");
 
         assertTrue(result.size() == actual.size() && result.containsAll(actual));
