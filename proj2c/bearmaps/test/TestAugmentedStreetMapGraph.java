@@ -72,9 +72,18 @@ public class TestAugmentedStreetMapGraph {
         }
 
         System.out.println(Arrays.toString(time));
+    }
 
+    @Test
+    public void testPrefix() {
+        AugmentedStreetMapGraph a = new AugmentedStreetMapGraph(OSM_DB_PATH);
+        a.getLocationsByPrefix("m");
+    }
 
-
+    @Test
+    public void testGetLocation() {
+        AugmentedStreetMapGraph a = new AugmentedStreetMapGraph(OSM_DB_PATH);
+        a.getLocations("Montague's Gourmet Sandwiches");
     }
 
 }

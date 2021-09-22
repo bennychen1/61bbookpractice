@@ -30,6 +30,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     PointSet k;
     Trie t;
     HashMap<String, String> cleanStringToActual;
+    Hashtable<String, List<Node>> cleanStringToNodes;
 
 
     public AugmentedStreetMapGraph(String dbPath) {
@@ -42,12 +43,19 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Node> nodes = this.getNodes();
         this.cleanStringToActual = new HashMap<>();
         this.t = new Trie();
+        this.cleanStringToNodes = new Hashtable<>();
 
         for (Node n : nodes) {
             nodeToPoint.put(new Point(n.lon(), n.lat()), n);
             if (n.name() != null) {
-                cleanStringToActual.put(cleanString(n.name()), n.name());
-                t.add(cleanString(n.name()));
+                String cleanedString = cleanString(n.name());
+                cleanStringToActual.put(cleanedString, n.name());
+                t.add(cleanedString);
+                if (!cleanStringToNodes.contains(cleanedString)) {
+                    cleanStringToNodes.put(cleanedString, new ArrayList<Node>());
+                }
+
+                cleanStringToNodes.get(cleanedString).add(n);
             }
         }
 
@@ -115,7 +123,20 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        ArrayList<Node> results = (ArrayList<Node>) cleanStringToNodes.get(cleanString(locationName));
+        List<Map<String, Object>> s = new ArrayList<Map<String, Object>>();
+        ArrayList<Map<String, Object>> toReturn = new ArrayList<>();
+        // If you need to return Set<Map>, then the variable to be returned should be something like
+            // HashSet<Map> - the interior object is still abstract. 
+        for (Node n : results) {
+            HashMap<String, Object> curResults = new HashMap<>();
+            curResults.put("lat", n.lat());
+            curResults.put("lon", n.lon());
+            curResults.put("name", n.name());
+            curResults.put("id", n.id());
+            toReturn.add(curResults);
+        }
+        return toReturn;
     }
 
 
