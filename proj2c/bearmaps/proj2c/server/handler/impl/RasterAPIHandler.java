@@ -129,8 +129,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double ullat = requestParams.get("ullat");
         double w = requestParams.get("w");
 
-        boolean query_success = true;
-
         // Query_success is false if the WHOLE requested box is outside of the ROOT rectangle
             // ULLON is east of ROOT LRLON OR LRLON is West of ROOT ULLON OR
                 // ULLAT is south of ROOT LRLAT or LRLAT is north of ROOT ULLAT
@@ -141,24 +139,28 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             // If request ullat north of ROOT ULat, i should start at 0
             // If request lrlat south of ROOT LRLAT, i should stop at sqrt(numTiles) - 1
         // Why raster  lr lat does not match up
-        if (ullon > ROOT_LRLON || lrlon < ROOT_ULLON // ULLON is to west of Root ULLON, ULLat is north Root ULLat,
-                || ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT || ullat < lrlat || ullon > lrlon) { // LRLon is east of Root LRLon, LRLAT is south of ROOT LRLAT
-            query_success = false;
-            results.put("render_grid", 1);
-            results.put("raster_ul_lon", 2);
-            results.put("raster_lr_lon", 2);
-            results.put("raster_ul_lat", 2);
-            results.put("raster_lr_lat", 2);
+
+        boolean lonOffMap = ullon > ROOT_LRLON || lrlon < ROOT_ULLON;
+        boolean latOffMap = ullat < ROOT_LRLAT || lrlat > ROOT_ULLAT;
+        boolean invalidRequestBox = ullat < lrlat || ullon > lrlon;
+
+        if (lonOffMap || latOffMap || invalidRequestBox) {
+            results.put("render_grid", new String[][]{{"d0_x0_y0.png"}});
+            results.put("raster_ul_lon", ROOT_ULLON);
+            results.put("raster_lr_lon", ROOT_LRLON);
+            results.put("raster_ul_lat", ROOT_ULLAT);
+            results.put("raster_lr_lat", ROOT_LRLAT);
             results.put("depth", 1);
             results.put("query_success", false);
             return results;
         }
 
-        results.put("query_success", query_success);
+        results.put("query_success", true);
 
         double requestlondpp = (lrlon - ullon) / w;
 
         // Find the right depth - the greatest depth LonDPP that is less than request LonDPP
+        // LonDPP that is just under request lonDPP
         int depth = 0;
 
         while (requestlondpp <= depthLonDPP[depth]) { // stop once depth Lon DPP is < request LonDPP
@@ -170,14 +172,9 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         results.put("depth", depth);
 
-        int totalNumTiles;
+        int totalNumTiles = ((Double) Math.pow(4, depth)).intValue();
 
-        if (depth == 0) {
-            totalNumTiles = 1;
-        } else {
-            Double numAsDouble = Math.pow(4, depth); // example: depth 3 grid is divided into 64 even tiles
-            totalNumTiles = numAsDouble.intValue();
-        }
+
 
         // Each tile will cover the total lon/lat divided by the number of tiles
         // Invariant: |LRLON| > |ULLON|, ULLAT > LRLAT
@@ -195,6 +192,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         Double startTileIndexJDouble = Math.abs(ROOT_ULLAT - ullat) / eachTileLat;
         Double endTileIndexIDouble = Math.abs(ROOT_ULLON - lrlon) / eachTileLon;
         Double endTileIndexJDouble = Math.abs(ROOT_ULLAT - lrlat) / eachTileLat;
+
 
         //Check if starts or ends exceed ROOT boundaries
         if (ullon < ROOT_ULLON) {
@@ -239,14 +237,21 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             images[0] = new String[]{"d0_x0_y0"};
         } else {
 
-            String depthString = "d" + String.valueOf(depth);
 
             // (1, 2), (1,3) etc; maybe dictionary or hashmap(1 -> 2, 3, 4, 5, etc then combine later)
             int imagesIndexJ = 0;
             for (int j = startTileIndexJ; j <= endTileIndexJ; j = j + 1) {
                 int imagesIndexI = 0;
                 for (int i = startTileIndexI; i <= endTileIndexI; i = i + 1) {
-                    images[imagesIndexJ][imagesIndexI] = depthString + "_x" + i + "_y" + j + ".png";
+                    StringBuilder depthString = new StringBuilder("d");
+                    depthString.append(depth);
+                    depthString.append("_x");
+                    depthString.append(i);
+                    depthString.append("_y");
+                    depthString.append(j);
+                    depthString.append(".png");
+
+                    images[imagesIndexJ][imagesIndexI] = depthString.toString();
                     imagesIndexI = imagesIndexI + 1;
                 }
                 imagesIndexJ = imagesIndexJ + 1;
