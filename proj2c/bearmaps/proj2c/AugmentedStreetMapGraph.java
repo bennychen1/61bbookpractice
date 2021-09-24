@@ -127,7 +127,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         List<Map<String, Object>> s = new ArrayList<Map<String, Object>>();
         ArrayList<Map<String, Object>> toReturn = new ArrayList<>();
         // If you need to return Set<Map>, then the variable to be returned should be something like
-            // HashSet<Map> - the interior object is still abstract. 
+            // HashSet<Map> - the interior object is still abstract.
         for (Node n : results) {
             HashMap<String, Object> curResults = new HashMap<>();
             curResults.put("lat", n.lat());
