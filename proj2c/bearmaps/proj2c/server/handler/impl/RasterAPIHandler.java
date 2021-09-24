@@ -163,7 +163,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         // LonDPP that is just under request lonDPP
         int depth = 0;
 
-        while (requestlondpp <= depthLonDPP[depth]) { // stop once depth Lon DPP is < request LonDPP
+        while (requestlondpp < depthLonDPP[depth]) { // stop once depth Lon DPP is < request LonDPP
             if (depth == 7) {
                 break;
             }
