@@ -55,30 +55,40 @@ public class Router {
         // first direction - x -> y get bearing between x and y
         /* fill in for part IV */
 
-        int curDirection = 0; // Begin with start
+        int initialDirection = 0;
+        int curDirection = 0;// Begin with start
         double curDistance = 0.0;
         Long curLocation = route.get(0);
-        String curWay = g.name(curLocation);
-        double lon = g.lon(curLocation);
+        String curWay = null;
         double prevBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(curLocation),
                 g.lat(curLocation), g.lat(curLocation));
         List<NavigationDirection> result = new ArrayList<>();
 
-        for (int i = 1; i < route.size() - 1; i = i + 1) {
+        for (int i = 1; i < route.size(); i = i + 1) {
+            // if get to last node, then add to result
             Long nextLocation = route.get(i);
             double curBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(nextLocation),
                     g.lat(curLocation), g.lat(nextLocation));
             int newDirection = NavigationDirection.getDirection(prevBearing, curBearing);
+            WeightedEdge<Long> curEdge = null;
             for (WeightedEdge<Long> e : g.neighbors(curLocation)) {
                 if (e.to().equals(nextLocation)) {
+                    curEdge = e;
                     curDistance = curDistance + e.weight();
                     break;
                 }
             }
+            if (curWay == null) {
+                curWay = curEdge.getName();
+            }
+            if (curDirection == 0) {
+                curDirection = newDirection;
+            }
             if (newDirection == curDirection) {
-                if (!g.name(nextLocation).equals(g.name(curLocation))) {
-                    result.add(NavigationDirection.fromString(directionString(curDirection, curWay,
-                            curDistance)));
+                if (!curWay.equals(curEdge.getName())) {
+                    String directionString = directionString(curDirection, curWay,
+                            curDistance);
+                    result.add(NavigationDirection.fromString(directionString));
                     curDirection = newDirection;
                     curDistance = 0.0;
                 }
@@ -92,7 +102,8 @@ public class Router {
             }
 
             curLocation = nextLocation;
-            curWay = g.name(nextLocation);
+            curWay = curEdge.getName();
+            curDirection = newDirection;
         }
 
         return result;

@@ -21,6 +21,7 @@ public class TestDirections {
     private static final int NUM_TESTS = 8;
     private static final String OSM_DB_PATH = "../library-sp19/data/proj2c_xml/berkeley-2019.osm.xml";
     private static AugmentedStreetMapGraph graph;
+    private static final String OSM_DB_PATH_SMALL = "../library-sp19/data/proj2c_xml/tiny-clean.osm.xml";
 
     @Before
     public void setUp() throws Exception {
@@ -29,6 +30,7 @@ public class TestDirections {
 
     @Test
     public void testDirections() {
+        AugmentedStreetMapGraph g = new AugmentedStreetMapGraph(OSM_DB_PATH_SMALL);
         List<Long> path = new ArrayList<>();
         path.add(760706748L);
         path.add(3178363987L);
