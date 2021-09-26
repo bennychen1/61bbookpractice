@@ -140,7 +140,7 @@ public class TestRasterAPIHandler {
         results = rasterer.processRequest(requestParams, null);
 
         assertEquals(0, results.get("depth"));
-        assertArrayEquals(new String[][]{{"d0_x0_y0"}}, (String[][]) results.get("render_grid"));
+        assertArrayEquals(new String[][]{{"d0_x0_y0.png"}}, (String[][]) results.get("render_grid"));
 
         requestParams.put("w", 100.0);
         requestParams.put("lrlon", -122.23);
@@ -148,7 +148,31 @@ public class TestRasterAPIHandler {
 
         results = rasterer.processRequest(requestParams, null);
         assertEquals(0, results.get("depth"));
-        assertArrayEquals(new String[][]{{"d0_x0_y0"}}, (String[][]) results.get("render_grid"));
+        assertArrayEquals(new String[][]{{"d0_x0_y0.png"}}, (String[][]) results.get("render_grid"));
+
+    }
+
+    @Test
+    public void testCorrectDepth() {
+        double lrlon = -122.2341865897522;
+        double ullon = -122.2775740027771;
+        double lrlat = 37.8489039094583;
+        double ullat = 37.87116527455201;
+        double w = 1011.0;
+        double h = 657.0;
+
+        HashMap<String, Double> request = new HashMap<>();
+
+        request.put("lrlon", lrlon);
+        request.put("ullon", ullon);
+        request.put("lrlat", lrlat);
+        request.put("ullat", ullat);
+        request.put("w", w);
+        request.put("h", h);
+
+
+        Map<String, Object> results = rasterer.processRequest(request, null);
+        assertEquals(3, results.get("depth"));
 
     }
 
