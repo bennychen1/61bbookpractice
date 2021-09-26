@@ -1,9 +1,13 @@
 package bearmaps.proj2c;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import bearmaps.hw4.WeightedEdge;
 import bearmaps.hw4.WeirdSolver;
 
 
@@ -37,12 +41,80 @@ public class Router {
      * @param g The graph to use.
      * @param route The route to translate into directions. Each element
      *              corresponds to a node from the graph in the route.
-     * @return A list of NavigatiionDirection objects corresponding to the input
+     * @return A list of NavigationDirection objects corresponding to the input
      * route.
      */
     public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g, List<Long> route) {
+        //route - will be a list of nodes (by their id) that are along the route
+        //first node - run bearing with both lat and lons as the starting node's lat and lon
+        // nodes x, y, z, w - previous bearing is bearing(x, y), current bearing is bearing(y, z)
+                // put this in get direction
+        // get distances - x -> y, iterate through neighbors of x until you see x-y edge. get the weight.
+        // Have variable for distance and one to keep track of current way (straight, turn, etc)
+                //reset distance when the current way changes
+        // first direction - x -> y get bearing between x and y
         /* fill in for part IV */
-        return null;
+
+        int curDirection = 0; // Begin with start
+        double curDistance = 0.0;
+        Long curLocation = route.get(0);
+        String curWay = g.name(curLocation);
+        double lon = g.lon(curLocation);
+        double prevBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(curLocation),
+                g.lat(curLocation), g.lat(curLocation));
+        List<NavigationDirection> result = new ArrayList<>();
+
+        for (int i = 1; i < route.size() - 1; i = i + 1) {
+            Long nextLocation = route.get(i);
+            double curBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(nextLocation),
+                    g.lat(curLocation), g.lat(nextLocation));
+            int newDirection = NavigationDirection.getDirection(prevBearing, curBearing);
+            for (WeightedEdge<Long> e : g.neighbors(curLocation)) {
+                if (e.to().equals(nextLocation)) {
+                    curDistance = curDistance + e.weight();
+                    break;
+                }
+            }
+            if (newDirection == curDirection) {
+                if (!g.name(nextLocation).equals(g.name(curLocation))) {
+                    result.add(NavigationDirection.fromString(directionString(curDirection, curWay,
+                            curDistance)));
+                    curDirection = newDirection;
+                    curDistance = 0.0;
+                }
+            } else {
+                String directionString = directionString(curDirection, curWay, curDistance);
+                Router.NavigationDirection stringToAdd = NavigationDirection.fromString(directionString);
+                result.add(stringToAdd);
+
+                curDirection = newDirection;
+                curDistance = 0.0;
+            }
+
+            curLocation = nextLocation;
+            curWay = g.name(nextLocation);
+        }
+
+        return result;
+    }
+
+    /** Creates a string to put into NavigationDirection.fromString()) **/
+    private static String directionString(int curDirection, String curWay, double curDistance) {
+        String direction = NavigationDirection.DIRECTIONS[curDirection];
+        StringBuilder addDirection = new StringBuilder(direction);
+        addDirection.append(" on ");
+        String addWay;
+        if (curWay == null) {
+            addWay = NavigationDirection.UNKNOWN_ROAD;
+        } else {
+            addWay = curWay;
+        }
+        addDirection.append(addWay);
+        addDirection.append(" and continue for ");
+        addDirection.append(curDistance);
+        addDirection.append(" miles");
+
+        return addDirection.toString();
     }
 
     /**

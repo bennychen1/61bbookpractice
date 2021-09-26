@@ -28,6 +28,26 @@ public class TestDirections {
     }
 
     @Test
+    public void testDirections() {
+        List<Long> path = new ArrayList<>();
+        path.add(760706748L);
+        path.add(3178363987L);
+        path.add(4422378712L);
+        List<Router.NavigationDirection> expected = new ArrayList<>();
+
+        Router.NavigationDirection nd1 = Router.NavigationDirection.fromString("Start on Centennial Drive " +
+                "and continue for 0.728 miles");
+        Router.NavigationDirection nd2 = Router.NavigationDirection.fromString("Turn left on Stadium Rim Way and " +
+                "continue for 0.085 miles.");
+        expected.add(nd1);
+        expected.add(nd2);
+
+        List<Router.NavigationDirection> actual = Router.routeDirections(graph, path);
+        assertEquals(expected.get(0).toString(), actual.get(0).toString());
+        assertEquals(expected.get(1).toString(), actual.get(1).toString());
+    }
+
+    @Test
     public void testRouteDirections() throws Exception {
         List<List<Long>> paths = pathsFromFile();
         List<List<Router.NavigationDirection>> expectedResults = resultsFromFile();
