@@ -29,24 +29,55 @@ public class TestDirections {
     }
 
     @Test
-    public void testDirections() {
-        AugmentedStreetMapGraph g = new AugmentedStreetMapGraph(OSM_DB_PATH_SMALL);
+    public void testDirectionsSimple() {
         List<Long> path = new ArrayList<>();
         path.add(760706748L);
         path.add(3178363987L);
         path.add(4422378712L);
         List<Router.NavigationDirection> expected = new ArrayList<>();
 
-        Router.NavigationDirection nd1 = Router.NavigationDirection.fromString("Start on Centennial Drive " +
-                "and continue for 0.728 miles");
-        Router.NavigationDirection nd2 = Router.NavigationDirection.fromString("Turn left on Stadium Rim Way and " +
-                "continue for 0.085 miles.");
+        Router.NavigationDirection nd1 = Router.NavigationDirection.fromString("Start on Centennial Drive and continue for 0.018 miles.");
+
         expected.add(nd1);
-        expected.add(nd2);
 
         List<Router.NavigationDirection> actual = Router.routeDirections(graph, path);
         assertEquals(expected.get(0).toString(), actual.get(0).toString());
-        assertEquals(expected.get(1).toString(), actual.get(1).toString());
+    }
+
+    @Test
+    public void testDirectionStraight() {
+        AugmentedStreetMapGraph a = new AugmentedStreetMapGraph(OSM_DB_PATH_SMALL);
+
+        List<Long> path = new ArrayList<>();
+
+        long node1 = 11L;
+        long node2 = 22L;
+
+        path.add(node1);
+        path.add(node2);
+
+        List<Router.NavigationDirection> expected = new ArrayList<>();
+        String expectedRoute = "Start on 11/21 connector road and continue for 8.799 miles.";
+        expected.add(Router.NavigationDirection.fromString(expectedRoute));
+
+        List<Router.NavigationDirection> actual = Router.routeDirections(a, path);
+
+        String expectedDirection = expected.get(0).toString();
+        String actualDirection = actual.get(0).toString();
+
+        assertEquals(expectedDirection, actualDirection);
+
+        long node3 = 55L;
+        path.add(node3);
+
+        String expectedRoute1 = "Go straight on scenic 22/55/63/66 highway and continue for 10 miles.";
+        expected.add(Router.NavigationDirection.fromString(expectedRoute1));
+
+        actual = Router.routeDirections(a, path);
+
+        String expectedDirection1 = expected.get(1).toString();
+        String actualDirection1 = actual.get(1).toString();
+        assertEquals(expectedDirection1, actualDirection1);
     }
 
     @Test

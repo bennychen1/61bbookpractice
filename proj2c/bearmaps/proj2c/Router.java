@@ -55,20 +55,22 @@ public class Router {
         // first direction - x -> y get bearing between x and y
         /* fill in for part IV */
 
-        int initialDirection = 0;
         int curDirection = 0;// Begin with start
         double curDistance = 0.0;
         Long curLocation = route.get(0);
         String curWay = null;
+        String startWay = null;
         double prevBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(curLocation),
                 g.lat(curLocation), g.lat(curLocation));
         List<NavigationDirection> result = new ArrayList<>();
 
         for (int i = 1; i < route.size(); i = i + 1) {
-            // if get to last node, then add to result
             Long nextLocation = route.get(i);
             double curBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(nextLocation),
                     g.lat(curLocation), g.lat(nextLocation));
+            if (i == 1) {
+                prevBearing = curBearing;
+            }
             int newDirection = NavigationDirection.getDirection(prevBearing, curBearing);
             WeightedEdge<Long> curEdge = null;
             for (WeightedEdge<Long> e : g.neighbors(curLocation)) {
@@ -78,26 +80,27 @@ public class Router {
                     break;
                 }
             }
+            if (i == 1) {
+                startWay = curEdge.getName();
+            }
             if (curWay == null) {
                 curWay = curEdge.getName();
             }
-            if (curDirection == 0) {
-                curDirection = newDirection;
-            }
-            if (newDirection == curDirection) {
-                if (!curWay.equals(curEdge.getName())) {
-                    String directionString = directionString(curDirection, curWay,
-                            curDistance);
-                    result.add(NavigationDirection.fromString(directionString));
-                    curDirection = newDirection;
-                    curDistance = 0.0;
-                }
-            } else {
-                String directionString = directionString(curDirection, curWay, curDistance);
-                Router.NavigationDirection stringToAdd = NavigationDirection.fromString(directionString);
-                result.add(stringToAdd);
 
-                curDirection = newDirection;
+            if (i == route.size() - 1) {
+                if (curWay.equals(startWay)) {
+                    curDirection = 0;
+                }
+                String directionString = directionString(curDirection, curWay,
+                        curDistance);
+                result.add(NavigationDirection.fromString(directionString));
+                return result;
+            }
+
+            if (!curWay.equals(curEdge.getName())) {
+                String directionString = directionString(curDirection, curWay,
+                        curDistance);
+                result.add(NavigationDirection.fromString(directionString));
                 curDistance = 0.0;
             }
 
@@ -123,7 +126,7 @@ public class Router {
         addDirection.append(addWay);
         addDirection.append(" and continue for ");
         addDirection.append(curDistance);
-        addDirection.append(" miles");
+        addDirection.append(" miles.");
 
         return addDirection.toString();
     }
@@ -194,7 +197,7 @@ public class Router {
          * @return A NavigationDirection object representing the input string.
          */
         public static NavigationDirection fromString(String dirAsString) {
-            String regex = "([a-zA-Z\\s]+) on ([\\w\\s]*) and continue for ([0-9\\.]+) miles\\.";
+            String regex = "([a-zA-Z\\s]+) on ([\\w\\s/]*) and continue for ([0-9\\.]+) miles\\.";
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(dirAsString);
             NavigationDirection nd = new NavigationDirection();
@@ -316,5 +319,12 @@ public class Router {
             x -= Math.sin(phi1) * Math.cos(phi2) * Math.cos(lambda2 - lambda1);
             return Math.toDegrees(Math.atan2(y, x));
         }
+
+    }
+
+    public static void main(String[] args) {
+        double prevBearing = NavigationDirection.bearing(0.1, 0.2,38.1, 38.2);
+        double currBearing = NavigationDirection.bearing(0.2, 0.5, 38.2,38.5);
+        System.out.println(NavigationDirection.getDirection(prevBearing, currBearing));
     }
 }
