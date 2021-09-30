@@ -70,7 +70,7 @@ public class TestDirections {
         long node3 = 55L;
         path.add(node3);
 
-        String expectedRoute1 = "Go straight on scenic 22/55/63/66 highway and continue for 10 miles.";
+        String expectedRoute1 = "Go straight on scenic 22/55/63/66 highway and continue for 26.37 miles.";
         expected.add(Router.NavigationDirection.fromString(expectedRoute1));
 
         actual = Router.routeDirections(a, path);

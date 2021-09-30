@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import bearmaps.hw4.WeightedEdge;
 import bearmaps.hw4.WeirdSolver;
+import bearmaps.hw4.streetmap.StreetMapGraph;
+import org.apache.commons.math3.geometry.spherical.twod.Vertex;
 
 
 /**
@@ -55,11 +57,15 @@ public class Router {
         // first direction - x -> y get bearing between x and y
         /* fill in for part IV */
 
+        /**
         int curDirection = 0;// Begin with start
         double curDistance = 0.0;
         Long curLocation = route.get(0);
         String curWay = null;
         String startWay = null;
+        String nextWay = null; // Example: turn left onto nextWay and continue on for x miles
+                    // For the first direction, start on curWay and continue for x miles
+                    // When would you have 2.Turn left onto X way then 3. Go straight on Y?
         double prevBearing = NavigationDirection.bearing(g.lon(curLocation), g.lon(curLocation),
                 g.lat(curLocation), g.lat(curLocation));
         List<NavigationDirection> result = new ArrayList<>();
@@ -107,9 +113,78 @@ public class Router {
             curLocation = nextLocation;
             curWay = curEdge.getName();
             curDirection = newDirection;
+        } **/
+
+        ArrayList<NavigationDirection> result = new ArrayList<>();
+
+        Long currentV = route.get(0);
+        Long currentW = route.get(1);
+
+        WeightedEdge<Long> currentWay = getCurrentEdge(currentV, currentW, g);
+
+        double currentDistance = currentWay.weight();
+        int currentDirection = 0;
+        double currentBearing = NavigationDirection.bearing(g.lon(currentV), g.lon(currentW), g.lat(currentV), g.lat(currentW));
+
+        if (route.size() == 2) {
+            NavigationDirection n = createString(currentDirection, currentWay, currentDistance);
+            result.add(n);
+            return result;
         }
 
+        for (int i = 2; i < route.size(); i = i + 1) {
+            // Add check for last node
+            currentV = currentW;
+            currentW = route.get(i);
+            WeightedEdge<Long> newWay = getCurrentEdge(currentV, currentW, g);
+
+            boolean isWayTheSame = currentWay.getName().equals(newWay.getName());
+
+            double newBearing = NavigationDirection.bearing(g.lon(currentV), g.lon(currentW),
+                    g.lat(currentV), g.lat(currentW));
+
+            if (isWayTheSame) {
+                currentDistance = currentDistance + newWay.weight();
+            } else{
+                NavigationDirection n = createString(currentDirection, currentWay, currentDistance);
+                result.add(n);
+                currentDirection = NavigationDirection.getDirection(currentBearing, newBearing);
+                currentDistance = newWay.weight();
+                currentWay = newWay;
+            }
+
+            currentBearing = newBearing;
+        }
+
+        NavigationDirection n = createString(currentDirection, currentWay, currentDistance);
+        result.add(n);
+
         return result;
+    }
+
+    private static WeightedEdge<Long> getCurrentEdge(Long v, Long w, StreetMapGraph g) {
+        WeightedEdge<Long> currentWay = null;
+        for (WeightedEdge<Long> wEdge : g.neighbors(v)) {
+            if (wEdge.to().equals(w)) {
+                currentWay = wEdge;
+            }
+        }
+
+        return currentWay;
+    }
+
+    private static NavigationDirection createString(int currentDirection, WeightedEdge<Long> currentWay
+            ,double currentDistance) {
+        String direction = NavigationDirection.DIRECTIONS[currentDirection];
+        String way = currentWay.getName();
+        StringBuilder directionString = new StringBuilder(direction);
+        directionString.append(" on ");
+        directionString.append(way);
+        directionString.append(" and continue for ");
+        directionString.append(currentDistance);
+        directionString.append(" miles.");
+        NavigationDirection n = NavigationDirection.fromString(directionString.toString());
+        return n;
     }
 
     /** Creates a string to put into NavigationDirection.fromString()) **/
