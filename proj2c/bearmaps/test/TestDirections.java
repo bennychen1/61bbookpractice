@@ -81,6 +81,29 @@ public class TestDirections {
     }
 
     @Test
+    public void testDirectionsTurn() {
+        AugmentedStreetMapGraph a = new AugmentedStreetMapGraph(OSM_DB_PATH_SMALL);
+
+        ArrayList<Long> route = new ArrayList<>();
+        route.add(22L);
+        route.add(11L);
+        route.add(41L);
+
+        List<Router.NavigationDirection> expectedDirections = new ArrayList<>();
+        String expectedDir1 = "Start on 11/21 connector road and continue for 8.799 miles.";
+        String expectedDir2 = "Sharp left on 11/41/63 southeast side highway and continue for 16.329 miles.";
+        expectedDirections.add(Router.NavigationDirection.fromString(expectedDir1));
+        expectedDirections.add(Router.NavigationDirection.fromString(expectedDir2));
+
+        List<Router.NavigationDirection> actual = Router.routeDirections(a, route);
+
+        assertEquals(expectedDirections.get(0).toString(), actual.get(0).toString());
+        assertEquals(expectedDirections.get(1).toString(), actual.get(1).toString());
+        // This doesn't work because the distance is not rounded in the actual navigation direction.
+        //assertEquals(expectedDirections, actual);
+    }
+
+    @Test
     public void testRouteDirections() throws Exception {
         List<List<Long>> paths = pathsFromFile();
         List<List<Router.NavigationDirection>> expectedResults = resultsFromFile();
