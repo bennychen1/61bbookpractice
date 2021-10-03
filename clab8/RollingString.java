@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 /**
  * A String-like class that allows users to add and remove characters in the String
  * in constant time and have a constant-time hash function. Used for the Rabin-Karp
@@ -18,7 +19,9 @@ class RollingString{
     static final int PRIMEBASE = 6113;
 
     /** The string. **/
-    StringBuilder s;
+    LinkedList<Character> s;
+
+    // Consider using a linkedlist or queue
 
     /**
      * Initializes a RollingString with a current value of String s.
@@ -27,7 +30,10 @@ class RollingString{
     public RollingString(String s, int length) {
         assert(s.length() == length);
         /* FIX ME */
-        this.s = new StringBuilder(s);
+        this.s = new LinkedList<>();
+        for (Character c : s.toCharArray()) {
+            this.s.addLast(c);
+        }
     }
 
     /**
@@ -37,8 +43,8 @@ class RollingString{
      */
     public void addChar(char c) {
         /* FIX ME */
-        s.deleteCharAt(0);
-        s.append(c);
+        this.s.removeFirst();
+        this.s.addLast(c);
     }
 
 
@@ -50,7 +56,11 @@ class RollingString{
     public String toString() {
         StringBuilder strb = new StringBuilder();
         /* FIX ME */
-        return s.toString();
+        for (int i = 0; i < this.s.size(); i = i + 1) {
+            strb.append(this.s.get(i));
+        }
+
+        return strb.toString();
     }
 
     /**
@@ -59,7 +69,7 @@ class RollingString{
      */
     public int length() {
         /* FIX ME */
-        return s.length();
+        return s.size();
     }
 
 
