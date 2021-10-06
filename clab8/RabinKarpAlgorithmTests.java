@@ -8,4 +8,14 @@ public class RabinKarpAlgorithmTests {
         String pattern = "ell";
         assertEquals(1, RabinKarpAlgorithm.rabinKarp(input, pattern));
     }
+
+    @Test
+    public void testRabinKarp() {
+        String input = "There is an elephant";
+        String pattern1 = "is a";
+        String pattern2 = "is ant";
+
+        assertEquals(-1, RabinKarpAlgorithm.rabinKarp(input, pattern2));
+        assertEquals(6, RabinKarpAlgorithm.rabinKarp(input, pattern1));
+    }
 }
