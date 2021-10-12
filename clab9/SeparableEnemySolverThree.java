@@ -28,8 +28,65 @@ public class SeparableEnemySolverThree {
             HashMap<String, Integer> marking = new HashMap<>();
             HashMap<String, HashSet<Integer>> possibleMarking = new HashMap<>();
             HashSet<String> nodes = new HashSet<>();
+            HashSet<Integer> markingLabels = new HashSet<>();
+            HashMap<Integer, Integer> enemyMarkings = new HashMap<>();
 
-            
+            enemyMarkings.put(1, 2);
+            enemyMarkings.put(2, 3);
+            enemyMarkings.put(3, 1);
+
+            markingLabels.add(1);
+            markingLabels.add(2);
+            markingLabels.add(3);
+
+
+            for (String s : this.g.labels()) {
+                marking.put(s, 0);
+                possibleMarking.put(s, markingLabels);
+                nodes.add(s);
+            }
+
+            while (nodes.size() > 0) {
+                Iterator<String> nodesIterator = nodes.iterator();
+                String startNode = nodesIterator.next();
+
+                LinkedList<String> fringe = new LinkedList<>();
+
+                fringe.addLast(startNode);
+
+                marking.put(startNode, 1);
+
+                while (fringe.size() > 0) {
+                    String curNode = fringe.pop();
+                    nodes.remove(curNode);
+                    int curNodeMark = marking.get(curNode);
+                    int markNeighbors = enemyMarkings.get(curNodeMark);
+
+                    for (String enemy : this.g.neighbors(curNode)) {
+                        if (nodes.contains(enemy)) {
+                            int enemyMarking = marking.get(enemy);
+                            HashSet<Integer> curPossibleMarkings = possibleMarking.get(enemy);
+                            if (enemyMarking == 0) {
+                                marking.put(enemy, markNeighbors);
+                                curPossibleMarkings.remove(curNodeMark);
+                                curPossibleMarkings.remove(markNeighbors);
+                            } else if (enemyMarking == curNodeMark) {
+                                if (curPossibleMarkings.size() == 0) {
+                                    return false;
+                                } else {
+                                    int updatedMarking = curPossibleMarkings.iterator().next();
+                                    marking.put(enemy, updatedMarking);
+                                    curPossibleMarkings.remove(updatedMarking);
+                                }
+                            }
+
+                            fringe.add(enemy);
+                        }
+                    }
+                }
+            }
+
+
 
             return true;
         }

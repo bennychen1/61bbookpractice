@@ -76,6 +76,7 @@ public class SeparableEnemySolverTests {
         g.connect("A", "C");
         g.connect("B", "C");
         g.connect("C", "D");
+        g.connect("D", "B");
 
         SeparableEnemySolverThree solver = new SeparableEnemySolverThree(g);
         assertEquals(false, solver.isSeparable());
