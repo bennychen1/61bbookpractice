@@ -61,4 +61,35 @@ public class SeparableEnemySolverTests {
         assertEquals(false, solver.isSeparable());
     }
 
+    @Test
+    public void testSeparableThreeinput4() throws FileNotFoundException {
+        SeparableEnemySolverThree solver = new SeparableEnemySolverThree("input/party3");
+        assertEquals(true, solver.isSeparable());
+    }
+
+    @Test
+    public void testSeparableThreeFalse() {
+        Graph g = new Graph();
+
+        g.connect("A", "B");
+        g.connect("A", "D");
+        g.connect("A", "C");
+        g.connect("B", "C");
+        g.connect("C", "D");
+
+        SeparableEnemySolverThree solver = new SeparableEnemySolverThree(g);
+        assertEquals(false, solver.isSeparable());
+    }
+
+    @Test
+    public void testSeparableThreeTrue() {
+        Graph g = new Graph();
+        g.connect("A", "B");
+        g.connect("B", "D");
+        g.connect("A", "C");
+        g.connect("C", "D");
+        SeparableEnemySolverThree solver = new SeparableEnemySolverThree(g);
+        assertEquals(true, solver.isSeparable());
+    }
+
 }
