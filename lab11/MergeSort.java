@@ -43,7 +43,14 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
         // Your code here!
-        return null;
+        Queue<Queue<Item>> qOfQ = new Queue<>();
+
+        while (!items.isEmpty()) {
+            Queue<Item> addToQ = new Queue<>();
+            addToQ.enqueue(items.dequeue());
+        }
+
+        return qOfQ;
     }
 
     /**
@@ -61,8 +68,15 @@ public class MergeSort {
      */
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
+
+        Queue<Item> combinedQ = new Queue<>();
+
+        while (!q1.isEmpty() || !q2.isEmpty()) {
+            combinedQ.enqueue(getMin(q1, q2));
+        }
+
         // Your code here!
-        return null;
+        return combinedQ;
     }
 
     /**
@@ -78,6 +92,38 @@ public class MergeSort {
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
+        if (items.size() <= 1) {
+            return items;
+        }
+
+        if (items.size() == 2) {
+            Queue<Queue<Item>> q = makeSingleItemQueues(items);
+            return mergeSortedQueues(q.dequeue(), q.dequeue());
+        }
+
+        int size = items.size();
+
+        int leftSize = 0;
+
+
+        if (size % 2 == 0) {
+            leftSize = size / 2;
+        } else {
+            leftSize = (size / 2) + 1;
+        }
+
+        int rightSize = size - leftSize;
+        
+
+        Queue<Item> left = new Queue<>();
+        Queue<Item> right = new Queue<>();
+
+
+        // merge(left)
+        //merge(right)
+        // return mergeSortedQueues(left, right)
+
+
         return items;
     }
 }

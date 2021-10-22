@@ -2,10 +2,20 @@ import edu.princeton.cs.algs4.Queue;
 
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 public class TestSortAlgs {
 
     @Test
     public void testQuickSort() {
+        Queue<String> q = new Queue<>();
+        q.enqueue("Blue");
+        q.enqueue("Green");
+        q.enqueue("Apple");
+
+        MergeSort.mergeSort(q);
+
+        assertTrue(isSorted(q));
 
     }
 
