@@ -9,17 +9,42 @@ import static org.junit.Assert.*;
 
 public class TestSortAlgs {
 
+    private final  int[] numItems = new int[]{10, 100, 1000, 10000, 100000, 1000000};
+
     @Test
     public void testQuickSort() {
+        Queue<String> q = createBasicQueue();
+        Queue<String> sortedQueue = QuickSort.quickSort(q);
+        assertTrue(isSorted(sortedQueue));
+    }
 
+    @Test
+    public void testQuickSortRandom() {
+        Queue<Integer> q = randomQueue(100);
+        Queue<Integer> sortedQueue = QuickSort.quickSort(q);
+        assertTrue(isSorted(sortedQueue));
+    }
+
+    @Test
+    public void testQuickSortSpeed() {
+        double[] time = new double[numItems.length];
+
+        for (int i = 0; i < numItems.length; i = i + 1) {
+            int currentNumItems = numItems[i];
+
+            Queue<Integer> q = randomQueue(currentNumItems);
+
+            Stopwatch s = new Stopwatch();
+            QuickSort.quickSort(q);
+            time[i] = s.elapsedTime();
+        }
+
+        System.out.println(Arrays.toString(time));
     }
 
     @Test
     public void testMergeSort() {
-        Queue<String> q = new Queue<>();
-        q.enqueue("Blue");
-        q.enqueue("Green");
-        q.enqueue("Apple");
+        Queue<String> q = createBasicQueue();
 
         Queue<String> sortedQueue = MergeSort.mergeSort(q);
 
@@ -34,11 +59,7 @@ public class TestSortAlgs {
 
     @Test
     public void testRandomIntsMergeSort() {
-        Queue<Integer> q = new Queue<>();
-
-        for (int i = 0; i < 100; i = i + 1) {
-            q.enqueue(10 + (int)(Math.random() + ((1000 - 10) + 1)));
-        }
+        Queue<Integer> q = randomQueue(100);
 
         Queue<Integer> sortedQ = MergeSort.mergeSort(q);
 
@@ -48,17 +69,12 @@ public class TestSortAlgs {
     @Test
     public void testMergeSortSpeed() {
 
-        int[] numItems = new int[]{10, 100, 1000, 10000, 100000, 1000000};
         double[] time = new double[numItems.length];
 
         for (int i = 0; i < numItems.length; i = i + 1) {
             int currentNumItems = numItems[i];
 
-            Queue<Integer> q = new Queue<>();
-
-            for (int j = 0; j < currentNumItems; j = j + 1) {
-                q.enqueue(1 + (int)(Math.random() * ((100 - 1) + 1)));
-            }
+            Queue<Integer> q = randomQueue(currentNumItems);
 
             Stopwatch s = new Stopwatch();
             MergeSort.mergeSort(q);
@@ -67,6 +83,31 @@ public class TestSortAlgs {
 
         System.out.println(Arrays.toString(time));
 
+    }
+
+    /** Returns a queue with 3 strings. */
+    public Queue<String> createBasicQueue() {
+        Queue<String> q = new Queue<>();
+        q.enqueue("Blue");
+        q.enqueue("Green");
+        q.enqueue("Apple");
+        return q;
+    }
+
+    /**
+     * Returns a queue of random ints
+     *
+     * @param size The number of random ints to put in the queue.
+     * @returns    A queue of random ints of size SIZE
+     */
+    private Queue<Integer> randomQueue(int size) {
+        Queue<Integer> q = new Queue<>();
+
+        for (int j = 0; j < size; j = j + 1) {
+            q.enqueue(1 + (int)(Math.random() * ((100 - 1) + 1)));
+        }
+
+        return q;
     }
 
     /**
