@@ -43,6 +43,51 @@ public class TestSortAlgs {
     }
 
     @Test
+    public void testQuickSortSameItems() {
+        double[] time = new double[numItems.length];
+
+        for (int i = 0; i < numItems.length; i = i + 1) {
+            int currentNumItems = numItems[i];
+
+            Queue<Integer> q = new Queue<>();
+
+            for (int j = 0; j < currentNumItems; j = j + 1) {
+                q.enqueue(10);
+            }
+
+            q.enqueue(1);
+
+            Stopwatch s = new Stopwatch();
+            QuickSort.quickSort(q);
+            time[i] = s.elapsedTime();
+        }
+
+
+        System.out.println(Arrays.toString(time));
+    }
+
+    @Test
+    public void testQuickSortAlreadySorted() {
+        double[] time = new double[numItems.length];
+
+        for (int i = 0; i < numItems.length; i = i + 1) {
+            int currentNumItems = numItems[i];
+
+            Queue<Integer> q = new Queue<>();
+
+            for (int j = 0; j < currentNumItems; j = j + 1) {
+                q.enqueue(j);
+            }
+
+            Stopwatch s = new Stopwatch();
+            QuickSort.quickSort(q);
+            time[i] = s.elapsedTime();
+        }
+
+        System.out.println(Arrays.toString(time));
+    }
+
+    @Test
     public void testMergeSort() {
         Queue<String> q = createBasicQueue();
 
@@ -83,6 +128,50 @@ public class TestSortAlgs {
 
         System.out.println(Arrays.toString(time));
 
+    }
+
+    @Test
+    public void testMergeSortSameItem() {
+        double[] time = new double[numItems.length];
+
+        for (int i = 0; i < numItems.length; i = i + 1) {
+            int currentNumItems = numItems[i];
+
+            Queue<Integer> q = new Queue<>();
+
+            for (int j = 0; j < currentNumItems; j = j + 1) {
+                q.enqueue(10);
+            }
+
+            q.enqueue(1);
+
+            Stopwatch s = new Stopwatch();
+            MergeSort.mergeSort(q);
+            time[i] = s.elapsedTime();
+        }
+
+        System.out.println(Arrays.toString(time));
+    }
+
+    @Test
+    public void testMergeSortAlreadySorted() {
+        double[] time = new double[numItems.length];
+
+        for (int i = 0; i < numItems.length; i = i + 1) {
+            int currentNumItems = numItems[i];
+
+            Queue<Integer> q = new Queue<>();
+
+            for (int j = 0; j < currentNumItems; j = j + 1) {
+                q.enqueue(j);
+            }
+
+            Stopwatch s = new Stopwatch();
+            MergeSort.mergeSort(q);
+            time[i] = s.elapsedTime();
+        }
+
+        System.out.println(Arrays.toString(time));
     }
 
     /** Returns a queue with 3 strings. */
