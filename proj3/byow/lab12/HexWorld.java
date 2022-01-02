@@ -18,15 +18,19 @@ public class HexWorld {
     /** The width of the world. **/
     int w;
 
-    /** The tile rendering engine. **/
-    TERenderer ter;
+    /** The world to render. **/
+    TETile[][] world;
 
     HexWorld(int w, int h) {
-        this.ter = new TERenderer();
         this.w = w;
         this.h = h;
+        this.world = new TETile[w][h];
 
-        ter.initialize(w, h);
+        for (int i = 0; i < w; i = i + 1) {
+            for (int j = 0; j < h; j = j + 1) {
+                world[i][j] = Tileset.NOTHING;
+            }
+        }
     }
 
     /** Draws a hexagon of length s (width of first row) with r rows at the specified x and y coordinate.
@@ -36,13 +40,9 @@ public class HexWorld {
      * @param   r   int, the height of the hexagon.
      * **/
     void addHexagon(int s, int x, int y, int r) {
-        if (s < 2 || r < 4 || !canDrawHexagon(s, x, y, r)) {
+        if (s < 2 || r < 4 || r % 2 != 0 || !canDrawHexagon(s, x, y, r)) {
             return;
         }
-
-
-
-
     }
 
     /** Helper method to check if a hexagon can be drawn within the bounds of the world.
@@ -56,9 +56,10 @@ public class HexWorld {
             return false;
         }
 
-
+        return true;
     }
 
+    /** Helper method to check if the width of the hexagon fits within the world. **/
     private boolean checkWidestPoint(int s, int x, int y, int r) {
         int addToEachSideAtWidestPoint = (r - 2) / 2;
 
@@ -67,6 +68,11 @@ public class HexWorld {
         }
 
         return true;
+    }
+
+    /** Helper method to find the row number of the widest point. **/
+    private int helperFindFirstWidestRow(int y, int r){
+        return y + (r - 2);
     }
 
     public static void main(String[] args) {
