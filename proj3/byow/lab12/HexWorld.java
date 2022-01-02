@@ -43,6 +43,29 @@ public class HexWorld {
         if (s < 2 || r < 4 || r % 2 != 0 || !canDrawHexagon(s, x, y, r)) {
             return;
         }
+
+        int numRows = r / 2;
+        int curAdd = 0;
+
+        for (int curRow = y; curRow < y + numRows; curRow = curRow + 1){
+            TETile[] currentTileArray = this.world[curRow];
+            for (int col = x - curAdd; x <= (x + s - 1) + curAdd; col = col + 1) {
+                currentTileArray[col] = Tileset.AVATAR;
+            }
+
+            curAdd = curAdd + 1;
+        }
+
+        curAdd = 0;
+
+        for (int curRow = y + r - 1; curRow > y + r - 1 - numRows; curRow = curRow - 1) {
+            TETile[] currentTileArray = this.world[curRow];
+            for (int col = x - curAdd; x <= (x + s - 1) + curAdd; col = col + 1) {
+                currentTileArray[col] = Tileset.AVATAR;
+            }
+
+            curAdd = curAdd + 1;
+        }
     }
 
     /** Helper method to check if a hexagon can be drawn within the bounds of the world.
@@ -70,10 +93,7 @@ public class HexWorld {
         return true;
     }
 
-    /** Helper method to find the row number of the widest point. **/
-    private int helperFindFirstWidestRow(int y, int r){
-        return y + (r - 2);
-    }
+
 
     public static void main(String[] args) {
         TERenderer ter = new TERenderer();
