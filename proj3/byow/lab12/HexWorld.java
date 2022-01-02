@@ -54,10 +54,7 @@ public class HexWorld {
 
         for (int curRow = y; curRow < y + numRows; curRow = curRow + 1){
             TETile[] currentTileArray = this.world[curRow];
-            for (int col = x - curAdd; col <= (x + s - 1) + curAdd; col = col + 1) {
-                currentTileArray[col] = Tileset.AVATAR;
-            }
-
+            helperDrawColumns(currentTileArray, x - curAdd, (x + s -1) + curAdd);
             curAdd = curAdd + 1;
         }
 
@@ -65,10 +62,7 @@ public class HexWorld {
 
         for (int curRow = y + r - 1; curRow > y + r - 1 - numRows; curRow = curRow - 1) {
             TETile[] currentTileArray = this.world[curRow];
-            for (int col = x - curAdd; col <= (x + s - 1) + curAdd; col = col + 1) {
-                currentTileArray[col] = Tileset.AVATAR;
-            }
-
+            helperDrawColumns(currentTileArray, x - curAdd, (x + s -1) + curAdd);
             curAdd = curAdd + 1;
         }
     }
@@ -96,6 +90,13 @@ public class HexWorld {
         }
 
         return true;
+    }
+
+    /** Helper method to draw in a row between specified columns. **/
+    private void helperDrawColumns(TETile[] tileArray, int start, int end) {
+        for (int col = start; col <= end; col = col + 1) {
+            tileArray[col] = Tileset.AVATAR;
+        }
     }
 
 
