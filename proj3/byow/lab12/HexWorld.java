@@ -33,7 +33,7 @@ public class HexWorld {
 
         for (int i = 0; i < w; i = i + 1) {
             for (int j = 0; j < h; j = j + 1) {
-                world[i][j] = Tileset.NOTHING;
+                world[i][j] = Tileset.WALL;
             }
         }
     }
@@ -52,19 +52,16 @@ public class HexWorld {
         int numRows = r / 2;
         int curAdd = 0;
 
-        for (int curRow = y; curRow < y + numRows; curRow = curRow + 1){
-            TETile[] currentTileArray = this.world[curRow];
-            helperDrawColumns(currentTileArray, x - curAdd, (x + s -1) + curAdd);
+        for (int counter = 0; counter < numRows; counter = counter + 1){
+            TETile[] currentTileArrayTop = this.world[y + counter];
+            TETile[] currentTileArrayBot = this.world[y + r - 1 - counter];
+            int startCol = x - curAdd;
+            int endCol = x + s - 1 + curAdd;
+            helperDrawColumns(currentTileArrayTop, startCol, endCol);
+            helperDrawColumns(currentTileArrayBot, startCol, endCol);
             curAdd = curAdd + 1;
         }
 
-        curAdd = 0;
-
-        for (int curRow = y + r - 1; curRow > y + r - 1 - numRows; curRow = curRow - 1) {
-            TETile[] currentTileArray = this.world[curRow];
-            helperDrawColumns(currentTileArray, x - curAdd, (x + s -1) + curAdd);
-            curAdd = curAdd + 1;
-        }
     }
 
     /** Helper method to check if a hexagon can be drawn within the bounds of the world.
@@ -103,7 +100,7 @@ public class HexWorld {
 
     public static void main(String[] args) {
         HexWorld h = new HexWorld(15, 15);
-        h.addHexagon(2, 5, 5, 4);
+        h.addHexagon(2, 5, 5, 6);
         h.ter.renderFrame(h.world);
 
 
