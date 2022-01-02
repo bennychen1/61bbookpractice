@@ -21,10 +21,15 @@ public class HexWorld {
     /** The world to render. **/
     TETile[][] world;
 
+    /** The tile engine renderer. **/
+    TERenderer ter;
+
     HexWorld(int w, int h) {
         this.w = w;
         this.h = h;
         this.world = new TETile[w][h];
+        this.ter = new TERenderer();
+        this.ter.initialize(w, h);
 
         for (int i = 0; i < w; i = i + 1) {
             for (int j = 0; j < h; j = j + 1) {
@@ -49,7 +54,7 @@ public class HexWorld {
 
         for (int curRow = y; curRow < y + numRows; curRow = curRow + 1){
             TETile[] currentTileArray = this.world[curRow];
-            for (int col = x - curAdd; x <= (x + s - 1) + curAdd; col = col + 1) {
+            for (int col = x - curAdd; col <= (x + s - 1) + curAdd; col = col + 1) {
                 currentTileArray[col] = Tileset.AVATAR;
             }
 
@@ -60,7 +65,7 @@ public class HexWorld {
 
         for (int curRow = y + r - 1; curRow > y + r - 1 - numRows; curRow = curRow - 1) {
             TETile[] currentTileArray = this.world[curRow];
-            for (int col = x - curAdd; x <= (x + s - 1) + curAdd; col = col + 1) {
+            for (int col = x - curAdd; col <= (x + s - 1) + curAdd; col = col + 1) {
                 currentTileArray[col] = Tileset.AVATAR;
             }
 
@@ -96,9 +101,9 @@ public class HexWorld {
 
 
     public static void main(String[] args) {
-        TERenderer ter = new TERenderer();
-
-        ter.initialize(5, 4);
+        HexWorld h = new HexWorld(15, 15);
+        h.addHexagon(2, 5, 5, 4);
+        h.ter.renderFrame(h.world);
 
 
     }
