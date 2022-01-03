@@ -53,12 +53,12 @@ public class HexWorld {
         int curAdd = 0;
 
         for (int counter = 0; counter < numRows; counter = counter + 1){
-            TETile[] currentTileArrayTop = this.world[y + counter];
-            TETile[] currentTileArrayBot = this.world[y + r - 1 - counter];
-            int startCol = x - curAdd;
-            int endCol = x + s - 1 + curAdd;
-            helperDrawColumns(currentTileArrayTop, startCol, endCol);
-            helperDrawColumns(currentTileArrayBot, startCol, endCol);
+            TETile[] currentTileArrayLeft = this.world[x - numRows + 1 + counter];
+            TETile[] currentTileArrayRight = this.world[x + s + numRows - 2 - counter];
+            int topCol = y + numRows + curAdd;
+            int bottomCol = y + numRows -1 - curAdd;
+            helperDrawColumns(currentTileArrayLeft, bottomCol, topCol);
+            helperDrawColumns(currentTileArrayRight, bottomCol, topCol);
             curAdd = curAdd + 1;
         }
 
@@ -99,7 +99,8 @@ public class HexWorld {
 
 
     public static void main(String[] args) {
-        HexWorld h = new HexWorld(15, 15);
+        HexWorld h = new HexWorld(15, 12);
+        h.world[5][5] = Tileset.FLOWER;
         h.addHexagon(2, 5, 5, 6);
         h.ter.renderFrame(h.world);
 
