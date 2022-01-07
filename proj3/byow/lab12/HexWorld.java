@@ -82,7 +82,7 @@ public class HexWorld {
     private boolean checkWidestPoint(int s, int x, int y, int r) {
         int addToEachSideAtWidestPoint = (r - 2) / 2;
 
-        if (x - addToEachSideAtWidestPoint < 0 || (x + s - 1) + addToEachSideAtWidestPoint >= this.w) {
+        if (y - addToEachSideAtWidestPoint < 0 || (y + s - 1) + addToEachSideAtWidestPoint >= this.w) {
             return false;
         }
 
@@ -96,12 +96,58 @@ public class HexWorld {
         }
     }
 
+    /** Draws a tessalation of 19 hexagons each with side length 3 and 6 deep starting at the given point.
+     * @param  p      HexagonPoint, the leftmost point of the bottom hexagon.
+    **/
+    private void tessalate(HexagonPoint p) {
+        HexagonPoint curPoint = p;
+        for (int i = 0; i < 4; i = i + 1) {
+            helperDrawHexagon(curPoint);
+
+        }
+    }
+
+    /** Helper method that finds the starting point of a hexagon above the provided starting point.   */
+    private HexagonPoint helperFindAbove(HexagonPoint p) {
+        int toReturnRow = p.row + 6;
+        return new HexagonPoint(toReturnRow, p.col);
+    }
+
+    /** Helper method that finds the starting point of a hexagon diagonally to the left of the starting point.   */
+    private HexagonPoint helperFindLeftDiagonal(HexagonPoint p) {
+        int toReturnRow = p.row + 3;
+        int toReturnCol = p.col - 3;
+        return new HexagonPoint(toReturnRow, toReturnCol);
+    }
+
+    /** Helper method that finds the starting point of a hexagon diagonally to the right of the starting point.   */
+    private HexagonPoint helperFindRightDiagonal(HexagonPoint p) {
+        int toReturnRow = p.row + 3;
+        int toReturnCol = p.col + 3;
+        return new HexagonPoint(toReturnRow, toReturnCol);
+    }
+
+    /** Helper to draw hexagon at the HexagonPoint of side length 3 and depth of 6. **/
+    private void helperDrawHexagon(HexagonPoint p) {
+        addHexagon(3, p.row, p.col, 6);
+    }
+
+    static class HexagonPoint {
+        int row;
+        int col;
+
+        HexagonPoint(int r, int c) {
+            this.row = r;
+            this.col = c;
+        }
+    }
 
 
     public static void main(String[] args) {
-        HexWorld h = new HexWorld(15, 12);
+        HexWorld h = new HexWorld(30, 30);
         h.world[5][5] = Tileset.FLOWER;
-        h.addHexagon(2, 5, 5, 6);
+        h.addHexagon(3, 5, 15, 6);
+        //h.tessalate(new HexWorld.HexagonPoint(5, 15));
         h.ter.renderFrame(h.world);
 
 
