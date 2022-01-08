@@ -7,6 +7,7 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * Draws a world consisting of hexagonal regions.
@@ -24,6 +25,9 @@ public class HexWorld {
     /** The tile engine renderer. **/
     TERenderer ter;
 
+    /** The random number generator to generate random tile types. **/
+    private static final Random RANDOM = new Random(2);
+
     HexWorld(int w, int h) {
         this.w = w;
         this.h = h;
@@ -39,12 +43,13 @@ public class HexWorld {
     }
 
     /** Draws a hexagon of length s (width of first row) with r rows at the specified x and y coordinate.
-     * @param   s   int, the base width of the hexagon.
-     * @param   col   int, the column index to start the hexagon bottom side.
-     * @param   row   int, the row index to start the hexagon bottom side.
-     * @param   r   int, the height of the hexagon.
+     * @param   s           int, the base width of the hexagon.
+     * @param   col         int, the column index to start the hexagon bottom side.
+     * @param   row         int, the row index to start the hexagon bottom side.
+     * @param   r           int, the height of the hexagon.
+     * @param   tileType    TETile, specifies what tile to draw.
      * **/
-    void addHexagon(int s, int col, int row, int r) {
+    void addHexagon(int s, int col, int row, int r, TETile tileType) {
         if (s < 2 || r < 4 || r % 2 != 0 || !canDrawHexagon(s, col, row, r)) {
             return;
         }
@@ -60,7 +65,7 @@ public class HexWorld {
            int topRow = row + numRows + curAdd;
            int bottomRow = row + numRows - 1 - curAdd;
 
-           helperDrawColumns(currentTileArray, bottomRow, topRow);
+           helperDrawColumns(currentTileArray, bottomRow, topRow, tileType);
 
            curAdd = iterateCurAdd(curCol, curAdd, s, col);
 
@@ -93,9 +98,9 @@ public class HexWorld {
     }
 
     /** Helper method to draw in a row between specified columns. **/
-    private void helperDrawColumns(TETile[] tileArray, int start, int end) {
+    private void helperDrawColumns(TETile[] tileArray, int start, int end, TETile tileType) {
         for (int col = start; col <= end; col = col + 1) {
-            tileArray[col] = Tileset.AVATAR;
+            tileArray[col] = tileType;
         }
     }
 
@@ -163,13 +168,16 @@ public class HexWorld {
 
     /** Helper method that draws the specified number of hexagons going upward from the starting point.
      * If numDraw is 3, then draws a total of three hexagons.
-     * @param   p       HexagonPoint representing the bottom left point to start.
-     * @param   numDraw int, the number of hexagons to draw.
+     * @param   p           HexagonPoint representing the bottom left point to start.
+     * @param   numDraw     int, the number of hexagons to draw.
      * */
     private void drawAbove(HexagonPoint p, int numDraw) {
         HexagonPoint curPoint = p;
         for (int i = 0; i < numDraw; i = i + 1) {
-            addHexagon(3, curPoint.col, curPoint.row, 6);
+
+            TETile tileType = randomTile();
+
+            addHexagon(3, curPoint.col, curPoint.row, 6, tileType);
             curPoint = helperFindAbove(curPoint);
         }
     }
@@ -188,10 +196,6 @@ public class HexWorld {
         return new HexagonPoint(toReturnCol, toReturnRow);
     }
 
-    /** Helper to draw hexagon at the HexagonPoint of side length 3 and depth of 6. **/
-    private void helperDrawHexagon(HexagonPoint p) {
-        addHexagon(3, p.col, p.row, 6);
-    }
 
     static class HexagonPoint {
         int row;
@@ -200,6 +204,21 @@ public class HexWorld {
         HexagonPoint(int c, int r) {
             this.row = r;
             this.col = c;
+        }
+    }
+
+    /** Picks a RANDOM tile with a 33% change of being
+     *  a wall, 33% chance of being a flower, and 33%
+     *  chance of being empty space.
+     */
+    private static TETile randomTile() {
+        int tileNum = RANDOM.nextInt(4);
+        switch (tileNum) {
+            case 0: return Tileset.GRASS;
+            case 1: return Tileset.FLOWER;
+            case 2: return Tileset.TREE;
+            case 3: return Tileset.SAND;
+            default: return Tileset.MOUNTAIN;
         }
     }
 
