@@ -139,6 +139,7 @@ public class HexWorld {
         HexagonPoint curPoint = p;
         for (int i = 0; i < 4; i = i + 1) {
             helperDrawHexagon(curPoint);
+            curPoint = helperFindAbove(curPoint);
 
         }
     }
@@ -146,7 +147,7 @@ public class HexWorld {
     /** Helper method that finds the starting point of a hexagon above the provided starting point.   */
     private HexagonPoint helperFindAbove(HexagonPoint p) {
         int toReturnRow = p.row + 6;
-        return new HexagonPoint(toReturnRow, p.col);
+        return new HexagonPoint(p.col, toReturnRow);
     }
 
     /** Helper method that finds the starting point of a hexagon diagonally to the left of the starting point.   */
@@ -165,14 +166,14 @@ public class HexWorld {
 
     /** Helper to draw hexagon at the HexagonPoint of side length 3 and depth of 6. **/
     private void helperDrawHexagon(HexagonPoint p) {
-        addHexagon(3, p.row, p.col, 6);
+        addHexagon(3, p.col, p.row, 6);
     }
 
     static class HexagonPoint {
         int row;
         int col;
 
-        HexagonPoint(int r, int c) {
+        HexagonPoint(int c, int r) {
             this.row = r;
             this.col = c;
         }
@@ -182,12 +183,12 @@ public class HexWorld {
     public static void main(String[] args) {
         HexWorld h = new HexWorld(30, 30);
         h.world[5][5] = Tileset.FLOWER;
-        h.addHexagon(3, 5, 6, 6);
-        h.addHexagon(3, 10, 0, 8);
-        h.addHexagon(5, 15, 15, 6);
-        h.addHexagon(3, 25, 1, 8);
-        h.addHexagon(2, 15, 23, 6);
-        //h.tessalate(new HexWorld.HexagonPoint(5, 15));
+        //h.addHexagon(3, 5, 6, 6);
+        //h.addHexagon(3, 10, 0, 8);
+        //h.addHexagon(5, 15, 15, 6);
+        //h.addHexagon(3, 25, 1, 8);
+        //h.addHexagon(2, 15, 23, 6);
+        h.tessalate(new HexWorld.HexagonPoint(5, 3));
         h.ter.renderFrame(h.world);
 
 
