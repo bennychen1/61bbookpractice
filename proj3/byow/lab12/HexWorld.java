@@ -136,10 +136,21 @@ public class HexWorld {
      * @param  p      HexagonPoint, the leftmost point of the bottom hexagon.
     **/
     private void tessalate(HexagonPoint p) {
-        HexagonPoint curPoint = p;
-        for (int i = 0; i < 4; i = i + 1) {
-            helperDrawHexagon(curPoint);
-            curPoint = helperFindAbove(curPoint);
+        HexagonPoint curLeftPoint = p;
+        HexagonPoint curRightPoint = p;
+        int numDraw = 5;
+
+        for (int i = 0; i < 3; i = i + 1) {
+            if (curLeftPoint.col == curRightPoint.col) {
+                drawAbove(curLeftPoint, 5);
+            } else {
+                drawAbove(curLeftPoint, numDraw);
+                drawAbove(curRightPoint, numDraw);
+            }
+
+            curLeftPoint = helperFindLeftDiagonal(curLeftPoint);
+            curRightPoint = helperFindRightDiagonal(curRightPoint);
+            numDraw = numDraw - 1;
 
         }
     }
@@ -150,18 +161,31 @@ public class HexWorld {
         return new HexagonPoint(p.col, toReturnRow);
     }
 
+    /** Helper method that draws the specified number of hexagons going upward from the starting point.
+     * If numDraw is 3, then draws a total of three hexagons.
+     * @param   p       HexagonPoint representing the bottom left point to start.
+     * @param   numDraw int, the number of hexagons to draw.
+     * */
+    private void drawAbove(HexagonPoint p, int numDraw) {
+        HexagonPoint curPoint = p;
+        for (int i = 0; i < numDraw; i = i + 1) {
+            addHexagon(3, curPoint.col, curPoint.row, 6);
+            curPoint = helperFindAbove(curPoint);
+        }
+    }
+
     /** Helper method that finds the starting point of a hexagon diagonally to the left of the starting point.   */
     private HexagonPoint helperFindLeftDiagonal(HexagonPoint p) {
         int toReturnRow = p.row + 3;
-        int toReturnCol = p.col - 3;
-        return new HexagonPoint(toReturnRow, toReturnCol);
+        int toReturnCol = p.col - 5;
+        return new HexagonPoint(toReturnCol, toReturnRow);
     }
 
     /** Helper method that finds the starting point of a hexagon diagonally to the right of the starting point.   */
     private HexagonPoint helperFindRightDiagonal(HexagonPoint p) {
         int toReturnRow = p.row + 3;
-        int toReturnCol = p.col + 3;
-        return new HexagonPoint(toReturnRow, toReturnCol);
+        int toReturnCol = p.col + 3 - 1 + 3;
+        return new HexagonPoint(toReturnCol, toReturnRow);
     }
 
     /** Helper to draw hexagon at the HexagonPoint of side length 3 and depth of 6. **/
@@ -181,14 +205,14 @@ public class HexWorld {
 
 
     public static void main(String[] args) {
-        HexWorld h = new HexWorld(30, 30);
+        HexWorld h = new HexWorld(50, 40);
         h.world[5][5] = Tileset.FLOWER;
         //h.addHexagon(3, 5, 6, 6);
         //h.addHexagon(3, 10, 0, 8);
         //h.addHexagon(5, 15, 15, 6);
         //h.addHexagon(3, 25, 1, 8);
         //h.addHexagon(2, 15, 23, 6);
-        h.tessalate(new HexWorld.HexagonPoint(5, 3));
+        h.tessalate(new HexWorld.HexagonPoint(20, 1));
         h.ter.renderFrame(h.world);
 
 
