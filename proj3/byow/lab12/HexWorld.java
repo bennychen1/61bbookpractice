@@ -40,38 +40,42 @@ public class HexWorld {
 
     /** Draws a hexagon of length s (width of first row) with r rows at the specified x and y coordinate.
      * @param   s   int, the base width of the hexagon.
-     * @param   x   int, the x coordinate to start the hexagon.
-     * @param   y   int, the y coordinate to start the hexagon.
+     * @param   col   int, the column index to start the hexagon bottom side.
+     * @param   row   int, the row index to start the hexagon bottom side.
      * @param   r   int, the height of the hexagon.
      * **/
-    void addHexagon(int s, int x, int y, int r) {
-        if (s < 2 || r < 4 || r % 2 != 0 || !canDrawHexagon(s, x, y, r)) {
+    void addHexagon(int s, int col, int row, int r) {
+        if (s < 2 || r < 4 || r % 2 != 0 || !canDrawHexagon(s, col, row, r)) {
             return;
         }
 
         int numRows = r / 2;
         int curAdd = 0;
+        int curCol = helperFindLeftDiagonal(col, r);
+        int endCol = helperFindRightDiagonal(col, s, r);
 
-        for (int counter = 0; counter < numRows; counter = counter + 1){
-            TETile[] currentTileArrayLeft = this.world[x - numRows + 1 + counter];
-            TETile[] currentTileArrayRight = this.world[x + s + numRows - 2 - counter];
-            int topCol = y + numRows + curAdd;
-            int bottomCol = y + numRows -1 - curAdd;
-            helperDrawColumns(currentTileArrayLeft, bottomCol, topCol);
-            helperDrawColumns(currentTileArrayRight, bottomCol, topCol);
-            curAdd = curAdd + 1;
+        for (; curCol <= endCol; curCol = curCol + 1) {
+           TETile[] currentTileArray = this.world[curCol];
+
+           int topRow = row + numRows + curAdd;
+           int bottomRow = row + numRows - 1 - curAdd;
+
+           helperDrawColumns(currentTileArray, bottomRow, topRow);
+
+           curAdd = iterateCurAdd(curCol, curAdd, s, col);
+
         }
 
     }
 
     /** Helper method to check if a hexagon can be drawn within the bounds of the world.
-     * @param   s   int, the base width of the hexagon.
-     * @param   x   int, the x coordinate to start the hexagon.
-     * @param   y   int, the y coordinate to start the hexagon.
-     * @param   r   int, the height of the hexagon.
+     * @param   s       int, the base width of the hexagon.
+     * @param   col     int, the bottom left column index to start the hexagon.
+     * @param   row     int, the row index of the bottom of the hexagon.
+     * @param   r       int, the height of the hexagon.
      * **/
-    private boolean canDrawHexagon(int s, int x, int y, int r) {
-        if (x + s > this.w || y + r > this.h || !checkWidestPoint(s, x, y, r)) {
+    private boolean canDrawHexagon(int s, int col, int row, int r) {
+        if (col + s - 1 >= this.w || row + r >= this.h || !checkWidestPoint(s, col, r)) {
             return false;
         }
 
@@ -79,10 +83,9 @@ public class HexWorld {
     }
 
     /** Helper method to check if the width of the hexagon fits within the world. **/
-    private boolean checkWidestPoint(int s, int x, int y, int r) {
-        int addToEachSideAtWidestPoint = (r - 2) / 2;
+    private boolean checkWidestPoint(int s, int col, int r) {
 
-        if (y - addToEachSideAtWidestPoint < 0 || (y + s - 1) + addToEachSideAtWidestPoint >= this.w) {
+        if (helperFindLeftDiagonal(col, r) < 0 || helperFindRightDiagonal(col, s, r) >= this.w) {
             return false;
         }
 
@@ -93,6 +96,39 @@ public class HexWorld {
     private void helperDrawColumns(TETile[] tileArray, int start, int end) {
         for (int col = start; col <= end; col = col + 1) {
             tileArray[col] = Tileset.AVATAR;
+        }
+    }
+
+    /** Helper to calculate the number of columns in the hexagon. **/
+     private int helperNumberOfColumns(int s, int r) {
+         return s + r - 2;
+     }
+
+     /** Helper to find left diagonal column. **/
+     private int helperFindLeftDiagonal(int col, int r) {
+         return col - ((r - 2)/2);
+     }
+
+    /** Helper to find right diagonal column. **/
+    private int helperFindRightDiagonal(int col, int s, int r) {
+        return col + s - 1 + ((r - 2) /2);
+    }
+
+    /** Helper function to determine how to iterate curAdd for the for loop in addHexagon. If the current
+     * column is to the left of the starting point, the increment by 1. If within the columns making up
+     * the base of the hexagon, then don't increment. After, decrement curAdd.
+     * @param  curCol       int, the current column index.
+     * @param  curValue     int, the current value of curAdd.
+     * @param  s            int, the side length of the hexagon.
+     * @param  col          int, the starting column of the hexagon.
+    */
+    private int iterateCurAdd(int curCol, int curValue, int s, int col) {
+        if (curCol < col) {
+            return curValue + 1;
+        } else if (curCol >= col && curCol < col + s - 1) {
+            return curValue;
+        } else {
+            return curValue - 1;
         }
     }
 
@@ -146,7 +182,11 @@ public class HexWorld {
     public static void main(String[] args) {
         HexWorld h = new HexWorld(30, 30);
         h.world[5][5] = Tileset.FLOWER;
-        h.addHexagon(3, 5, 15, 6);
+        h.addHexagon(3, 5, 6, 6);
+        h.addHexagon(3, 10, 0, 8);
+        h.addHexagon(5, 15, 15, 6);
+        h.addHexagon(3, 25, 1, 8);
+        h.addHexagon(2, 15, 23, 6);
         //h.tessalate(new HexWorld.HexagonPoint(5, 15));
         h.ter.renderFrame(h.world);
 
