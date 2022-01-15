@@ -2,6 +2,7 @@ package byow.Core;
 
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import byow.TileEngine.Tileset;
 
 public class Engine {
     TERenderer ter = new TERenderer();
@@ -50,6 +51,44 @@ public class Engine {
         return finalWorldFrame;
     }
 
+    /** Draw a rectangle of floor tiles at the specified width and length
+     * with the upper left corner at the specified point in a tile array.
+     * @param   tileArray   TETile[][], the tile array to draw the rectangle in.
+     * @param   width       int, the width of the rectangle. How many columns it takes up.
+     * @param   length      int, the length of the rectangle. How many rows it takes up.
+     * @param   p           Point, the point of the upper left corner of the rectangle.
+     * **/
+    public void drawRectangle(TETile[][] tileArray, int width, int length, Point p) {
+        int startRow = p.row;
+        int startCol = p.col;
+
+        int endRow = p.row - length + 1;
+        int endCol = p.col + width - 1;
+
+        for (int i = startCol; i <= endCol; i = i + 1) {
+            TETile[] currArray = tileArray[i];
+            drawRectangleColumns(currArray, endRow, startRow);
+        }
+
+
+    }
+
+    /** Draw floor tiles in the specified array from start index to end index inclusive.
+     * @param   tileArray   TETile[], the array to draw the tiles in, represents a column.
+     * @param   startRow    int, the starting index.
+     * @param   endRow      int, the ending index.
+     * **/
+    public void drawRectangleColumns(TETile[] tileArray, int startRow, int endRow) {
+
+        for (int i = startRow; i <= endRow; i = i + 1) {
+            tileArray[i] = Tileset.FLOOR;
+        }
+
+
+    }
+
+
+
     /** A Point represents a location based on row and column on the tile array. **/
     static class Point {
 
@@ -64,5 +103,24 @@ public class Engine {
             this.col = col;
         }
 
+    }
+
+    public static void main(String[] args) {
+        Engine e = new Engine();
+        Point p = new Point(5, 6);
+
+        TETile[][] tileArray = new TETile[10][10];
+        for (int i = 0; i < 10; i = i + 1) {
+            TETile[] currArray = tileArray[i];
+            for (int j = 0; j < 10; j = j + 1) {
+                currArray[j] = Tileset.SAND;
+            }
+        }
+
+        e.drawRectangle(tileArray, 2, 3, p);
+
+        TERenderer t = new TERenderer();
+        t.initialize(10, 10);
+        t.renderFrame(tileArray);
     }
 }
