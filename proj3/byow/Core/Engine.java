@@ -86,24 +86,7 @@ public class Engine {
 
 
     }
-
-
-
-    /** A Point represents a location based on row and column on the tile array. **/
-    static class Point {
-
-        /** The row index of the point. **/
-        int row;
-
-        /** The column index of the point. **/
-        int col;
-
-        Point(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
-
-    }
+    
 
     public static void main(String[] args) {
         Engine e = new Engine();
