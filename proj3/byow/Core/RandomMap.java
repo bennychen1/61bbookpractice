@@ -32,6 +32,15 @@ public class RandomMap {
     /** The length (number of rows) of the map. */
     int length;
 
+    /** An array for choosing either hallway or nothing. */
+    final String[] connectToRoom = new String[]{"Hallway", "None"};
+
+    /** An array for choosing either hallway, room, or none to connect to a hallway. */
+    final String[] connectToHallway = new String[]{"Room", "Hallway", "None"};
+
+    /** An array for choosing either a vertical or horizontal hallway. */
+    final String[] hallwayDirections = new String[]{"Horizontal", "Vertical"};
+
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
         this.roomList = new ArrayList<>();
@@ -92,7 +101,9 @@ public class RandomMap {
             for (Point potentialPoint : possibleConnectionPoints) {
                 String connectingObject = randomRoomConnection();
                 if (connectingObject.equals("Hallway")) {
+                    String direction = randomHallwayDir();
                     // make a hallway starting at point p and add it to hallway queue.
+                    // Can you have a horizontal hallway connect to top of room? 
                 } else {
                     continue;
                 }
@@ -181,10 +192,25 @@ public class RandomMap {
         return RandomUtils.uniform(ran,Math.max(this.length, this.width)) + 1;
     }
 
-    /** A helper function to randomly pick hallway or nothing */
+    /** A helper function to randomly pick hallway or nothing to connect to a room. */
     private String randomRoomConnection() {
-        return "";
+        RandomUtils.shuffle(ran, this.connectToRoom);
+        return this.connectToRoom[0];
     }
+
+    /** A helper function to randomly pick a room, another hallway, or nothing to a hallway. */
+    private String randomHallwayConnection() {
+        RandomUtils.shuffle(ran, this.connectToHallway);
+        return this.connectToHallway[0];
+    }
+
+    /** A helper function to randomly pick a vertical or horizontal hallway to connect to another hallway. */
+    private String randomHallwayDir() {
+        RandomUtils.shuffle(ran, this.hallwayDirections);
+        return this.hallwayDirections[0];
+    }
+
+
 
 
 
