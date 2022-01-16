@@ -99,11 +99,11 @@ public class RandomMap {
             Room curRoom = roomQueue.poll();
             ArrayList<Point> possibleConnectionPoints = (ArrayList<Point>) findPossibleConnections(curRoom);
             for (Point potentialPoint : possibleConnectionPoints) {
-                String connectingObject = randomRoomConnection();
+                String connectingObject = randomConnection(this.connectToRoom);
                 if (connectingObject.equals("Hallway")) {
-                    String direction = randomHallwayDir();
+                    String direction = randomConnection(this.hallwayDirections);
                     // make a hallway starting at point p and add it to hallway queue.
-                    // Can you have a horizontal hallway connect to top of room? 
+                    // Can you have a horizontal hallway connect to top of room?
                 } else {
                     continue;
                 }
@@ -198,17 +198,44 @@ public class RandomMap {
         return this.connectToRoom[0];
     }
 
-    /** A helper function to randomly pick a room, another hallway, or nothing to a hallway. */
-    private String randomHallwayConnection() {
-        RandomUtils.shuffle(ran, this.connectToHallway);
-        return this.connectToHallway[0];
+    /** A helper function to randomly pick from an array A. Used for randomly picking connections to
+     * rooms and hallways. */
+    private String randomConnection(String[]A) {
+        RandomUtils.shuffle(ran, A);
+        return A[0];
     }
 
-    /** A helper function to randomly pick a vertical or horizontal hallway to connect to another hallway. */
-    private String randomHallwayDir() {
-        RandomUtils.shuffle(ran, this.hallwayDirections);
-        return this.hallwayDirections[0];
+
+    /** Simplify the code finding possible connections to one area. */
+    private void helperConnector(Room r, String[] chooseFrom) {
+
+        ArrayList<Point> possibleConnections = (ArrayList<Point>) findPossibleConnections(r);
+
+        for (Point p : possibleConnections) {
+            String connectingObject = randomConnection(chooseFrom);
+            switch(connectingObject) {
+                case "Room":
+                    Room newRoom = new Room();
+                    addRoom(newRoom);
+                case "Hallway":
+                    String hallwayDirection = randomConnection(this.hallwayDirections);
+                    if (hallwayDirection.equals("vertical")) {
+                        drawVerticalHallway();;
+                    } else {
+                        drawHorizontalHallway();
+                    }
+                    break;
+                default: break;
+            }
+        }
+
+        return;
     }
+
+    private void drawVerticalHallway() {}
+    private void drawHorizontalHallway() {}
+
+
 
 
 
