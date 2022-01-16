@@ -66,6 +66,58 @@ public class RandomMap {
         }
     }
 
+    /** Draw the world (tessalate).
+     *
+     */
+    public void drawWorld() {
+        // add a room - add to room queue
+        // for each possible point of connection, connect a hallwayor nothing.
+            // add hallways and rooms to the appropriate queues.
+        // for each hallway, find all possible connection points, add room, hallway, or nothing.
+            // add items to the queue.
+        // go back to room queue, find possible connections, add connections, ...
+        // only add to queues if valid to avoid infinite loops
+        // have a seen hashSet
+        // have whole thing be a graph? 
+        /**
+         * for each room in roomQ
+         *      pick a room - mark it so it doesn't get revisited again.
+         *      for each connection point - add hall or nothing, add halls to queue.
+         *          for each hall in hallQ
+         *              pick a hall - mark it so it doesn't get revisited again.
+         *              find possible connections, add hall, room, or nothing.
+         */
+    }
+
+    /** Add a room to the map.
+     * @param r   The Room to add.
+     * */
+    public void addRoom(Room r) {
+        // check if valid room
+        // draw room floors
+        // put a wall around it
+    }
+
+    /** Helper function to draw a wall around a room or hallway. */
+    private void helperDrawWall(Room r) {
+
+    }
+
+    /** Helper function to check if a specified room can be drawn. **/
+    private boolean checkRoomValid(Room r) {
+        return false;
+    }
+
+    /** Helper function to find all the possible connection points for a room or hallway. */
+    private List<Point> findPossibleConnections(Room r) {
+        return null;
+    }
+
+    /** Helper to find the closest size room if given room can't be drawn at a point. */
+    private Room largestValidRoom(Room r) {
+        return null;
+    }
+
 
 
 }
