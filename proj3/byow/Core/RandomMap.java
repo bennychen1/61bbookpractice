@@ -97,25 +97,12 @@ public class RandomMap {
 
         while (roomQueue.size() != 0) {
             Room curRoom = roomQueue.poll();
-            ArrayList<Point> possibleConnectionPoints = (ArrayList<Point>) findPossibleConnections(curRoom);
-            for (Point potentialPoint : possibleConnectionPoints) {
-                String connectingObject = randomConnection(this.connectToRoom);
-                if (connectingObject.equals("Hallway")) {
-                    String direction = randomConnection(this.hallwayDirections);
-                    // make a hallway starting at point p and add it to hallway queue.
-                    // Can you have a horizontal hallway connect to top of room?
-                } else {
-                    continue;
-                }
+            helperConnector(curRoom, this.connectToRoom);
             }
 
             while (hallwayQueue.size() != 0) {
                 Hallway curHallway = hallwayQueue.poll();
-                ArrayList<Point> possibleHallwayConnections = (ArrayList<Point>) findPossibleConnections(curHallway);
-                for (Point potentialPoint : possibleHallwayConnections) {
-                    // connecting object Room, Hallway, or nothing
-                    // add to roomQ or hallwayQ if needed.
-                }
+                helperConnector(curHallway, this.connectToHallway);
             }
         }
         // add a room - add to room queue
@@ -217,13 +204,16 @@ public class RandomMap {
                 case "Room":
                     Room newRoom = new Room();
                     addRoom(newRoom);
+                    roomQueue.add(newRoom);
                 case "Hallway":
                     String hallwayDirection = randomConnection(this.hallwayDirections);
+                    Hallway h = new Hallway();
                     if (hallwayDirection.equals("vertical")) {
-                        drawVerticalHallway();;
+                        drawVerticalHallway(h);;
                     } else {
-                        drawHorizontalHallway();
+                        drawHorizontalHallway(h);
                     }
+                    hallwayQueue.add(h);
                     break;
                 default: break;
             }
@@ -232,8 +222,8 @@ public class RandomMap {
         return;
     }
 
-    private void drawVerticalHallway() {}
-    private void drawHorizontalHallway() {}
+    private void drawVerticalHallway(Hallway h) {}
+    private void drawHorizontalHallway(Hallway h) {}
 
 
 
