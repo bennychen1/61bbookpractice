@@ -81,6 +81,32 @@ public class RandomMap {
      *
      */
     public void drawWorld() {
+        Room startRoom = new Room(randomSizes(), randomSizes(), getRandomPoint());
+        addRoom(startRoom);
+        helperDrawWall(startRoom);
+        roomQueue.add(startRoom);
+
+        while (roomQueue.size() != 0) {
+            Room curRoom = roomQueue.poll();
+            ArrayList<Point> possibleConnectionPoints = (ArrayList<Point>) findPossibleConnections(curRoom);
+            for (Point potentialPoint : possibleConnectionPoints) {
+                String connectingObject = randomRoomConnection();
+                if (connectingObject.equals("Hallway")) {
+                    // make a hallway starting at point p and add it to hallway queue.
+                } else {
+                    continue;
+                }
+            }
+
+            while (hallwayQueue.size() != 0) {
+                Hallway curHallway = hallwayQueue.poll();
+                ArrayList<Point> possibleHallwayConnections = (ArrayList<Point>) findPossibleConnections(curHallway);
+                for (Point potentialPoint : possibleHallwayConnections) {
+                    // connecting object Room, Hallway, or nothing
+                    // add to roomQ or hallwayQ if needed.
+                }
+            }
+        }
         // add a room - add to room queue
         // for each possible point of connection, connect a hallwayor nothing.
             // add hallways and rooms to the appropriate queues.
@@ -145,9 +171,19 @@ public class RandomMap {
     /** Pick a random point on the map to draw the initial room . */
     private Point getRandomPoint() {
 
-        int rowIndex = RandomUtils.uniform(ran, this.length- 1);
+        int rowIndex = RandomUtils.uniform(ran, this.length - 1);
         int colIndex = RandomUtils.uniform(ran, this.width - 1);
         return new Point(rowIndex, colIndex);
+    }
+
+    /** Helper function to return random widths and lengths that fit in the map. */
+    private int randomSizes() {
+        return RandomUtils.uniform(ran,Math.max(this.length, this.width)) + 1;
+    }
+
+    /** A helper function to randomly pick hallway or nothing */
+    private String randomRoomConnection() {
+        return "";
     }
 
 
