@@ -139,8 +139,8 @@ public class RandomMap {
 
     }
 
-    /** Helper function to check if a specified room can be drawn. **/
-    private boolean checkRoomValid(Room r) {
+    /** Helper function to check if a specified room can be drawn based on its size. **/
+    private boolean checkRoomValidSize(Room r) {
         Point startingPoint = r.start;
         int roomWidth = r.width;
         int roomLength = r.length;
@@ -149,12 +149,25 @@ public class RandomMap {
         boolean checkStartColValid = startingPoint.col >= 0 && startingPoint.col < this.maxColIndex;
         boolean checkStartRowValid = startingPoint.row >= 0 && startingPoint.row < this.maxRowIndex; **/
 
-        boolean checkWideEnough = startingPoint.col + roomWidth - 1 < this.maxColIndex;
-        boolean checkLongEnough = startingPoint.row + roomLength - 1 < this.maxRowIndex;
+        //boolean checkWideEnough = startingPoint.col + roomWidth - 1 < this.maxColIndex;
+       //boolean checkLongEnough = startingPoint.row + roomLength - 1 < this.maxRowIndex;
 
 
-        return checkWideEnough && checkLongEnough;
+        return checkRoomWidth(r) && checkRoomLength(r)
     }
+
+    /** Check if room width will fit in the map. */
+    private boolean checkRoomWidth(Room r) {
+        Point startingPoint = r.start;
+        return startingPoint.col + r.width - 1 < this.maxColIndex;
+    }
+
+    /** Check if room length will fit in the map. */
+    private boolean checkRoomLength(Room r) {
+        Point startingPoint = r.start;
+        return startingPoint.row + r.length - 1 < this.maxRowIndex;
+    }
+
 
     /** Helper function to find all the possible connection points for a room or hallway. */
     private List<Point> findPossibleConnections(Room r) {
@@ -163,6 +176,10 @@ public class RandomMap {
 
     /** Helper to find the closest size room if given room can't be drawn at a point. */
     private Room largestValidRoom(Room r) {
+        // find why room is not valid
+        if (!checkRoomWidth(r) && !checkRoomLength(r)) {
+
+        }
         return null;
     }
 
@@ -175,7 +192,7 @@ public class RandomMap {
     /** Instantiates a room of random width and length at a point. */
     private Room helperRandomRoom(Point p) {
         Room r = new Room(randomWidth(), randomLength(), p);
-        if (!checkRoomValid(r)) {
+        if (!checkRoomValidSize(r)) {
             r = largestValidRoom(r);
         }
         return r;
@@ -244,6 +261,9 @@ public class RandomMap {
 
     private void drawVerticalHallway(Hallway h) {}
     private void drawHorizontalHallway(Hallway h) {}
+    private void checkOverlappingRoom(){
+        // check starting point isn't already populated with a floor
+    }
 
 
 
