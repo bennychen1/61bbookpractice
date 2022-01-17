@@ -145,14 +145,15 @@ public class RandomMap {
         int roomWidth = r.width;
         int roomLength = r.length;
 
+        /** Guarantee starting point is valid.
         boolean checkStartColValid = startingPoint.col >= 0 && startingPoint.col < this.maxColIndex;
-        boolean checkStartRowValid = startingPoint.row >= 0 && startingPoint.row < this.maxRowIndex;
+        boolean checkStartRowValid = startingPoint.row >= 0 && startingPoint.row < this.maxRowIndex; **/
 
         boolean checkWideEnough = startingPoint.col + roomWidth - 1 < this.maxColIndex;
         boolean checkLongEnough = startingPoint.row + roomLength - 1 < this.maxRowIndex;
 
 
-        return checkStartColValid && checkStartRowValid && checkWideEnough && checkLongEnough;
+        return checkWideEnough && checkLongEnough;
     }
 
     /** Helper function to find all the possible connection points for a room or hallway. */
