@@ -27,10 +27,10 @@ public class RandomMap {
     Random ran;
 
     /** The width (number of columns) of the map. */
-    int width;
+    int maxColIndex;
 
     /** The length (number of rows) of the map. */
-    int length;
+    int maxRowIndex;
 
     /** An array for choosing either hallway or nothing. */
     final String[] connectToRoom = new String[]{"Hallway", "None"};
@@ -50,8 +50,8 @@ public class RandomMap {
         this.tileArray = new TETile[30][30];
         this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
         this.ran = new Random(seed);
-        this.width = 30;
-        this.length = 30;
+        this.maxColIndex = 29;
+        this.maxRowIndex = 29;
     }
 
     /** Instantiate a w by l map where w is width and l is the length. Provide seed for randomness.
@@ -61,8 +61,8 @@ public class RandomMap {
     RandomMap(int w, int l, int seed) {
         this(seed);
         this.tileArray = new TETile[w][l];
-        this.width = w;
-        this.length = l;
+        this.maxRowIndex = w  - 1;
+        this.maxColIndex = l - 1;
         this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
     }
 
@@ -90,7 +90,7 @@ public class RandomMap {
      *
      */
     public void drawWorld() {
-        Room startRoom = new Room(randomSizes(), randomSizes(), getRandomPoint());
+        Room startRoom = helperRandomRoom(getRandomPoint());
         addRoom(startRoom);
         helperDrawWall(startRoom);
         roomQueue.add(startRoom);
@@ -141,7 +141,18 @@ public class RandomMap {
 
     /** Helper function to check if a specified room can be drawn. **/
     private boolean checkRoomValid(Room r) {
-        return false;
+        Point startingPoint = r.start;
+        int roomWidth = r.width;
+        int roomLength = r.length;
+
+        boolean checkStartColValid = startingPoint.col >= 0 && startingPoint.col < this.maxColIndex;
+        boolean checkStartRowValid = startingPoint.row >= 0 && startingPoint.row < this.maxRowIndex;
+
+        boolean checkWideEnough = startingPoint.col + roomWidth - 1 < this.maxColIndex;
+        boolean checkLongEnough = startingPoint.row + roomLength - 1 < this.maxRowIndex;
+
+
+        return checkStartColValid && checkStartRowValid && checkWideEnough && checkLongEnough;
     }
 
     /** Helper function to find all the possible connection points for a room or hallway. */
@@ -162,28 +173,36 @@ public class RandomMap {
 
     /** Instantiates a room of random width and length at a point. */
     private Room helperRandomRoom(Point p) {
-        // largestValidRoom?
-        return null;
+        Room r = new Room(randomWidth(), randomLength(), p);
+        if (!checkRoomValid(r)) {
+            r = largestValidRoom(r);
+        }
+        return r;
     }
 
     /** Pick a random point on the map to draw the initial room . */
     private Point getRandomPoint() {
 
-        int rowIndex = RandomUtils.uniform(ran, this.length - 1);
-        int colIndex = RandomUtils.uniform(ran, this.width - 1);
+        int rowIndex = RandomUtils.uniform(ran, this.maxRowIndex- 1);
+        int colIndex = RandomUtils.uniform(ran, this.maxColIndex - 1);
         return new Point(rowIndex, colIndex);
     }
 
-    /** Helper function to return random widths and lengths that fit in the map. */
-    private int randomSizes() {
-        return RandomUtils.uniform(ran,Math.max(this.length, this.width)) + 1;
+    /** Helper function to return a random width size. **/
+    private int randomWidth() {
+        return RandomUtils.uniform(ran, this.maxColIndex) + 1;
     }
 
-    /** A helper function to randomly pick hallway or nothing to connect to a room. */
-    private String randomRoomConnection() {
-        RandomUtils.shuffle(ran, this.connectToRoom);
-        return this.connectToRoom[0];
+    /** Helper function to return a random width size. **/
+    private int randomLength() {
+        return RandomUtils.uniform(ran, this.maxRowIndex) + 1;
     }
+
+    /** Helper function to return random widths and lengths that fit in the map.
+    private int randomSizes() {
+        return RandomUtils.uniform(ran,Math.max(this.max, this.width)) + 1;
+    } */
+
 
     /** A helper function to randomly pick from an array A. Used for randomly picking connections to
      * rooms and hallways. */
