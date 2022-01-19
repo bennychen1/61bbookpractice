@@ -209,12 +209,12 @@ public class RandomMap {
 
     /** Helper function to return a random width size. **/
     private int randomWidth() {
-        return RandomUtils.uniform(ran, this.maxColIndex) + 1;
+        return RandomUtils.uniform(ran, this.maxColIndex + 1) + 1;
     }
 
     /** Helper function to return a random width size. **/
     private int randomLength() {
-        return RandomUtils.uniform(ran, this.maxRowIndex) + 1;
+        return RandomUtils.uniform(ran, this.maxRowIndex + 1) + 1;
     }
 
     /** Helper function to return random widths and lengths that fit in the map.
@@ -245,10 +245,12 @@ public class RandomMap {
                     roomQueue.add(newRoom);
                 case "Hallway":
                     String hallwayDirection = randomConnection(this.hallwayDirections);
-                    Hallway h = new Hallway();
+                    Hallway h;
                     if (hallwayDirection.equals("vertical")) {
+                        h = new Hallway(false, randomWidth(), p);
                         drawVerticalHallway(h);;
                     } else {
+                        h = new Hallway(true, randomLength(), p);
                         drawHorizontalHallway(h);
                     }
                     hallwayQueue.add(h);
