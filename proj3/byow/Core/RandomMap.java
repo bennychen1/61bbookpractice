@@ -153,7 +153,7 @@ public class RandomMap {
        //boolean checkLongEnough = startingPoint.row + roomLength - 1 < this.maxRowIndex;
 
 
-        return checkRoomWidth(r) && checkRoomLength(r)
+        return checkRoomWidth(r) && checkRoomLength(r);
     }
 
     /** Check if room width will fit in the map. */
@@ -169,7 +169,8 @@ public class RandomMap {
     }
 
 
-    /** Helper function to find all the possible connection points for a room or hallway. */
+    /** Helper function to find all the possible connection points for a room or hallway.
+     * The connection point will be one of the walls of the room or hallway. */
     private List<Point> findPossibleConnections(Room r) {
         return null;
     }
@@ -263,8 +264,36 @@ public class RandomMap {
     private void drawHorizontalHallway(Hallway h) {}
     private void checkOverlappingRoom(){
         // check starting point isn't already populated with a floor
+        // have another array that marks if (i, j) is already a room.
     }
 
+    /** Returns true if connection point P is to the left (index - 1) or below room R's starting point, then
+     * drawing a room or hallway will need to be drawn going left or down rather than up or to
+     * the right.
+     * */
+    private boolean checkToLeftOrDown(Point p, Room r) {
+        return false;
+    }
+
+    /** Find starting point if the room or hallway ROOMTOCONNECT is
+     * to the left or below the room or hallway CONNECTTO.
+     * */
+    private Point findStartingPoint(Room roomToConnect, Room connectTo) {
+        return null;
+    }
+
+    /** Check if the Point P is valid (is on the map). **/
+    private boolean isPointValid(Point p) {
+        boolean checkColValid = p.col >= 0 && p.col < this.maxColIndex;
+        boolean checkRowValid = p.row >= 0 && p.row < this.maxRowIndex;
+
+        return checkColValid && checkRowValid;
+    }
+
+    /** Find nearest valid point from Point P. Returns null if there is none. */
+    private Point nearestValidPoint(Point p) {
+        return null;
+    }
 
 
 
