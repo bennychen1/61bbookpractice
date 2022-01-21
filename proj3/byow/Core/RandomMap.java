@@ -123,7 +123,6 @@ public class RandomMap {
          *              find possible connections, add hall, room, or nothing.
          */
 
-    }
 
     /** Add a room to the map.
      * @param r   The Room to add.
@@ -136,7 +135,50 @@ public class RandomMap {
 
     /** Helper function to draw a wall around a room or hallway. */
     private void helperDrawWall(Room r) {
+        drawHorizontalWallsAround(r);
+        drawVerticalWallsAround(r);
+    }
 
+    /** Helper function to find the starting column index of a wall around Room R. */
+    private int findStartColWall(Room r) {
+        return r.start.col - 1;
+    }
+
+    /** Helper function to find the starting row index of a wall around Room R. */
+    private int findStartRowWall(Room r) {
+        return r.start.row - 1;
+    }
+
+    /** Helper function to find the ending column index of a wall around Room R. */
+    private int findEndColWall(Room r) {
+        return r.start.col + r.width;
+    }
+
+    /** Helper function to find the ending row index of a wall around Room R. */
+    private int findEndRowWall(Room r) {
+        return r.start.row + r.length;
+    }
+
+    /** Helper to draw the two vertical walls around room R. **/
+    private void drawVerticalWallsAround(Room r) {
+        int startColIndex = findStartColWall(r);
+        int endColIndex = findEndColWall(r);
+
+        for (int i = findStartRowWall(r); i < findEndRowWall(r); i = i + 1) {
+            this.tileArray[startColIndex][i] = Tileset.WALL;
+            this.tileArray[endColIndex][i] = Tileset.WALL;
+        }
+    }
+
+    /** Helper to draw the two horizontal walls around room R. **/
+    private void drawHorizontalWallsAround(Room r) {
+        int bottomRowIndex = findStartRowWall(r);
+        int topRowIndex = findEndRowWall(r);
+
+        for (int i = findStartColWall(r); i < findEndColWall(r); i = i + 1) {
+            this.tileArray[i][bottomRowIndex] = Tileset.WALL;
+            this.tileArray[i][topRowIndex] = Tileset.WALL;
+        }
     }
 
     /** Helper function to check if a specified room can be drawn based on its size. **/
@@ -240,7 +282,7 @@ public class RandomMap {
             String connectingObject = randomConnection(chooseFrom);
             switch(connectingObject) {
                 case "Room":
-                    Room newRoom = new Room();
+                    Room newRoom = new Room(randomWidth(), randomLength(), p);
                     addRoom(newRoom);
                     roomQueue.add(newRoom);
                 case "Hallway":
@@ -274,7 +316,7 @@ public class RandomMap {
      * the right.
      * */
     private boolean checkToLeftOrDown(Point p, Room r) {
-        return false;
+        return p.col < r.start.col || p.row < r.start.row;
     }
 
     /** Find starting point if the room or hallway ROOMTOCONNECT is
@@ -286,17 +328,43 @@ public class RandomMap {
 
     /** Check if the Point P is valid (is on the map). **/
     private boolean isPointValid(Point p) {
-        boolean checkColValid = p.col >= 0 && p.col < this.maxColIndex;
-        boolean checkRowValid = p.row >= 0 && p.row < this.maxRowIndex;
 
-        return checkColValid && checkRowValid;
+        return isPointColValid(p) && isPointRowValid(p);
+    }
+
+    /** Check if Point P has a valid column index. */
+    private boolean isPointColValid(Point p) {
+        return p.col >= 0 && p.col < this.maxColIndex;
+    }
+
+    /** Check if Point P has a valid row index. */
+    private boolean isPointRowValid(Point p) {
+        return p.row >= 0 && p.row < this.maxRowIndex;
     }
 
     /** Find nearest valid point from Point P. Returns null if there is none. */
     private Point nearestValidPoint(Point p) {
+        if ()
         return null;
     }
 
+    /** Find the maximum width for room starting at Point p drawing from the specified direction left or right. */
+    private int maxWidth(Point p, String direction) {
+        if (direction.equals("left")) {
+            return p.col;
+        } else {
+            return this.maxColIndex - p.col;
+        }
+    }
+
+    /** Find maximum length for room starting at Point p drawing from the specified direction up or down. */
+    private int maxLength(Point p, String direction) {
+        if (direction.equals("down")) {
+            return p.row;
+        } else {
+            return this.maxRowIndex - p.row;
+        }
+    }
 
 
 
