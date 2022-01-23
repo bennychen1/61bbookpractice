@@ -32,6 +32,9 @@ public class RandomMap {
     /** The length (number of rows) of the map. */
     int maxRowIndex;
 
+    /** Object containing useful random functions. */
+    RandomMapUtils randomFuncs;
+
     /** An array for choosing either hallway or nothing. */
     final String[] connectToRoom = new String[]{"Hallway", "None"};
 
@@ -52,6 +55,7 @@ public class RandomMap {
         this.ran = new Random(seed);
         this.maxColIndex = 29;
         this.maxRowIndex = 29;
+        this.randomFuncs = new RandomMapUtils(seed);
     }
 
     /** Instantiate a w by l map where w is width and l is the length. Provide seed for randomness.
@@ -264,29 +268,20 @@ public class RandomMap {
         return RandomUtils.uniform(ran,Math.max(this.max, this.width)) + 1;
     } */
 
-
-    /** A helper function to randomly pick from an array A. Used for randomly picking connections to
-     * rooms and hallways. */
-    private String randomConnection(String[]A) {
-        RandomUtils.shuffle(ran, A);
-        return A[0];
-    }
-
-
     /** Simplify the code finding possible connections to one area. */
     private void helperConnector(Room r, String[] chooseFrom) {
 
         ArrayList<Point> possibleConnections = (ArrayList<Point>) findPossibleConnections(r);
 
         for (Point p : possibleConnections) {
-            String connectingObject = randomConnection(chooseFrom);
+            String connectingObject = this.randomFuncs.randomConnection(chooseFrom);
             switch(connectingObject) {
                 case "Room":
                     Room newRoom = new Room(randomWidth(), randomLength(), p);
                     addRoom(newRoom);
                     roomQueue.add(newRoom);
                 case "Hallway":
-                    String hallwayDirection = randomConnection(this.hallwayDirections);
+                    String hallwayDirection = this.randomFuncs.randomConnection(this.hallwayDirections);
                     Hallway h;
                     if (hallwayDirection.equals("vertical")) {
                         h = new Hallway(false, randomWidth(), p);
