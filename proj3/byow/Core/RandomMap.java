@@ -95,6 +95,7 @@ public class RandomMap {
         helperDrawWall(startRoom);
         roomQueue.add(startRoom);
 
+        /**
         while (roomQueue.size() != 0) {
             Room curRoom = roomQueue.poll();
             helperConnector(curRoom, this.connectToRoom);
@@ -103,8 +104,78 @@ public class RandomMap {
             while (hallwayQueue.size() != 0) {
                 Hallway curHallway = hallwayQueue.poll();
                 helperConnector(curHallway, this.connectToHallway);
-            }
+            } */
+
+        for (int i = 0; i < 2; i = i + 1) {
+            Room r = new Room();
+            this.drawRoom(r);
         }
+
+        }
+
+    /** Generates a room of random width, length, and starting point. */
+    private Room generateRandomRoom() {
+        Point startPoint = getRandomPoint();
+        int maxWidth = findMaxRoomWidth(startPoint);
+
+        int maxHeight = 0;
+
+        for (int curCol = startPoint.col; curCol < curCol + maxWidth - 1; curCol = curCol + 1) {
+            maxHeight = Math.max(maxHeight, findMaxHeight(curCol));
+        }
+    }
+
+    /** Find the maximum possible width going to the right if a room drawn from the
+     * lower left corner starts at point P. Must stop when a wall is hit or up to the
+     * maximum column index of this map minus 1 to account for the room wall, whichever comes first.
+     * @param   p       Point, the possible room's starting point, which is it's lower left corner.
+     * @return  An int which represents the largest possible number of columns (width) the room can
+     * take up.
+     * */
+    private int helperFindMaxRoomWidth(Point p) {
+        return 0;
+    }
+
+    /** Find the maximum possible height for a width 1 room at the starting point. Must stop when
+     * a wall is hit or up to the maximum row index of this map minus 1 to account for
+     * the room wall, whichever comes first.
+     * @param   colIndex    int, the index of the column to find the maximum height.
+     * @return  An int representing the maximum height of a room at the given column.
+     */
+    private int findMaxRoomHeight(int colIndex) {
+        return 0;
+    }
+
+
+
+    /**
+     * populate with rooms
+     *          pick random start points, draw rooms of random widths and sizes
+     *          ok to keep Point as representing lower left
+     * connect rooms with hallways
+     *          pick a room, connect a random number of rooms to it
+     *          for those rooms, repeat.
+     *
+     */
+
+
+    // add initial room - add it to the room queue
+        // while the room queue is not empty
+            // select current room (pop queue)
+            // for each wall point in the room (skip corners?), connect a hallway or do nothing
+                // if on the vertical wall, only connect horizontal hallways. if on horizontal wall, only connect vertical hallways
+                        // add hallways to hallway queue
+                    // connecting hallway starting point is the wall
+            // while hallway queue is not empty
+                // select current hallway (pop queue)
+                // for each wall point, either connect room, hallway, or nothing
+                    // connecting room - replace wall point with floor, then room starts tile above or next to it
+                        // add rooms to room queue
+                        // find largest possible room width and length, then choose random between 1 and that length
+                    // if hallway
+                       // if on the vertical wall, only connect horizontal hallways. if on horizontal wall, only connect vertical hallways
+                      // add hallways to queue
+
         // add a room - add to room queue
         // for each possible point of connection, connect a hallwayor nothing.
             // add hallways and rooms to the appropriate queues.
@@ -244,8 +315,8 @@ public class RandomMap {
     /** Pick a random point on the map to draw the initial room . */
     private Point getRandomPoint() {
 
-        int rowIndex = RandomUtils.uniform(ran, this.maxRowIndex- 1);
-        int colIndex = RandomUtils.uniform(ran, this.maxColIndex - 1);
+        int rowIndex = RandomUtils.uniform(ran, this.maxRowIndex- 1) + 1;
+        int colIndex = RandomUtils.uniform(ran, this.maxColIndex - 1) + 1;
         return new Point(rowIndex, colIndex);
     }
 
