@@ -116,7 +116,7 @@ public class RandomMap {
     /** Generates a room of random width, length, and starting point. */
     private Room generateRandomRoom() {
         Point startPoint = getRandomPoint();
-        int maxWidth = findMaxRoomWidth(startPoint);
+        int maxWidth = helperFindMaxRoomWidth(startPoint);
 
         int maxHeight = 0;
 
@@ -133,7 +133,19 @@ public class RandomMap {
      * take up.
      * */
     private int helperFindMaxRoomWidth(Point p) {
-        return 0;
+        int startRow = p.row;
+        int startCol = p.col;
+
+        int curWidth = 1;
+
+        for (int curCol = p.col + 1; curCol < maxColIndex; curCol = curCol + 1) {
+            if (this.tileArray[curCol][startRow].equals(Tileset.WALL)) {
+                break;
+            }
+            curWidth = curWidth + 1;
+        }
+
+        return curWidth;
     }
 
     /** Find the maximum possible height for a width 1 room at the starting point. Must stop when
