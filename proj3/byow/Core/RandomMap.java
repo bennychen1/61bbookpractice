@@ -103,7 +103,7 @@ public class RandomMap {
                 helperConnector(curHallway, this.connectToHallway);
             } */
 
-        for (int i = 0; i < 2; i = i + 1) {
+        for (int i = 0; i < 3; i = i + 1) {
             Room r = generateRandomRoom();
             this.drawRoom(r);
         }
@@ -131,7 +131,9 @@ public class RandomMap {
 
     /** Generates a room of random width, length, and starting point. */
     private Room generateRandomRoom() {
+
         Point startPoint = getRandomPoint();
+
         int maxWidth = helperFindMaxRoomWidth(startPoint);
 
         int roomWidth = RandomUtils.uniform(this.ran, maxWidth) + 1;
@@ -208,6 +210,14 @@ public class RandomMap {
         }
 
         return count;
+    }
+
+    /** Returns the tile at point p.
+     * @param   p       A Point object.
+     * @return  The type of tile at point p.
+     * */
+    private TETile helperTileAtPoint(Point p) {
+        return this.tileArray[p.col][p.row];
     }
 
 
