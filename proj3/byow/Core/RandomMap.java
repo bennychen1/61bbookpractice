@@ -118,11 +118,13 @@ public class RandomMap {
         Point startPoint = getRandomPoint();
         int maxWidth = helperFindMaxRoomWidth(startPoint);
 
-        int maxHeight = 0;
+        int roomWidth = RandomUtils.uniform(this.ran, maxWidth) + 1;
 
-        for (int curCol = startPoint.col; curCol < curCol + maxWidth - 1; curCol = curCol + 1) {
-            maxHeight = Math.max(maxHeight, findMaxHeight(curCol));
-        }
+        int maxHeight = findMaxRoomHeight(startPoint, roomWidth);
+
+        int roomHeight = RandomUtils.uniform(this.ran, maxHeight) + 1;
+
+        return new Room(roomWidth, roomHeight, startPoint);
     }
 
     /** Find the maximum possible width going to the right if a room drawn from the
@@ -138,7 +140,7 @@ public class RandomMap {
 
         int curWidth = 1;
 
-        for (int curCol = p.col + 1; curCol < maxColIndex; curCol = curCol + 1) {
+        for (int curCol = startCol + 1; curCol < maxColIndex; curCol = curCol + 1) {
             if (this.tileArray[curCol][startRow].equals(Tileset.WALL)) {
                 break;
             }
@@ -151,11 +153,45 @@ public class RandomMap {
     /** Find the maximum possible height for a width 1 room at the starting point. Must stop when
      * a wall is hit or up to the maximum row index of this map minus 1 to account for
      * the room wall, whichever comes first.
-     * @param   colIndex    int, the index of the column to find the maximum height.
+     * @param   p           Point, the point to start at.
+     * @param   width       int, representing the number of columns to check inclusive of start point.
      * @return  An int representing the maximum height of a room at the given column.
      */
-    private int findMaxRoomHeight(int colIndex) {
-        return 0;
+    private int findMaxRoomHeight(Point p, int width) {
+
+        int curMaxHeight = 0;
+
+        for (int w = 0; w < width; w = w + 1) {
+            TETile[] curCol = this.tileArray[p.col + w];
+            int curColHeight = helperFindColMaxHeight(p.row, curCol);
+            curMaxHeight = Math.max(curMaxHeight, curColHeight);
+        }
+
+        return curMaxHeight;
+    }
+
+    /** A helper function that counts the number of tiles traversed before hitting a wall in a tile array,
+     * starting from a given starting index. Does not count the top row because this is for room drawing.
+     * @param   startIndex      int, the index to start at.
+     * @param   tiles           TETile[], the tile array.
+     * @return  An int representing the number of tiles iterate over before hitting a wall, includes start point.
+     * */
+    private int helperFindColMaxHeight(int startIndex, TETile[] tiles) {
+        if (startIndex < 0 || startIndex >= tiles.length - 1) {
+            return 0;
+        }
+
+        int count = 1;
+
+        for (int curIndex = startIndex + 1; curIndex < tiles.length - 1; curIndex = curIndex + 1) {
+            if (!tiles[curIndex].equals(Tileset.WALL)) {
+                count = count + 1;
+            } else {
+                break;
+            }
+        }
+
+        return count;
     }
 
 
