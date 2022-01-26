@@ -15,7 +15,7 @@ public class TestEngine {
         TETile[][] tileArray = createTileArray();
 
         Engine e = new Engine();
-        Engine.Point p = new Engine.Point(10, 15);
+        Point p = new Point(10, 15);
 
         e.drawRectangle(tileArray, 5, 3, p);
 
@@ -47,6 +47,23 @@ public class TestEngine {
         }
 
         return tileArray;
+    }
+
+    @Test
+    public void testDrawTwoRooms() {
+        RandomMap m = new RandomMap(8);
+        m.drawWorld();
+
+        TETile[][] tileArray = m.tileArray;
+        TERenderer t = new TERenderer();
+        t.initialize(30, 30);
+        t.renderFrame(tileArray);
+
+        int i = 0;
+
+        while (i == 0) {
+            continue;
+        }
     }
 
 }

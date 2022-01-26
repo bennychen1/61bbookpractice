@@ -90,10 +90,7 @@ public class RandomMap {
      *
      */
     public void drawWorld() {
-        Room startRoom = helperRandomRoom(getRandomPoint());
-        addRoom(startRoom);
-        helperDrawWall(startRoom);
-        roomQueue.add(startRoom);
+
 
         /**
         while (roomQueue.size() != 0) {
@@ -107,11 +104,30 @@ public class RandomMap {
             } */
 
         for (int i = 0; i < 2; i = i + 1) {
-            Room r = new Room();
+            Room r = generateRandomRoom();
             this.drawRoom(r);
         }
 
+    }
+
+    /** Draw the provided room in this map.
+     * @param r    A Room object.
+     * */
+    private void drawRoom(Room r) {
+
+        int startRowIndex = r.start.row;
+        int startColIndex = r.start.col;
+
+        for (int curCol = startColIndex; curCol < startColIndex + r.width; curCol = curCol + 1) {
+            TETile[] curColArray = this.tileArray[curCol];
+            for (int curRow = startRowIndex; curRow < startRowIndex + r.length; curRow = curRow + 1) {
+                curColArray[curRow] = Tileset.FLOOR;
+                r.addPoint(new Point(curCol, curRow));
+            }
         }
+    }
+
+
 
     /** Generates a room of random width, length, and starting point. */
     private Room generateRandomRoom() {
@@ -463,7 +479,6 @@ public class RandomMap {
 
     /** Find nearest valid point from Point P. Returns null if there is none. */
     private Point nearestValidPoint(Point p) {
-        if ()
         return null;
     }
 
