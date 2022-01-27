@@ -48,7 +48,7 @@ public class RandomMap {
         this.roomQueue = new LinkedList<>();
         this.hallwayQueue = new LinkedList<>();
         this.tileArray = new TETile[30][30];
-        this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
+        this.helperPopulateMap(this.tileArray, Tileset.SAND);
         this.ran = new Random(seed);
         this.maxColIndex = 29;
         this.maxRowIndex = 29;
@@ -106,6 +106,7 @@ public class RandomMap {
         for (int i = 0; i < 3; i = i + 1) {
             Room r = generateRandomRoom();
             this.drawRoom(r);
+            roomQueue.add(r);
         }
 
     }
@@ -125,6 +126,55 @@ public class RandomMap {
                 r.addPoint(new Point(curCol, curRow));
             }
         }
+
+        drawLowerWall(r);
+        drawUpperWall(r);
+        drawLeftWall(r);
+        drawRightWall(r);
+    }
+
+    /** Draw lower wall around room.
+     * @param r Room to draw the lower wall for.
+     * */
+    private void drawLowerWall(Room r) {
+        int wallRow = r.start.row - 1;
+
+        for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
+            this.tileArray[curCol][wallRow] = Tileset.WALL;
+        }
+    }
+
+    /** Draw upper wall around room.
+     * @param r Room to draw the lower wall for.
+     * */
+    private void drawUpperWall(Room r) {
+        int wallRow = r.start.row + r.length;
+
+        for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
+            this.tileArray[curCol][wallRow] = Tileset.WALL;
+        }
+    }
+
+    /** Draw left wall around room.
+     * @param r Room to draw the lower wall for.
+     * */
+    private void drawLeftWall(Room r) {
+        int wallCol = r.start.col - 1;
+
+        for (int curRow = r.start.row - 1; curRow <= r.start.row + r.length; curRow = curRow + 1) {
+            this.tileArray[wallCol][curRow] = Tileset.WALL;
+        }
+    }
+
+    /** Draw right wall around room.
+     * @param r Room to draw the lower wall for.
+     * */
+    private void drawRightWall(Room r) {
+        int wallCol = r.start.col + r.width;
+
+        for (int curRow = r.start.row - 1; curRow <= r.start.row + r.length; curRow = curRow + 1) {
+            this.tileArray[wallCol][curRow] = Tileset.WALL;
+        }
     }
 
 
@@ -133,6 +183,10 @@ public class RandomMap {
     private Room generateRandomRoom() {
 
         Point startPoint = getRandomPoint();
+
+        while (helperTileAtPoint(startPoint).equals(Tileset.WALL)) {
+            startPoint = getRandomPoint();
+        }
 
         int maxWidth = helperFindMaxRoomWidth(startPoint);
 
@@ -177,12 +231,12 @@ public class RandomMap {
      */
     private int findMaxRoomHeight(Point p, int width) {
 
-        int curMaxHeight = 0;
+        int curMaxHeight = Integer.MAX_VALUE;
 
         for (int w = 0; w < width; w = w + 1) {
             TETile[] curCol = this.tileArray[p.col + w];
             int curColHeight = helperFindColMaxHeight(p.row, curCol);
-            curMaxHeight = Math.max(curMaxHeight, curColHeight);
+            curMaxHeight = Math.min(curMaxHeight, curColHeight);
         }
 
         return curMaxHeight;
