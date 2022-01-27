@@ -127,33 +127,33 @@ public class RandomMap {
             }
         }
 
-        drawLowerWall(r);
-        drawUpperWall(r);
-        drawLeftWall(r);
-        drawRightWall(r);
+        drawHorizontalWalls(r, r.start.row - 1);
+        drawHorizontalWalls(r, r.start.row + r.length);
+        drawVerticalWalls(r, r.start.col - 1);
+        drawVerticalWalls(r, r.start.col + r.width);
     }
 
-    /** Draw lower wall around room.
-     * @param r Room to draw the lower wall for.
-     * */
-    private void drawLowerWall(Room r) {
-        int wallRow = r.start.row - 1;
 
+    /** Draw the horizontal walls around rooms.
+     * @param r          The Room to draw the wall around.
+     * @param wallRow   int, the index of the row to draw the horizontal wall.
+     * */
+    private void drawHorizontalWalls(Room r, int wallRow) {
         for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
             this.tileArray[curCol][wallRow] = Tileset.WALL;
         }
     }
 
-    /** Draw upper wall around room.
-     * @param r Room to draw the lower wall for.
+    /** Draw the vertical walls around rooms.
+     * @param r          The Room to draw the wall around.
+     * @param wallCol   int, the index of the column to draw the vertical wall.
      * */
-    private void drawUpperWall(Room r) {
-        int wallRow = r.start.row + r.length;
-
-        for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
-            this.tileArray[curCol][wallRow] = Tileset.WALL;
+    private void drawVerticalWalls(Room r, int wallCol) {
+        for (int curRow = r.start.row - 1; curRow <= r.start.row + r.length; curRow = curRow + 1) {
+            this.tileArray[wallCol][curRow] = Tileset.WALL;
         }
     }
+
 
     /** Draw left wall around room.
      * @param r Room to draw the lower wall for.
