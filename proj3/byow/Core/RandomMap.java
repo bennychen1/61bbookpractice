@@ -41,6 +41,9 @@ public class RandomMap {
     /** An array for choosing either a vertical or horizontal hallway. */
     final String[] hallwayDirections = new String[]{"Horizontal", "Vertical"};
 
+    /** The default tile type of this map. */
+    TETile defaultTileType;
+
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
         this.roomList = new ArrayList<>();
@@ -52,6 +55,13 @@ public class RandomMap {
         this.ran = new Random(seed);
         this.maxColIndex = 29;
         this.maxRowIndex = 29;
+        this.defaultTileType = Tileset.SAND;
+    }
+
+    /** Instantiate a basic 30x30 map with the provided seed and default tile type.*/
+    RandomMap(int seed, TETile tileType) {
+        this(seed);
+        this.defaultTileType = tileType;
     }
 
     /** Instantiate a w by l map where w is width and l is the length. Provide seed for randomness.
@@ -70,7 +80,10 @@ public class RandomMap {
     RandomMap(int w, int l, TETile tileType, int seed) {
         this(w, l, seed);
         this.helperPopulateMap(this.tileArray, tileType);
+        this.defaultTileType = tileType;
     }
+
+
 
 
     /** Helper function to populate tile array during instantiation with the specified tile type.
@@ -103,7 +116,7 @@ public class RandomMap {
                 helperConnector(curHallway, this.connectToHallway);
             } */
 
-        for (int i = 0; i < 3; i = i + 1) {
+        for (int i = 0; i < 6; i = i + 1) {
             Room r = generateRandomRoom();
             this.drawRoom(r);
             roomQueue.add(r);
@@ -184,7 +197,7 @@ public class RandomMap {
 
         Point startPoint = getRandomPoint();
 
-        while (helperTileAtPoint(startPoint).equals(Tileset.WALL)) {
+        while (!helperTileAtPoint(startPoint).equals(this.defaultTileType)) {
             startPoint = getRandomPoint();
         }
 
