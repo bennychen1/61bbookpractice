@@ -168,26 +168,30 @@ public class RandomMap {
             startPoint = getRandomPoint();
         }
 
-        int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint), (this.maxColIndex + 1) * 0.2);
+        int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
+                Math.round((this.maxColIndex + 1) * 0.2));
 
-        int roomWidth;
-        if (maxWidth != 1) {
-            roomWidth = RandomUtils.uniform(this.ran, 1, maxWidth);
-        } else {
-            roomWidth = maxWidth;
-        }
+        int roomWidth = helperGenerateRandomWidthLength(maxWidth);
 
         int maxHeight = (int) Math.min(findMaxRoomHeight(startPoint, roomWidth)
-                , (this.maxRowIndex + 1) * 0.2);
+                , Math.round((this.maxRowIndex + 1) * 0.2));
 
-        int roomHeight;
-        if (maxHeight != 1) {
-            roomHeight = RandomUtils.uniform(this.ran, 1, maxHeight);
-        } else {
-            roomHeight = maxHeight;
-        }
+        int roomHeight = helperGenerateRandomWidthLength(maxHeight);
+
 
         return new Room(roomWidth, roomHeight, startPoint);
+    }
+
+    /** A helper function to generate a random width and random length for a room given the max value.
+     * @param value int, the maximum value
+     * @return  An int between 1 and value.
+     *  */
+    private int helperGenerateRandomWidthLength(int value) {
+        if (value != 1) {
+            return RandomUtils.uniform(this.ran, 1, value);
+        } else {
+            return value;
+        }
     }
 
     /** Find the maximum possible width going to the right if a room drawn from the
