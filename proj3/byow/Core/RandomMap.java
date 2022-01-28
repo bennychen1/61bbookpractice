@@ -104,19 +104,9 @@ public class RandomMap {
      */
     public void drawWorld() {
 
+        int numRooms = RandomUtils.uniform(this.ran, 1, 10);
 
-        /**
-        while (roomQueue.size() != 0) {
-            Room curRoom = roomQueue.poll();
-            helperConnector(curRoom, this.connectToRoom);
-            }
-
-            while (hallwayQueue.size() != 0) {
-                Hallway curHallway = hallwayQueue.poll();
-                helperConnector(curHallway, this.connectToHallway);
-            } */
-
-        for (int i = 0; i < 6; i = i + 1) {
+        for (int i = 0; i < 10; i = i + 1) {
             Room r = generateRandomRoom();
             this.drawRoom(r);
             roomQueue.add(r);
@@ -139,6 +129,7 @@ public class RandomMap {
                 r.addPoint(new Point(curCol, curRow));
             }
         }
+
 
         drawHorizontalWalls(r, r.start.row - 1);
         drawHorizontalWalls(r, r.start.row + r.length);
@@ -203,11 +194,21 @@ public class RandomMap {
 
         int maxWidth = helperFindMaxRoomWidth(startPoint);
 
-        int roomWidth = RandomUtils.uniform(this.ran, maxWidth) + 1;
+        int roomWidth;
+        if (maxWidth != 1) {
+            roomWidth = RandomUtils.uniform(this.ran, 1, maxWidth);
+        } else {
+            roomWidth = maxWidth;
+        }
 
         int maxHeight = findMaxRoomHeight(startPoint, roomWidth);
 
-        int roomHeight = RandomUtils.uniform(this.ran, maxHeight) + 1;
+        int roomHeight;
+        if (maxHeight != 1) {
+            roomHeight = RandomUtils.uniform(this.ran, 1, maxHeight);
+        } else {
+            roomHeight = maxHeight;
+        }
 
         return new Room(roomWidth, roomHeight, startPoint);
     }
@@ -456,8 +457,8 @@ public class RandomMap {
     /** Pick a random point on the map to draw the initial room . */
     private Point getRandomPoint() {
 
-        int rowIndex = RandomUtils.uniform(ran, this.maxRowIndex- 1) + 1;
-        int colIndex = RandomUtils.uniform(ran, this.maxColIndex - 1) + 1;
+        int rowIndex = RandomUtils.uniform(ran, 1, this.maxRowIndex- 1);
+        int colIndex = RandomUtils.uniform(ran, 1, this.maxColIndex - 1);
         return new Point(rowIndex, colIndex);
     }
 
