@@ -71,8 +71,8 @@ public class RandomMap {
     RandomMap(int w, int l, int seed) {
         this(seed);
         this.tileArray = new TETile[w][l];
-        this.maxRowIndex = w  - 1;
-        this.maxColIndex = l - 1;
+        this.maxRowIndex = l  - 1;
+        this.maxColIndex = w - 1;
         this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
     }
 
@@ -104,7 +104,7 @@ public class RandomMap {
      */
     public void drawWorld() {
 
-        int numRooms = RandomUtils.uniform(this.ran, 1, 10);
+        int numRooms = RandomUtils.uniform(this.ran, 1, 20);
 
         for (int i = 0; i < numRooms; i = i + 1) {
             Room r = generateRandomRoom();
@@ -169,14 +169,17 @@ public class RandomMap {
         }
 
         int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
-                Math.round((this.maxColIndex + 1) * 0.2));
+                Math.round((this.maxColIndex + 1) * 0.5));
 
         int roomWidth = helperGenerateRandomWidthLength(maxWidth);
 
         int maxHeight = (int) Math.min(findMaxRoomHeight(startPoint, roomWidth)
-                , Math.round((this.maxRowIndex + 1) * 0.2));
+                , Math.round((this.maxRowIndex + 1) * 0.5));
 
         int roomHeight = helperGenerateRandomWidthLength(maxHeight);
+
+        System.out.println(startPoint);
+        System.out.println("Width " + helperFindMaxRoomWidth(startPoint) + " " + maxHeight);
 
 
         return new Room(roomWidth, roomHeight, startPoint);
