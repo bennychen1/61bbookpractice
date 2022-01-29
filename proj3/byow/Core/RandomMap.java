@@ -107,7 +107,7 @@ public class RandomMap {
         int numRooms = RandomUtils.uniform(this.ran, 5, 20);
 
         for (int i = 0; i < numRooms; i = i + 1) {
-            Room r = generateRandomRoom();
+            Room r = generateRandomRoom(0.3);
             this.drawRoom(r);
             roomQueue.add(r);
         }
@@ -163,23 +163,22 @@ public class RandomMap {
     }
 
 
-    /** Generates a room of random width, length, and starting point. */
-    private Room generateRandomRoom() {
+    /** Generates a room of random width, length, and starting point. Limit width and lengths to
+     * a specified percentage of this map's width and length.
+     * @param   limit      a double representing the percentage of this map's width and length
+     *                      each room can take up.
+     * @return A Room object with a random start point, random width, and random length.
+     * */
+    private Room generateRandomRoom(double limit) {
 
         Point startPoint = helperFindRoomStartPoint();
 
-        int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
-                Math.round((this.maxColIndex + 1) * 0.3));
+        int[] roomDimensions = helperGenerateWidthLength(startPoint, limit);
 
-        int roomWidth = helperGenerateRandomWidthLength(maxWidth);
+        int roomWidth = roomDimensions[0];
+        int roomLength = roomDimensions[1];
 
-        int maxHeight = (int) Math.min(findMaxRoomHeight(startPoint, roomWidth)
-                , Math.round((this.maxRowIndex + 1) * 0.3));
-
-        int roomHeight = helperGenerateRandomWidthLength(maxHeight);
-
-
-        return new Room(roomWidth, roomHeight, startPoint);
+        return new Room(roomWidth, roomLength, startPoint);
     }
 
     /** A helper function to find a valid room starting point. Randomly pick a point until it
@@ -195,6 +194,38 @@ public class RandomMap {
 
         return startPoint;
     }
+
+    /** A helper function to be used when generating random widths and lengths. Limits
+     * the height and width to a given maximum.
+     * @param   limitMax     int, representing the limit maximum width or length
+     * @param   foundMax     int, representing the maximum without a cap.
+     * @return  The minimum between the maximum found and the cap.
+     */
+     private int helperFindMaxLimit(int limitMax, int foundMax) {
+         return Math.min(foundMax, limitMax);
+     }
+
+     /** A helper function to generate the width and length of a room at a given starting point.
+      * @param  startPoint       Point representing the starting point.
+      * @param  limit            The percentage cap of the map's width and length
+      *                          set on the room's width and length.
+      * @return A length 2 int array, with index 0 being the width and index 1 being the length.
+      * */
+     private int[] helperGenerateWidthLength(Point startPoint, double limit) {
+
+         int widthLimit = (int) Math.round((this.maxRowIndex + 1) * limit);
+         int lengthLimit = (int) Math.round((this.maxColIndex + 1) * limit);
+
+         int maxWidth = helperFindMaxLimit(helperFindMaxRoomWidth(startPoint), widthLimit);
+
+         int roomWidth = helperGenerateRandomWidthLength(maxWidth);
+
+         int maxHeight = helperFindMaxLimit(findMaxRoomHeight(startPoint, roomWidth), lengthLimit);
+
+         int roomHeight = helperGenerateRandomWidthLength(maxHeight);
+
+         return new int[]{roomWidth, roomHeight};
+     }
 
     /** A helper function to generate a random width and random length for a room given the max value.
      * @param value int, the maximum value
