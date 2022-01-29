@@ -169,18 +169,14 @@ public class RandomMap {
         }
 
         int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
-                Math.round((this.maxColIndex + 1) * 0.5));
+                Math.round((this.maxColIndex + 1) * 0.3));
 
         int roomWidth = helperGenerateRandomWidthLength(maxWidth);
 
         int maxHeight = (int) Math.min(findMaxRoomHeight(startPoint, roomWidth)
-                , Math.round((this.maxRowIndex + 1) * 0.5));
+                , Math.round((this.maxRowIndex + 1) * 0.3));
 
         int roomHeight = helperGenerateRandomWidthLength(maxHeight);
-
-        System.out.println(startPoint);
-        System.out.println("Width " + helperFindMaxRoomWidth(startPoint) + " " + maxHeight);
-
 
         return new Room(roomWidth, roomHeight, startPoint);
     }
