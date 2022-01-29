@@ -104,7 +104,7 @@ public class RandomMap {
      */
     public void drawWorld() {
 
-        int numRooms = RandomUtils.uniform(this.ran, 1, 20);
+        int numRooms = RandomUtils.uniform(this.ran, 5, 20);
 
         for (int i = 0; i < numRooms; i = i + 1) {
             Room r = generateRandomRoom();
@@ -118,6 +118,10 @@ public class RandomMap {
      * @param r    A Room object.
      * */
     private void drawRoom(Room r) {
+
+        if (r == null) {
+            return;
+        }
 
         int startRowIndex = r.start.row;
         int startColIndex = r.start.col;
@@ -163,7 +167,7 @@ public class RandomMap {
     private Room generateRandomRoom() {
 
         Point startPoint = helperFindRoomStartPoint();
-        
+
         int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
                 Math.round((this.maxColIndex + 1) * 0.3));
 
@@ -173,6 +177,7 @@ public class RandomMap {
                 , Math.round((this.maxRowIndex + 1) * 0.3));
 
         int roomHeight = helperGenerateRandomWidthLength(maxHeight);
+
 
         return new Room(roomWidth, roomHeight, startPoint);
     }
