@@ -162,12 +162,8 @@ public class RandomMap {
     /** Generates a room of random width, length, and starting point. */
     private Room generateRandomRoom() {
 
-        Point startPoint = getRandomPoint();
-
-        while (!helperTileAtPoint(startPoint).equals(this.defaultTileType)) {
-            startPoint = getRandomPoint();
-        }
-
+        Point startPoint = helperFindRoomStartPoint();
+        
         int maxWidth = (int) Math.min(helperFindMaxRoomWidth(startPoint),
                 Math.round((this.maxColIndex + 1) * 0.3));
 
@@ -179,6 +175,20 @@ public class RandomMap {
         int roomHeight = helperGenerateRandomWidthLength(maxHeight);
 
         return new Room(roomWidth, roomHeight, startPoint);
+    }
+
+    /** A helper function to find a valid room starting point. Randomly pick a point until it
+     * finds a point that is unused (is the default tile type of this map).
+     * @return  A Point object representing the lower left corner of a room.
+     */
+    private Point helperFindRoomStartPoint() {
+        Point startPoint = getRandomPoint();
+
+        while (!helperTileAtPoint(startPoint).equals(this.defaultTileType)) {
+            startPoint = getRandomPoint();
+        }
+
+        return startPoint;
     }
 
     /** A helper function to generate a random width and random length for a room given the max value.
