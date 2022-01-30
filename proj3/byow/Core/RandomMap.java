@@ -358,10 +358,23 @@ public class RandomMap {
     /** Convert 1d index to corresponding column and row index on this map.
      * A 5x5 map, index 7 in 1-D array corresponds to map[1][2]
      * @param   indexToConvert  int, the index to convert to a 2d array index
-     * @return  A length 2 list {col, row}.
+     * @return  A length 2 int array representing {col, row}.
      * */
-    private ArrayList<Integer> helper1DIndexConvertor(int indexToConvert) {
-        int col = indexToConvert / this.maxColIndex + 1
+    private int[] helper1DIndexConvertor(int indexToConvert) {
+        int colIndex = indexToConvert / this.width;
+        int rowIndex = indexToConvert % this.width;
+
+        return new int[]{colIndex, rowIndex};
+    }
+
+    /** Convert the column index and row index into a 1d index.
+     * A 5x5 map, map[1][2] corresponds to index 7 - the 8th element.
+     * @param   colIndex  int, the column index.
+     * @param   rowIndex  int, the row index
+     * @return  an int representing the corresponding 1d index.
+     * */
+    private int helper2DIndexConvertor(int colIndex, int rowIndex) {
+        return (rowIndex * this.width) + colIndex;
     }
 
     /** Returns the tile at point p.
