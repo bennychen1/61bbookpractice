@@ -32,10 +32,10 @@ public class RandomMap {
     /** The random number generator for this map. */
     Random ran;
 
-    /** The width (number of columns) of the map. */
+    /** The maximum column index of the map. */
     int maxColIndex;
 
-    /** The length (number of rows) of the map. */
+    /** The maximum row index of the map. */
     int maxRowIndex;
 
     /** An array for choosing either hallway or nothing. */
@@ -53,6 +53,12 @@ public class RandomMap {
     /** True if the map contains an L-shaped hallway. */
     boolean containsLShapedHallway;
 
+    /** The width of the map (total number of columns). */
+    int width;
+
+    /** The length of the map (total number of rows). */
+    int length;
+
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
         this.roomList = new ArrayList<>();
@@ -64,6 +70,8 @@ public class RandomMap {
         this.ran = new Random(seed);
         this.maxColIndex = 29;
         this.maxRowIndex = 29;
+        this.width = 30;
+        this.length = 30;
         this.defaultTileType = Tileset.SAND;
         this.containsLShapedHallway = false;
         this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
@@ -355,6 +363,15 @@ public class RandomMap {
         return count;
     }
 
+    /** Convert 1d index to corresponding column and row index on this map.
+     * A 5x5 map, index 7 in 1-D array corresponds to map[1][2]
+     * @param   indexToConvert  int, the index to convert to a 2d array index
+     * @return  A length 2 list {col, row}.
+     * */
+    private ArrayList<Integer> helper1DIndexConvertor(int indexToConvert) {
+        int col = indexToConvert / this.maxColIndex + 1
+    }
+
     /** Returns the tile at point p.
      * @param   p       A Point object.
      * @return  The type of tile at point p.
@@ -380,20 +397,13 @@ public class RandomMap {
     }
 
 
-
-    /** Helper function to return random widths and lengths that fit in the map.
-    private int randomSizes() {
-        return RandomUtils.uniform(ran,Math.max(this.max, this.width)) + 1;
-    } */
-
-
     /** A helper function to randomly pick from an array A. Used for randomly picking connections to
      * rooms and hallways. */
     private String randomConnection(String[]A) {
         RandomUtils.shuffle(ran, A);
         return A[0];
     }
-    
+
     /** Check if the Point P is valid (is on the map). **/
     private boolean isPointValid(Point p) {
 
