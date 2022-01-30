@@ -364,62 +364,6 @@ public class RandomMap {
     }
 
 
-
-    /**
-     * populate with rooms
-     *          pick random start points, draw rooms of random widths and sizes
-     *          ok to keep Point as representing lower left
-     * connect rooms with hallways
-     *          pick a room, connect a random number of rooms to it
-     *          for those rooms, repeat.
-     *
-     */
-
-
-    // add initial room - add it to the room queue
-        // while the room queue is not empty
-            // select current room (pop queue)
-            // for each wall point in the room (skip corners?), connect a hallway or do nothing
-                // if on the vertical wall, only connect horizontal hallways. if on horizontal wall, only connect vertical hallways
-                        // add hallways to hallway queue
-                    // connecting hallway starting point is the wall
-            // while hallway queue is not empty
-                // select current hallway (pop queue)
-                // for each wall point, either connect room, hallway, or nothing
-                    // connecting room - replace wall point with floor, then room starts tile above or next to it
-                        // add rooms to room queue
-                        // find largest possible room width and length, then choose random between 1 and that length
-                    // if hallway
-                       // if on the vertical wall, only connect horizontal hallways. if on horizontal wall, only connect vertical hallways
-                      // add hallways to queue
-
-        // add a room - add to room queue
-        // for each possible point of connection, connect a hallwayor nothing.
-            // add hallways and rooms to the appropriate queues.
-        // for each hallway, find all possible connection points, add room, hallway, or nothing.
-            // add items to the queue.
-        // go back to room queue, find possible connections, add connections, ...
-        // only add to queues if valid to avoid infinite loops
-        // have a seen hashSet
-        // have whole thing be a graph?
-        /**
-         * for each room in roomQ
-         *      pick a room - mark it so it doesn't get revisited again.
-         *      for each connection point - add hall or nothing, add halls to queue.
-         *          for each hall in hallQ
-         *              pick a hall - mark it so it doesn't get revisited again.
-         *              find possible connections, add hall, room, or nothing.
-         */
-
-
-    /** Helper function to find all the possible connection points for a room or hallway.
-     * The connection point will be one of the walls of the room or hallway. */
-    private List<Point> findPossibleConnections(Room r) {
-        return null;
-    }
-
-
-
     /** Choose a random point to create a connection. */
     private Point helperRandomPoint(List<Point> listOfPoints) {
         // pick a random point from a list.
@@ -449,49 +393,7 @@ public class RandomMap {
         RandomUtils.shuffle(ran, A);
         return A[0];
     }
-
-
-    /** Simplify the code finding possible connections to one area.
-    private void helperConnector(Room r, String[] chooseFrom) {
-
-        ArrayList<Point> possibleConnections = (ArrayList<Point>) findPossibleConnections(r);
-
-        for (Point p : possibleConnections) {
-            String connectingObject = randomConnection(chooseFrom);
-            switch(connectingObject) {
-                case "Room":
-                    Room newRoom = new Room(randomWidth(), randomLength(), p);
-                    addRoom(newRoom);
-                    roomQueue.add(newRoom);
-                case "Hallway":
-                    String hallwayDirection = randomConnection(this.hallwayDirections);
-                    Hallway h;
-                    if (hallwayDirection.equals("vertical")) {
-                        h = new Hallway(false, randomWidth(), p);
-                        drawVerticalHallway(h);;
-                    } else {
-                        h = new Hallway(true, randomLength(), p);
-                        drawHorizontalHallway(h);
-                    }
-                    hallwayQueue.add(h);
-                    break;
-                default: break;
-            }
-        }
-
-        return;
-    } */
-
-    private void drawVerticalHallway(Hallway h) {}
-    private void drawHorizontalHallway(Hallway h) {}
-    private void checkOverlappingRoom(){
-        // check starting point isn't already populated with a floor
-        // have another array that marks if (i, j) is already a room.
-    }
-
-
-
-
+    
     /** Check if the Point P is valid (is on the map). **/
     private boolean isPointValid(Point p) {
 
