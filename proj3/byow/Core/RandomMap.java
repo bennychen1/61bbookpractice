@@ -23,6 +23,12 @@ public class RandomMap {
     /** The tile array that represents this map. */
     TETile[][] tileArray;
 
+    /** A union find object - each connected room will belong to a set.
+     * Indices - 5x5 array - index 2 will represent tileArray[0][2]
+     * index 20 tileArray[4][0];
+     * */
+    UnionFind roomSets;
+
     /** The random number generator for this map. */
     Random ran;
 
@@ -60,6 +66,7 @@ public class RandomMap {
         this.maxRowIndex = 29;
         this.defaultTileType = Tileset.SAND;
         this.containsLShapedHallway = false;
+        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
     }
 
     /** Instantiate a basic 30x30 map with the provided seed and default tile type.*/
@@ -78,6 +85,7 @@ public class RandomMap {
         this.maxRowIndex = l  - 1;
         this.maxColIndex = w - 1;
         this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
+        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
     }
 
     /** Instantiate a w by l map where w is the width and l is the length. Specify default tile type to start with. */
@@ -85,6 +93,7 @@ public class RandomMap {
         this(w, l, seed);
         this.helperPopulateMap(this.tileArray, tileType);
         this.defaultTileType = tileType;
+        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
     }
 
 
@@ -188,6 +197,7 @@ public class RandomMap {
     private void drawHorizontalWalls(Room r, int wallRow) {
         for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
             this.tileArray[curCol][wallRow] = Tileset.WALL;
+            // r.startPoint.union(new Point(curCol, wallRow)
         }
     }
 
