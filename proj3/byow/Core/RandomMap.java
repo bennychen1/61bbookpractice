@@ -145,7 +145,7 @@ public class RandomMap {
                 curColArray[curRow] = Tileset.FLOOR;
                 r.addPoint(new Point(curCol, curCol));
                 this.roomSets.union(helper2DIndexConvertor(curCol, curRow),
-                        helper2DIndexConvertor(r.start));
+                     helper2DIndexConvertor(r.start));
             }
         }
 
@@ -257,8 +257,10 @@ public class RandomMap {
     private Point helperFindRoomStartPoint() {
         Point startPoint = getRandomPoint();
 
-        while (!helperTileAtPoint(startPoint).equals(this.defaultTileType)) {
+        int tries = 0;
+        while (!helperTileAtPoint(startPoint).equals(this.defaultTileType) && tries < 20) {
             startPoint = getRandomPoint();
+            tries = tries + 1;
         }
 
         return startPoint;
