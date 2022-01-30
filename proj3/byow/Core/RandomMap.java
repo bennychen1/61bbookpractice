@@ -144,6 +144,8 @@ public class RandomMap {
             for (int curRow = startRowIndex; curRow < startRowIndex + r.length; curRow = curRow + 1) {
                 curColArray[curRow] = Tileset.FLOOR;
                 r.addPoint(new Point(curCol, curRow));
+                this.roomSets.union(helper2DIndexConvertor(curCol, curRow),
+                        helper2DIndexConvertor(startColIndex, startRowIndex));
             }
         }
 
@@ -373,7 +375,7 @@ public class RandomMap {
      * @param   rowIndex  int, the row index
      * @return  an int representing the corresponding 1d index.
      * */
-    private int helper2DIndexConvertor(int colIndex, int rowIndex) {
+    public int helper2DIndexConvertor(int colIndex, int rowIndex) {
         return (rowIndex * this.width) + colIndex;
     }
 
