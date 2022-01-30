@@ -61,26 +61,12 @@ public class RandomMap {
 
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
-        this.roomList = new ArrayList<>();
-        this.hallwayList = new ArrayList<>();
-        this.roomQueue = new LinkedList<>();
-        this.hallwayQueue = new LinkedList<>();
-        this.tileArray = new TETile[30][30];
-        this.helperPopulateMap(this.tileArray, Tileset.SAND);
-        this.ran = new Random(seed);
-        this.maxColIndex = 29;
-        this.maxRowIndex = 29;
-        this.width = 30;
-        this.length = 30;
-        this.defaultTileType = Tileset.SAND;
-        this.containsLShapedHallway = false;
-        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
+        this(30, 30, Tileset.SAND, 1);
     }
 
     /** Instantiate a basic 30x30 map with the provided seed and default tile type.*/
     RandomMap(int seed, TETile tileType) {
-        this(seed);
-        this.defaultTileType = tileType;
+        this(30, 30, tileType, seed);
     }
 
     /** Instantiate a w by l map where w is width and l is the length. Provide seed for randomness.
@@ -88,20 +74,26 @@ public class RandomMap {
      * the inner arrays.
      * */
     RandomMap(int w, int l, int seed) {
-        this(seed);
-        this.tileArray = new TETile[w][l];
-        this.maxRowIndex = l  - 1;
-        this.maxColIndex = w - 1;
-        this.helperPopulateMap(this.tileArray, Tileset.NOTHING);
-        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
+       this(w, l, Tileset.SAND, seed);
     }
 
     /** Instantiate a w by l map where w is the width and l is the length. Specify default tile type to start with. */
     RandomMap(int w, int l, TETile tileType, int seed) {
-        this(w, l, seed);
+
+        this.roomList = new ArrayList<>();
+        this.hallwayList = new ArrayList<>();
+        this.roomQueue = new LinkedList<>();
+        this.hallwayQueue = new LinkedList<>();
+        this.tileArray = new TETile[w][l];
         this.helperPopulateMap(this.tileArray, tileType);
+        this.ran = new Random(seed);
+        this.maxRowIndex = l - 1;
+        this.maxColIndex = w - 1;
+        this.width = w;
+        this.length = l;
+        this.containsLShapedHallway = false;
         this.defaultTileType = tileType;
-        this.roomSets = new UnionFind((this.maxRowIndex + 1) * (this.maxColIndex + 1));
+        this.roomSets = new UnionFind(this.width * this.length);
     }
 
 
