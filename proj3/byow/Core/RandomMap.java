@@ -44,6 +44,9 @@ public class RandomMap {
     /** The default tile type of this map. */
     TETile defaultTileType;
 
+    /** True if the map contains an L-shaped hallway. */
+    boolean containsLShapedHallway;
+
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
         this.roomList = new ArrayList<>();
@@ -56,6 +59,7 @@ public class RandomMap {
         this.maxColIndex = 29;
         this.maxRowIndex = 29;
         this.defaultTileType = Tileset.SAND;
+        this.containsLShapedHallway = false;
     }
 
     /** Instantiate a basic 30x30 map with the provided seed and default tile type.*/
@@ -140,6 +144,41 @@ public class RandomMap {
         drawVerticalWalls(r, r.start.col - 1);
         drawVerticalWalls(r, r.start.col + r.width);
     }
+
+    /** Draws a horizontally oriented hallway between two points.
+     * @param   p1  A Point on the map.
+     * @param   p2  A Point on the map.
+     * @return A Point object that represents the point stopped at. Not necessarily p2.
+     * */
+     private Point drawHorizontalHallway(Point p1, Point p2) {
+
+         Point startingPointHorizontal;
+         Point endPointHorizontal;
+
+         if (p1.col < p2.col) {
+             startingPointHorizontal = p1;
+             endPointHorizontal = p2;
+         } else {
+             startingPointHorizontal = p2;
+             endPointHorizontal = p1;
+         }
+
+         int maxWidth = p1.horizontalDistance(p2);
+
+         /* Width is inclusive - includes starting point and end point. Width 3 starting at col 1 = col 3 */
+
+         int hallWayWidth = RandomUtils.uniform(this.ran, 1, maxWidth + 1);
+
+         //drawHorizontalHallway(startingPointHorizontal, hallwayWidth)
+         //find point stopped at; return it.
+
+         // if not p2, drawVerticalHallway(pointStoppedAt, p2)
+         // find point stopped at
+         // if not p2, drawHorizontalHallway(pointStoopedAt, p2)
+
+         return null;
+     }
+
 
 
     /** Draw the horizontal walls around rooms.
