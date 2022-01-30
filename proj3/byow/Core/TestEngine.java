@@ -12,7 +12,7 @@ public class TestEngine {
 
     @Test
     public void testDrawTwoRooms() {
-        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 10);
+        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 20);
 
         m.drawWorld();
 
@@ -38,6 +38,12 @@ public class TestEngine {
         assertEquals(24, m.helper2DIndexConvertor(4, 4));
 
         assertEquals(17, m.helper2DIndexConvertor(new Point(2, 3)));
+    }
+
+    @Test
+    public void testUnion() {
+        RandomMap m = new RandomMap(5,5, 1);
+        m.drawWorld();
     }
 
 }
