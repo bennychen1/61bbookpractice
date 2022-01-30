@@ -156,6 +156,11 @@ public class RandomMap {
         drawVerticalWalls(r, r.start.col + r.width);
     }
 
+    /** Draw a hallway or hallways to connect two rooms at two random points. */
+    private void hallwayBetweenTwoRooms() {
+       
+    }
+
     /** Draws a horizontally oriented hallway between two points.
      * @param   p1  A Point on the map.
      * @param   r1  The Room that p1 belongs to.
@@ -166,7 +171,6 @@ public class RandomMap {
      private Point drawHorizontalHallway(Room r1, Point p1, Room r2, Point p2) {
 
          Room startRoom;
-         Room endRoom;
          Point startingPointHorizontal;
          Point endPointHorizontal;
 
@@ -174,12 +178,10 @@ public class RandomMap {
              startingPointHorizontal = p1;
              endPointHorizontal = p2;
              startRoom = r1;
-             endRoom = r2;
          } else {
              startingPointHorizontal = p2;
              endPointHorizontal = p1;
              startRoom = r2;
-             endRoom = r1;
          }
 
          int maxWidth = p1.horizontalDistance(p2);
