@@ -122,8 +122,10 @@ public class RandomMap {
         for (int i = 0; i < numRooms; i = i + 1) {
             Room r = generateRandomRoom(0.3);
             this.drawRoom(r);
-            roomQueue.add(r);
+            roomList.add(r);
         }
+
+        hallwayBetweenTwoRooms();
 
     }
 
@@ -158,7 +160,27 @@ public class RandomMap {
 
     /** Draw a hallway or hallways to connect two rooms at two random points. */
     private void hallwayBetweenTwoRooms() {
-       
+        Room r1 = helperRandomRoom();
+        Room r2 = helperRandomRoom();
+
+        Point p1 = helperRandomRoomPoint(r1);
+        Point p2 = helperRandomRoomPoint(r2);
+
+        drawHorizontalHallway(r1, p1, r2, p2);
+    }
+
+    /** Get a random room from the room list.
+     * @return a Room on this map. */
+    private Room helperRandomRoom() {
+        Collections.shuffle(this.roomList, this.ran);
+        return this.roomList.get(0);
+    }
+
+    /** Get a random point in a room.
+     * @return a Point object. */
+    private Point helperRandomRoomPoint(Room r) {
+        Collections.shuffle(r.roomPoints, this.ran);
+        return r.roomPoints.get(0);
     }
 
     /** Draws a horizontally oriented hallway between two points.
@@ -186,12 +208,13 @@ public class RandomMap {
 
          int maxWidth = p1.horizontalDistance(p2);
          int startingRow = startingPointHorizontal.row;
+         int startingCol = startingPointHorizontal.col;
 
          /* Width is inclusive - includes starting point and end point. Width 3 starting at col 1 = col 3 */
 
          int hallWayWidth = RandomUtils.uniform(this.ran, 1, maxWidth + 1);
 
-         for (int curCol = startingPointHorizontal.col; curCol <= hallWayWidth; curCol = curCol + 1) {
+         for (int curCol = startingCol; curCol <= startingCol + hallWayWidth; curCol = curCol + 1) {
              TETile[] curTileArray = this.tileArray[curCol];
              if (!curTileArray[startingRow].equals(Tileset.FLOOR)) {
                  curTileArray[startingRow] = Tileset.FLOOR;
