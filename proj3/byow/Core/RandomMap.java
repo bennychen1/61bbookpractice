@@ -143,9 +143,9 @@ public class RandomMap {
             TETile[] curColArray = this.tileArray[curCol];
             for (int curRow = startRowIndex; curRow < startRowIndex + r.length; curRow = curRow + 1) {
                 curColArray[curRow] = Tileset.FLOOR;
-                r.addPoint(new Point(curCol, curRow));
+                r.addPoint(new Point(curCol, curCol));
                 this.roomSets.union(helper2DIndexConvertor(curCol, curRow),
-                        helper2DIndexConvertor(startColIndex, startRowIndex));
+                        helper2DIndexConvertor(r.start));
             }
         }
 
@@ -158,27 +158,45 @@ public class RandomMap {
 
     /** Draws a horizontally oriented hallway between two points.
      * @param   p1  A Point on the map.
+     * @param   r1  The Room that p1 belongs to.
+     * @param   r2  The Room that p2 belongs to.
      * @param   p2  A Point on the map.
      * @return A Point object that represents the point stopped at. Not necessarily p2.
      * */
-     private Point drawHorizontalHallway(Point p1, Point p2) {
+     private Point drawHorizontalHallway(Room r1, Point p1, Room r2, Point p2) {
 
+         Room startRoom;
+         Room endRoom;
          Point startingPointHorizontal;
          Point endPointHorizontal;
 
          if (p1.col < p2.col) {
              startingPointHorizontal = p1;
              endPointHorizontal = p2;
+             startRoom = r1;
+             endRoom = r2;
          } else {
              startingPointHorizontal = p2;
              endPointHorizontal = p1;
+             startRoom = r2;
+             endRoom = r1;
          }
 
          int maxWidth = p1.horizontalDistance(p2);
+         int startingRow = startingPointHorizontal.row;
 
          /* Width is inclusive - includes starting point and end point. Width 3 starting at col 1 = col 3 */
 
          int hallWayWidth = RandomUtils.uniform(this.ran, 1, maxWidth + 1);
+
+         for (int curCol = startingPointHorizontal.col; curCol <= hallWayWidth; curCol = curCol + 1) {
+             TETile[] curTileArray = this.tileArray[curCol];
+             if (!curTileArray[startingRow].equals(Tileset.FLOOR)) {
+                 curTileArray[startingRow] = Tileset.FLOOR;
+                 this.roomSets.union(helper2DIndexConvertor(startRoom.start),
+                         helper2DIndexConvertor(curCol, startingRow));
+             }
+         }
 
          //drawHorizontalHallway(startingPointHorizontal, hallwayWidth)
          //find point stopped at; return it.
@@ -379,6 +397,15 @@ public class RandomMap {
         return (rowIndex * this.width) + colIndex;
     }
 
+    /** Convert a Point object into its corresponding 1d index.
+     * A 5x5 map, a point at (1, 2) corresponds to index 7 - the 8th element.
+     * @param   p   A point object
+     * @return  an int representing the corresponding 1d index.
+     * */
+    public int helper2DIndexConvertor(Point p) {
+        return helper2DIndexConvertor(p.col, p.row);
+    }
+
     /** Returns the tile at point p.
      * @param   p       A Point object.
      * @return  The type of tile at point p.
@@ -400,7 +427,7 @@ public class RandomMap {
 
         int rowIndex = RandomUtils.uniform(ran, 1, this.maxRowIndex- 1);
         int colIndex = RandomUtils.uniform(ran, 1, this.maxColIndex - 1);
-        return new Point(rowIndex, colIndex);
+        return new Point(colIndex, rowIndex);
     }
 
 
