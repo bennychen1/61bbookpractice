@@ -21,7 +21,7 @@ public class RandomMap {
     Queue<Hallway> hallwayQueue;
 
     /** The tile array that represents this map. */
-    TETile[][] tileArray;
+    private TETile[][] tileArray;
 
     /** A union find object - each connected room will belong to a set.
      * Indices - 5x5 array - index 2 will represent tileArray[0][2]
@@ -145,7 +145,7 @@ public class RandomMap {
             TETile[] curColArray = this.tileArray[curCol];
             for (int curRow = startRowIndex; curRow < startRowIndex + r.length; curRow = curRow + 1) {
                 curColArray[curRow] = Tileset.FLOOR;
-                r.addPoint(new Point(curCol, curCol));
+                r.addPoint(new Point(curCol, curRow));
                 this.roomSets.union(helper2DIndexConvertor(curCol, curRow),
                      helper2DIndexConvertor(r.start));
             }
@@ -166,7 +166,12 @@ public class RandomMap {
         Point p1 = helperRandomRoomPoint(r1);
         Point p2 = helperRandomRoomPoint(r2);
 
-        drawHorizontalHallway(r1, p1, r2, p2);
+        // Do something similar to KDTree comparator nextComparator
+        Point endPoint = drawHorizontalHallway(r1, p1, r2, p2);
+
+        while (!endPoint.equals(p2)) {
+
+        }
     }
 
     /** Get a random room from the room list.
@@ -194,15 +199,12 @@ public class RandomMap {
 
          Room startRoom;
          Point startingPointHorizontal;
-         Point endPointHorizontal;
 
          if (p1.col < p2.col) {
              startingPointHorizontal = p1;
-             endPointHorizontal = p2;
              startRoom = r1;
          } else {
              startingPointHorizontal = p2;
-             endPointHorizontal = p1;
              startRoom = r2;
          }
 
@@ -470,6 +472,34 @@ public class RandomMap {
 
         return isPointColValid(p) && isPointRowValid(p);
     }
+
+    /** Get a deep copy of this map's tile array. */
+    public TETile[][] getTileArray() {
+        TETile[][] toReturn = new TETile[this.width][this.length];
+        for (int i = 0; i < this.maxColIndex; i = i + 1) {
+            System.arraycopy(this.tileArray[i], 0, toReturn[i], 0, this.length);
+        }
+        return toReturn;
+    }
+
+    /** Set the tile at the given column and row to a specified tile type in this map's tile array.
+     * @param   col         The column index of the tile to change
+     * @param   row         The row index of the tile to change.
+     * @param   tileType    The type of tile to change the tile to.
+     * */
+    public void setTileArray(int col, int row, TETile tileType) {
+        this.tileArray[col][row] = tileType;
+    }
+
+    /** Public method to union two points in this map.
+     * @param   index1  The index of the first point.
+     * @param   index2  The index of the second point.
+     * */
+    public void unionPoints(int index1, int index2) {
+        this.roomSets.union(index1, index2);
+    }
+
+
 
     /** Check if Point P has a valid column index. */
     private boolean isPointColValid(Point p) {
