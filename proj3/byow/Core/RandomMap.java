@@ -11,6 +11,10 @@ public class RandomMap {
     /** A list of all the rooms in the map. */
     List<Room> roomList;
 
+    /** The number of rooms in the map. */
+    int numRooms;
+
+
     /** A list of all the hallways. */
     List<Hallway> hallwayList;
 
@@ -59,6 +63,10 @@ public class RandomMap {
     /** The length of the map (total number of rows). */
     int length;
 
+    /** Hallway drawers. */
+    final HallwayDrawer[] hallwayDrawers = new HallwayDrawer[]{new HorizontalHallwayDrawer(),
+            new VerticalHallwayDrawer()};
+
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
     RandomMap(int seed) {
         this(30, 30, Tileset.SAND, 1);
@@ -94,6 +102,7 @@ public class RandomMap {
         this.containsLShapedHallway = false;
         this.defaultTileType = tileType;
         this.roomSets = new UnionFind(this.width * this.length);
+        this.numRooms = 0;
     }
 
 
@@ -123,8 +132,12 @@ public class RandomMap {
             Room r = generateRandomRoom(0.3);
             this.drawRoom(r);
             roomList.add(r);
+            this.numRooms = this.numRooms + 1;
         }
 
+        // two possible ways: for each room connect to the other rooms
+                // pick a starter room, connect to each room then for all the other rooms,
+                        // randomly connect. 
         hallwayBetweenTwoRooms();
 
     }
@@ -166,8 +179,12 @@ public class RandomMap {
         Point p1 = helperRandomRoomPoint(r1);
         Point p2 = helperRandomRoomPoint(r2);
 
+        RandomUtils.shuffle(this.ran, this.hallwayDrawers);
+
+        HallwayDrawer currHallwayDrawer = this.hallwayDrawers[0];
+
         // Do something similar to KDTree comparator nextComparator
-        Point endPoint = drawHorizontalHallway(r1, p1, r2, p2);
+        Point endPoint = currHallwayDrawer.draw(this, r1, p1, r2, p2);
 
         while (!endPoint.equals(p2)) {
 
