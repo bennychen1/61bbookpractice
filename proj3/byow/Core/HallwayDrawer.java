@@ -9,6 +9,6 @@ public interface HallwayDrawer {
      * @param r2    A random Room in the map.
      * @param p2    A random point in Room r2.
      */
-    public Point draw(RandomMap m, Room r1, Point p1, Room r2,
+    public FinishHallwayInformation draw(RandomMap m, Room r1, Point p1, Room r2,
                      Point p2);
 }
