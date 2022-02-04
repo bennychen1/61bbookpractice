@@ -44,7 +44,7 @@ public class VerticalHallwayDrawer implements HallwayDrawer{
         for (int curRow = startingRow; curRow < startingRow + numTiles; curRow = curRow + 1) {
             Point newPoint = new Point(startingCol, curRow);
             curPoint = newPoint;
-            if (!curTileArray[startingRow].equals(Tileset.FLOOR)) {
+            if (!curTileArray[curRow].equals(Tileset.FLOOR)) {
                 m.setTileArray(newPoint, Tileset.FLOOR);
                 m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
                         m.helper2DIndexConvertor(newPoint));
