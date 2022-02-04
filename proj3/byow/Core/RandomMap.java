@@ -183,16 +183,29 @@ public class RandomMap {
         Point p1 = helperRandomRoomPoint(r1);
         Point p2 = helperRandomRoomPoint(r2);
 
-        RandomUtils.shuffle(this.ran, this.hallwayDrawers);
+        HallwayDrawer currHallwayDrawer = this.chooseRandomHallwayDrawer();
 
-        HallwayDrawer currHallwayDrawer = this.hallwayDrawers[0];
+        FinishHallwayInformation currentArgs = new FinishHallwayInformation(r1, p1, r2, p2);
 
-        // Do something similar to KDTree comparator nextComparator
-        Point endPoint = currHallwayDrawer.draw(this, r1, p1, r2, p2);
+        int i = 0;
 
-        while (!endPoint.equals(p2)) {
+        while (i < 5 && !this.roomSets.connected(helper2DIndexConvertor(p1), helper2DIndexConvertor(p2))) {
+
+            currentArgs = currHallwayDrawer.draw(this, currentArgs.r1, currentArgs.p1, currentArgs.r2,
+                    currentArgs.p2);
+
+            currHallwayDrawer = chooseRandomHallwayDrawer();
+
+            i = i + 1;
 
         }
+
+    }
+
+    /** A helper function to randomly choose a direction to draw a hallway. **/
+    private HallwayDrawer chooseRandomHallwayDrawer() {
+        RandomUtils.shuffle(this.ran, this.hallwayDrawers);
+        return this.hallwayDrawers[0];
     }
 
     /** Get a random room from the room list.
@@ -497,7 +510,7 @@ public class RandomMap {
     /** Get a deep copy of this map's tile array. */
     public TETile[][] getTileArray() {
         TETile[][] toReturn = new TETile[this.width][this.length];
-        for (int i = 0; i < this.maxColIndex; i = i + 1) {
+        for (int i = 0; i <= this.maxColIndex; i = i + 1) {
             System.arraycopy(this.tileArray[i], 0, toReturn[i], 0, this.length);
         }
         return toReturn;
