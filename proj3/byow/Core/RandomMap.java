@@ -137,7 +137,11 @@ public class RandomMap {
 
         // two possible ways: for each room connect to the other rooms
                 // pick a starter room, connect to each room then for all the other rooms,
-                        // randomly connect. 
+                        // randomly connect.
+        // pick a room then randomly connect it to a random number of rooms - form one set
+        // for the rooms not in this set, randomly connect it to one of the rooms in the set then add
+        // to the set. Repeat until second set has no more rooms. Kind of like MST - randomly create
+        // an initial 2 sets, then connect the two sets. 
         hallwayBetweenTwoRooms();
 
     }
@@ -506,6 +510,14 @@ public class RandomMap {
      * */
     public void setTileArray(int col, int row, TETile tileType) {
         this.tileArray[col][row] = tileType;
+    }
+
+    /** Set the tile at the given Point to a specified tile type in this map's tile array.
+     * @param   p           A Point representing the location to chagne the tile.
+     * @param   tileType    The type of tile to change the tile to.
+     * */
+    public void setTileArray(Point p, TETile tileType) {
+        setTileArray(p.col, p.row, tileType);
     }
 
     /** Public method to union two points in this map.
