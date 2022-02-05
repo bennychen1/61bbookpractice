@@ -41,10 +41,7 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
 
         for (int curCol = startingCol; curCol < startingCol + numTiles; curCol = curCol + 1) {
             TETile[] curTileArray = m.getTileArray()[curCol];
-            Point newPoint = new Point(curCol, startingRow);
-            curPoint = newPoint;
-
-            helperDrawAndUnion(m, curTileArray, startingRow, newPoint, startRoom);
+            curPoint = helperDrawAndUnion(m, curTileArray, curCol, startingRow, startRoom);
         }
 
         return new FinishHallwayInformation(endRoom, endPoint, startRoom, curPoint);

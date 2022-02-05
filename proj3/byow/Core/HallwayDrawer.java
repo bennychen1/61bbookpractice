@@ -30,18 +30,31 @@ public abstract class HallwayDrawer {
     /** Draws a floor at a specified location and unions that location with the points in the provided room.
      * @param   m               A RandomMap object
      * @param   curTileArray    A TETile array that represents a column in the map.
+     * @param   curCol          An int representing the column index of the location.
      * @param   curRow          An int representing the row index of the location.
-     * @param   newPoint        A Point object representing the location of the tile at the provided row in the provided column.
      * @param   startRoom       A Room object.
      * */
-    public void helperDrawAndUnion(RandomMap m, TETile[] curTileArray, int curRow,
-                                   Point newPoint, Room startRoom) {
+    public Point helperDrawAndUnion(RandomMap m, TETile[] curTileArray, int curCol, int curRow, Room startRoom) {
+
+        Point newPoint = new Point(curCol, curRow);
+
         if (!curTileArray[curRow].equals(Tileset.FLOOR)) {
             m.setTileArray(newPoint, Tileset.FLOOR);
         }
 
         m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
                 m.helper2DIndexConvertor(newPoint));
+
+        return newPoint;
+    }
+
+    /** A helper function to draw walls as needed around (up, down, left, right) a hallway point.
+     * Draws when the tile is not a floor or already a wall.
+     * @param  m     A RandomMap that contains the location of the hallway point.
+     * @param  p     A Point object representing the hallway point.
+     */
+    public void drawWallsAround(RandomMap m, Point p) {
+
     }
 
 
