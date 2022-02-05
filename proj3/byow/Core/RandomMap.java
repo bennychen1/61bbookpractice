@@ -9,20 +9,20 @@ import java.util.*;
 public class RandomMap {
 
     /** A list of all the rooms in the map. */
-    List<Room> roomList;
+    private List<Room> roomList;
 
     /** The number of rooms in the map. */
-    int numRooms;
+    private int numRooms;
 
 
     /** A list of all the hallways. */
-    List<Hallway> hallwayList;
+    private List<Hallway> hallwayList;
 
     /** A Queue containing the rooms that have already been explored. */
-    Queue<Room> roomQueue;
+    private Queue<Room> roomQueue;
 
     /** A Queue containing the hallways that have already been explored. */
-    Queue<Hallway> hallwayQueue;
+    private Queue<Hallway> hallwayQueue;
 
     /** The tile array that represents this map. */
     private TETile[][] tileArray;
@@ -31,16 +31,16 @@ public class RandomMap {
      * Indices - 5x5 array - index 2 will represent tileArray[0][2]
      * index 20 tileArray[4][0];
      * */
-    UnionFind roomSets;
+    private UnionFind roomSets;
 
     /** The random number generator for this map. */
-    Random ran;
+    private Random ran;
 
     /** The maximum column index of the map. */
-    int maxColIndex;
+    private int maxColIndex;
 
     /** The maximum row index of the map. */
-    int maxRowIndex;
+    private int maxRowIndex;
 
     /** An array for choosing either hallway or nothing. */
     final String[] connectToRoom = new String[]{"Hallway", "None"};
@@ -52,19 +52,19 @@ public class RandomMap {
     final String[] hallwayDirections = new String[]{"Horizontal", "Vertical"};
 
     /** The default tile type of this map. */
-    TETile defaultTileType;
+    private TETile defaultTileType;
 
     /** True if the map contains an L-shaped hallway. */
     boolean containsLShapedHallway;
 
     /** The width of the map (total number of columns). */
-    int width;
+    private int width;
 
     /** The length of the map (total number of rows). */
-    int length;
+    private int length;
 
     /** Hallway drawers. */
-    final HallwayDrawer[] hallwayDrawers = new HallwayDrawer[]{new HorizontalHallwayDrawer(),
+    private final HallwayDrawer[] hallwayDrawers = new HallwayDrawer[]{new HorizontalHallwayDrawer(),
             new VerticalHallwayDrawer()};
 
     /** Instantiate a basic 30x30 map. Provide a seed for randomness */
@@ -143,6 +143,8 @@ public class RandomMap {
         // to the set. Repeat until second set has no more rooms. Kind of like MST - randomly create
         // an initial 2 sets, then connect the two sets. 
         hallwayBetweenTwoRooms();
+        hallwayBetweenTwoRooms();
+        hallwayBetweenTwoRooms();
 
     }
 
@@ -189,7 +191,8 @@ public class RandomMap {
 
         int i = 0;
 
-        while (i < 5 && !this.roomSets.connected(helper2DIndexConvertor(p1), helper2DIndexConvertor(p2))) {
+        while (!this.roomSets.connected(helper2DIndexConvertor(r1.start),
+                helper2DIndexConvertor(r2.start))) {
 
             currentArgs = currHallwayDrawer.draw(this, currentArgs.r1, currentArgs.p1, currentArgs.r2,
                     currentArgs.p2);
@@ -515,6 +518,30 @@ public class RandomMap {
         }
         return toReturn;
     }
+
+    /** Returns the TETile at the specified Point.
+     * @param   p   A Point object
+     * @return  A TETile object that represents the tile type at the point in this map.
+     * */
+    public TETile getTileAt(Point p) {
+        return this.tileArray[p.col][p.row];
+    }
+
+    /** Returns the max column index of this map. */
+    public int getMaxColIndex() {
+        return this.maxColIndex;
+    }
+
+    /** Returns the max row index of this map. */
+    public int getMaxRowIndex() {
+        return this.maxRowIndex;
+    }
+
+    /** Returns the Random Number Generator of this map. */
+    public Random getRan() {
+        return this.ran;
+    }
+
 
     /** Set the tile at the given column and row to a specified tile type in this map's tile array.
      * @param   col         The column index of the tile to change
