@@ -3,7 +3,7 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
-public class HorizontalHallwayDrawer implements HallwayDrawer{
+public class HorizontalHallwayDrawer extends HallwayDrawer{
 
     @Override
     public FinishHallwayInformation draw(RandomMap m, Room r1, Point p1,
@@ -34,7 +34,7 @@ public class HorizontalHallwayDrawer implements HallwayDrawer{
 
         int maxWidth = p1.horizontalDistance(p2);
 
-        int numTiles = RandomUtils.uniform(m.ran, 1, maxWidth + 2);
+        int numTiles = helperNumTiles(m, maxWidth);
 
 
         Point curPoint = startPoint;
