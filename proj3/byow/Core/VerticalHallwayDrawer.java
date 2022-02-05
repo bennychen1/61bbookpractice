@@ -44,12 +44,7 @@ public class VerticalHallwayDrawer extends HallwayDrawer{
         for (int curRow = startingRow; curRow < startingRow + numTiles; curRow = curRow + 1) {
             Point newPoint = new Point(startingCol, curRow);
             curPoint = newPoint;
-            if (!curTileArray[curRow].equals(Tileset.FLOOR)) {
-                m.setTileArray(newPoint, Tileset.FLOOR);
-            }
-
-            m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
-                    m.helper2DIndexConvertor(newPoint));
+            helperDrawAndUnion(m, curTileArray, curRow, newPoint, startRoom);
         }
 
         return new FinishHallwayInformation(endRoom, endPoint, startRoom, curPoint);
