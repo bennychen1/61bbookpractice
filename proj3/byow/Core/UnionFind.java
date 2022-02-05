@@ -57,6 +57,10 @@ public class UnionFind {
         validate(v1);
         validate(v2);
 
+        if (find(v1) == find(v2)) {
+            return;
+        }
+
         if (sizeOf(v1) <= sizeOf(v2)) {
             int addSize = sizeOf(v1);
             nodes[find(v1)] = find(v2);
