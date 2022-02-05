@@ -24,7 +24,7 @@ public abstract class HallwayDrawer {
      * @return  An int representing the number of tiles the hallway segment will have.
      */
     public int helperNumTiles(RandomMap m, int maxTiles) {
-        return RandomUtils.uniform(m.ran, 1, maxTiles + 2);
+        return RandomUtils.uniform(m.getRan(), 1, maxTiles + 2);
     }
 
     /** Draws a floor at a specified location and unions that location with the points in the provided room.
@@ -54,7 +54,10 @@ public abstract class HallwayDrawer {
      * @param  p     A Point object representing the hallway point.
      */
     public void drawWallsAround(RandomMap m, Point p) {
-
+        Point left = p.pointToLeft();
+        Point right = p.pointToRight(m.getMaxColIndex());
+        Point top = p.pointToTop(m.getMaxRowIndex());
+        Point bottom = p.pointToBottom();
     }
 
 
