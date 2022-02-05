@@ -45,9 +45,11 @@ public class HorizontalHallwayDrawer implements HallwayDrawer{
             curPoint = newPoint;
             if (!curTileArray[startingRow].equals(Tileset.FLOOR)) {
                 m.setTileArray(newPoint, Tileset.FLOOR);
-                m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
-                        m.helper2DIndexConvertor(newPoint));
             }
+
+            m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
+                    m.helper2DIndexConvertor(newPoint));
+            ;
         }
 
         return new FinishHallwayInformation(endRoom, endPoint, startRoom, curPoint);
