@@ -3,6 +3,9 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public abstract class HallwayDrawer {
     /** Draws a hallway of random length between p1 and p2.
      * Returns the last point of the drawn hallway.
@@ -45,6 +48,8 @@ public abstract class HallwayDrawer {
         m.unionPoints(m.helper2DIndexConvertor(startRoom.start),
                 m.helper2DIndexConvertor(newPoint));
 
+        drawWallsAround(m, newPoint);
+
         return newPoint;
     }
 
@@ -54,10 +59,37 @@ public abstract class HallwayDrawer {
      * @param  p     A Point object representing the hallway point.
      */
     public void drawWallsAround(RandomMap m, Point p) {
+
+        ArrayList<Point> pointsAround = new ArrayList<>();
+
         Point left = p.pointToLeft();
         Point right = p.pointToRight(m.getMaxColIndex());
         Point top = p.pointToTop(m.getMaxRowIndex());
         Point bottom = p.pointToBottom();
+
+        pointsAround.add(left);
+        pointsAround.add(right);
+        pointsAround.add(top);
+        pointsAround.add(bottom);
+
+        for (Point curPoint : pointsAround) {
+            if (curPoint != null && helperCheckIfWallIsNeeded(m, curPoint)) {
+                m.setTileArray(curPoint, Tileset.WALL);
+            }
+        }
+
+
+    }
+
+    /** A helper function that returns true if the tile at the specified point is neither
+     * a floor nor wall.
+     * @param m         A RandomMap object representing the map.
+     * @param curPoint  A Point object representing the current point.
+     * @return boolean  true if the tile at the specified point is neither a floor nor wall, false otherwise.
+     */
+    private boolean helperCheckIfWallIsNeeded(RandomMap m, Point curPoint) {
+        TETile tileAt = m.getTileAt(curPoint);
+        return !tileAt.equals(Tileset.FLOOR) && !tileAt.equals(Tileset.WALL);
     }
 
 
