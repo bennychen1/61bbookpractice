@@ -74,6 +74,62 @@ public class Point {
         return new Point(this.col, this.row + 1);
     }
 
+    /**
+     * Return the Point to this point's left upper diagonal.
+     * @param topMax    An int representing the index of the top most row.
+     * @return  A Point or null if this point is already on the top most row.
+     */
+    public Point pointLeftUpDiagonal(int topMax) {
+        Point top = this.pointToTop(topMax);
+        if (top != null) {
+            return top.pointToLeft();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Return the Point to this point's right upper diagonal.
+     * @param topMax    An int representing the index of the top most row.
+     * @param rightMax  An int representing the idnex of the right most row.
+     * @return  A Point or null if this point is already on the top most row or on the right most column.
+     */
+    public Point pointRightUpDiagonal(int topMax, int rightMax) {
+        Point top = this.pointToTop(topMax);
+        if (top != null) {
+            return top.pointToRight(rightMax);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Return the Point to this point's left lower diagonal.
+     * @return  A Point or null if this point is already on the top most row.
+     */
+    public Point pointLeftLowerDiagonal() {
+        Point bot = this.pointToBottom();
+        if (bot != null) {
+            return bot.pointToLeft();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Return the Point to this point's right lower diagonal.
+     * @param   rightMost   An int representing the right most column index.
+     * @return  A Point or null if this point is already on the top most row.
+     */
+    public Point pointRightLowerDiagonal(int rightMost) {
+        Point bot = this.pointToBottom();
+        if (bot != null) {
+            return bot.pointToRight(rightMost);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public String toString() {
         return "Column " + this.col + " Row " + this.row;
