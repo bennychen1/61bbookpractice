@@ -159,20 +159,15 @@ public class RandomMap {
      * */
     private void addHallways() {
         HashSet<Room> unionedRooms = new HashSet<>();
-        HashSet<Room> nonUnionedRooms = new HashSet<>(this.roomList);
 
         Collections.shuffle(this.roomList, this.ran);
 
         Room randomInitialRoom = this.roomList.get(0);
         unionedRooms.add(randomInitialRoom);
-        nonUnionedRooms.remove(randomInitialRoom);
 
         while (unionedRooms.size() < this.roomList.size()) {
-            hallwayBetweenTwoRooms(unionedRooms, nonUnionedRooms);
+            hallwayBetweenTwoRooms(unionedRooms);
         }
-
-
-
 
     }
 
@@ -208,12 +203,11 @@ public class RandomMap {
 
     /** Draw a hallway or hallways to connect two rooms at two random points. One room will be chosen
      * from each of two sets of rooms.
-     * @param   set1      A Set of Rooms.
-     * @param   set2      A Set of Rooms
+     * @param   set1      A Set of Rooms that are connected (unioned).
      * */
-    private void hallwayBetweenTwoRooms(Set set1, Set set2) {
+    private void hallwayBetweenTwoRooms(Set set1) {
         Room r1 = helperRandomRoomFromSet(set1);
-        Room r2 = helperRandomRoomFromSet(set2);
+        Room r2 = helperRandomRoom();
 
         Point p1 = helperRandomRoomPoint(r1);
         Point p2 = helperRandomRoomPoint(r2);
@@ -237,7 +231,6 @@ public class RandomMap {
         }
 
         set1.add(r2);
-        set2.remove(r2);
 
     }
 
