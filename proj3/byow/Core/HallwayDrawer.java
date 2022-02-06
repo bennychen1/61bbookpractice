@@ -66,11 +66,20 @@ public abstract class HallwayDrawer {
         Point right = p.pointToRight(m.getMaxColIndex());
         Point top = p.pointToTop(m.getMaxRowIndex());
         Point bottom = p.pointToBottom();
+        Point leftUpDiagonal = p.pointLeftUpDiagonal(m.getMaxRowIndex());
+        Point rightUpDiagonal = p.pointRightUpDiagonal(m.getMaxRowIndex(), m.getMaxColIndex());
+        Point lowerLeftDiagonal = p.pointLeftLowerDiagonal();
+        Point lowerRightDiagonal = p.pointRightLowerDiagonal(m.getMaxColIndex());
 
         pointsAround.add(left);
         pointsAround.add(right);
         pointsAround.add(top);
         pointsAround.add(bottom);
+
+        pointsAround.add(leftUpDiagonal);
+        pointsAround.add(rightUpDiagonal);
+        pointsAround.add(lowerLeftDiagonal);
+        pointsAround.add(lowerRightDiagonal);
 
         for (Point curPoint : pointsAround) {
             if (curPoint != null && helperCheckIfWallIsNeeded(m, curPoint)) {
