@@ -126,6 +126,24 @@ public class RandomMap {
      */
     public void drawWorld() {
 
+        addRooms();
+        addHallways();
+
+
+
+        // two possible ways: for each room connect to the other rooms
+                // pick a starter room, connect to each room then for all the other rooms,
+                        // randomly connect.
+        // pick a room then randomly connect it to a random number of rooms - form one set
+        // for the rooms not in this set, randomly connect it to one of the rooms in the set then add
+        // to the set. Repeat until second set has no more rooms. Kind of like MST - randomly create
+        // an initial 2 sets, then connect the two sets.
+    }
+
+    /**
+     * Add a random number of rooms to this map.
+     * */
+    private void addRooms() {
         int numRooms = RandomUtils.uniform(this.ran, 5, 20);
 
         for (int i = 0; i < numRooms; i = i + 1) {
@@ -134,19 +152,30 @@ public class RandomMap {
             roomList.add(r);
             this.numRooms = this.numRooms + 1;
         }
+    }
 
-        // two possible ways: for each room connect to the other rooms
-                // pick a starter room, connect to each room then for all the other rooms,
-                        // randomly connect.
-        // pick a room then randomly connect it to a random number of rooms - form one set
-        // for the rooms not in this set, randomly connect it to one of the rooms in the set then add
-        // to the set. Repeat until second set has no more rooms. Kind of like MST - randomly create
-        // an initial 2 sets, then connect the two sets. 
-        hallwayBetweenTwoRooms();
-        hallwayBetweenTwoRooms();
-        hallwayBetweenTwoRooms();
+    /**
+     * Add the hallways to the map.
+     * */
+    private void addHallways() {
+        HashSet<Room> unionedRooms = new HashSet<>();
+        HashSet<Room> nonUnionedRooms = new HashSet<>(this.roomList);
+
+        Collections.shuffle(this.roomList, this.ran);
+
+        Room randomInitialRoom = this.roomList.get(0);
+        unionedRooms.add(randomInitialRoom);
+        nonUnionedRooms.remove(randomInitialRoom);
+
+        while (unionedRooms.size() < this.roomList.size()) {
+            hallwayBetweenTwoRooms(unionedRooms, nonUnionedRooms);
+        }
+
+
+
 
     }
+
 
     /** Draw the provided room in this map.
      * @param r    A Room object.
@@ -177,10 +206,14 @@ public class RandomMap {
         drawVerticalWalls(r, r.start.col + r.width);
     }
 
-    /** Draw a hallway or hallways to connect two rooms at two random points. */
-    private void hallwayBetweenTwoRooms() {
-        Room r1 = helperRandomRoom();
-        Room r2 = helperRandomRoom();
+    /** Draw a hallway or hallways to connect two rooms at two random points. One room will be chosen
+     * from each of two sets of rooms.
+     * @param   set1      A Set of Rooms.
+     * @param   set2      A Set of Rooms
+     * */
+    private void hallwayBetweenTwoRooms(Set set1, Set set2) {
+        Room r1 = helperRandomRoomFromSet(set1);
+        Room r2 = helperRandomRoomFromSet(set2);
 
         Point p1 = helperRandomRoomPoint(r1);
         Point p2 = helperRandomRoomPoint(r2);
@@ -203,6 +236,9 @@ public class RandomMap {
 
         }
 
+        set1.add(r2);
+        set2.remove(r2);
+
     }
 
     /** A helper function to randomly choose a direction to draw a hallway. **/
@@ -216,6 +252,17 @@ public class RandomMap {
     private Room helperRandomRoom() {
         Collections.shuffle(this.roomList, this.ran);
         return this.roomList.get(0);
+    }
+
+    /**
+     * Returns a randomly selected room from the provided set of rooms.
+     * @param roomSet   A Set of Rooms
+     * @return  A Room chosen at random.
+     */
+    private Room helperRandomRoomFromSet(Set roomSet) {
+        ArrayList<Room> roomsAsList = new ArrayList<>(roomSet);
+        Collections.shuffle(roomsAsList, this.ran);
+        return roomsAsList.get(0);
     }
 
     /** Get a random point in a room.
