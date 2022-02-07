@@ -15,15 +15,6 @@ public class RandomMap {
     private int numRooms;
 
 
-    /** A list of all the hallways. */
-    private List<Hallway> hallwayList;
-
-    /** A Queue containing the rooms that have already been explored. */
-    private Queue<Room> roomQueue;
-
-    /** A Queue containing the hallways that have already been explored. */
-    private Queue<Hallway> hallwayQueue;
-
     /** The tile array that represents this map. */
     private TETile[][] tileArray;
 
@@ -42,20 +33,8 @@ public class RandomMap {
     /** The maximum row index of the map. */
     private int maxRowIndex;
 
-    /** An array for choosing either hallway or nothing. */
-    final String[] connectToRoom = new String[]{"Hallway", "None"};
-
-    /** An array for choosing either hallway, room, or none to connect to a hallway. */
-    final String[] connectToHallway = new String[]{"Room", "Hallway", "None"};
-
-    /** An array for choosing either a vertical or horizontal hallway. */
-    final String[] hallwayDirections = new String[]{"Horizontal", "Vertical"};
-
     /** The default tile type of this map. */
     private TETile defaultTileType;
-
-    /** True if the map contains an L-shaped hallway. */
-    boolean containsLShapedHallway;
 
     /** The width of the map (total number of columns). */
     private int width;
@@ -89,9 +68,6 @@ public class RandomMap {
     RandomMap(int w, int l, TETile tileType, int seed) {
 
         this.roomList = new ArrayList<>();
-        this.hallwayList = new ArrayList<>();
-        this.roomQueue = new LinkedList<>();
-        this.hallwayQueue = new LinkedList<>();
         this.tileArray = new TETile[w][l];
         this.helperPopulateMap(this.tileArray, tileType);
         this.ran = new Random(seed);
@@ -99,7 +75,6 @@ public class RandomMap {
         this.maxColIndex = w - 1;
         this.width = w;
         this.length = l;
-        this.containsLShapedHallway = false;
         this.defaultTileType = tileType;
         this.roomSets = new UnionFind(this.width * this.length);
         this.numRooms = 0;
@@ -128,16 +103,6 @@ public class RandomMap {
 
         addRooms();
         addHallways();
-
-
-
-        // two possible ways: for each room connect to the other rooms
-                // pick a starter room, connect to each room then for all the other rooms,
-                        // randomly connect.
-        // pick a room then randomly connect it to a random number of rooms - form one set
-        // for the rooms not in this set, randomly connect it to one of the rooms in the set then add
-        // to the set. Repeat until second set has no more rooms. Kind of like MST - randomly create
-        // an initial 2 sets, then connect the two sets.
     }
 
     /**
@@ -265,54 +230,6 @@ public class RandomMap {
         return r.roomPoints.get(0);
     }
 
-    /** Draws a horizontally oriented hallway between two points.
-     * @param   p1  A Point on the map.
-     * @param   r1  The Room that p1 belongs to.
-     * @param   r2  The Room that p2 belongs to.
-     * @param   p2  A Point on the map.
-     * @return A Point object that represents the point stopped at. Not necessarily p2.
-     * */
-     private Point drawHorizontalHallway(Room r1, Point p1, Room r2, Point p2) {
-
-         Room startRoom;
-         Point startingPointHorizontal;
-
-         if (p1.col < p2.col) {
-             startingPointHorizontal = p1;
-             startRoom = r1;
-         } else {
-             startingPointHorizontal = p2;
-             startRoom = r2;
-         }
-
-         int maxWidth = p1.horizontalDistance(p2);
-         int startingRow = startingPointHorizontal.row;
-         int startingCol = startingPointHorizontal.col;
-
-         /* Width is inclusive - includes starting point and end point. Width 3 starting at col 1 = col 3 */
-
-         int hallWayWidth = RandomUtils.uniform(this.ran, 1, maxWidth + 1);
-
-         for (int curCol = startingCol; curCol <= startingCol + hallWayWidth; curCol = curCol + 1) {
-             TETile[] curTileArray = this.tileArray[curCol];
-             if (!curTileArray[startingRow].equals(Tileset.FLOOR)) {
-                 curTileArray[startingRow] = Tileset.FLOOR;
-                 this.roomSets.union(helper2DIndexConvertor(startRoom.start),
-                         helper2DIndexConvertor(curCol, startingRow));
-             }
-         }
-
-         //drawHorizontalHallway(startingPointHorizontal, hallwayWidth)
-         //find point stopped at; return it.
-
-         // if not p2, drawVerticalHallway(pointStoppedAt, p2)
-         // find point stopped at
-         // if not p2, drawHorizontalHallway(pointStoopedAt, p2)
-
-         return null;
-     }
-
-
 
     /** Draw the horizontal walls around rooms.
      * @param r          The Room to draw the wall around.
@@ -321,7 +238,6 @@ public class RandomMap {
     private void drawHorizontalWalls(Room r, int wallRow) {
         for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
             this.tileArray[curCol][wallRow] = Tileset.WALL;
-            // r.startPoint.union(new Point(curCol, wallRow)
         }
     }
 
@@ -520,14 +436,6 @@ public class RandomMap {
         return this.tileArray[p.col][p.row];
     }
 
-
-    /** Choose a random point to create a connection. */
-    private Point helperRandomPoint(List<Point> listOfPoints) {
-        // pick a random point from a list.
-        return null;
-    }
-
-
     /** Pick a random point on the map to draw the initial room . */
     private Point getRandomPoint() {
 
@@ -536,19 +444,6 @@ public class RandomMap {
         return new Point(colIndex, rowIndex);
     }
 
-
-    /** A helper function to randomly pick from an array A. Used for randomly picking connections to
-     * rooms and hallways. */
-    private String randomConnection(String[]A) {
-        RandomUtils.shuffle(ran, A);
-        return A[0];
-    }
-
-    /** Check if the Point P is valid (is on the map). **/
-    private boolean isPointValid(Point p) {
-
-        return isPointColValid(p) && isPointRowValid(p);
-    }
 
     /** Get a deep copy of this map's tile array. */
     public TETile[][] getTileArray() {
@@ -608,17 +503,6 @@ public class RandomMap {
         this.roomSets.union(index1, index2);
     }
 
-
-
-    /** Check if Point P has a valid column index. */
-    private boolean isPointColValid(Point p) {
-        return p.col >= 0 && p.col < this.maxColIndex;
-    }
-
-    /** Check if Point P has a valid row index. */
-    private boolean isPointRowValid(Point p) {
-        return p.row >= 0 && p.row < this.maxRowIndex;
-    }
 
 
 
