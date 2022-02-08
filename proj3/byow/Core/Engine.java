@@ -5,7 +5,13 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.*;
+
 public class Engine {
+
+    /** The most recent seed. */
+    int seed;
+
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -48,7 +54,8 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        mainMenu();
+        StringCall inputCommands = new StringCall(input);
+
 
         TETile[][] finalWorldFrame = null;
         return finalWorldFrame;
@@ -60,8 +67,37 @@ public class Engine {
     private void mainMenu() {
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.text(0.5, 0.9, "CS61B:  The Game");
+        Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
+        StdDraw.setFont(mainFont);
+        StdDraw.text(0.5, 0.75, "CS61B:  The Game");
+
+        Font optionsFont = new Font("Impact", Font.PLAIN, 15);
+        StdDraw.setFont(optionsFont);
+        StdDraw.text(0.5, 0.4, "New Game (N)");
+        StdDraw.text(0.5, 0.36, "Load Game (L)");
+        StdDraw.text(0.5, 0.32, "Quit Game (Q)");
     }
+
+    /** Stores the information from a user's input string.  */
+    class StringCall {
+
+        /** "N" for new game, "L" for load game*/
+        String userOption;
+
+        /** The seed for the randomly generated map. */
+        String seed;
+
+        /** Movement commands, quit, and/or quit and save */
+        String commands;
+
+        StringCall(String inputString) {
+            // regex
+            // set variables based on regex grouping
+        }
+
+
+    }
+
 
     public static void main(String[] args) {
         Engine e = new Engine();
