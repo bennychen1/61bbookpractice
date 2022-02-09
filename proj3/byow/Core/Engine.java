@@ -93,12 +93,48 @@ public class Engine {
         /** Movement commands, quit, and/or quit and save */
         private String commands;
 
+        /** A String with all possible digits. */
+        private final String POSSIBLE_DIGITS = "0123456789";
+
         StringCall(String inputString) throws IllegalArgumentException {
             // regex
             // set variables based on regex grouping
             // if not valid string, return null;
             // N and L have different string structure
             // If N, save the commands to a variable, then Lxx would just add xx to the variable
+
+
+            int curSeed = 0;
+            boolean seedSet = false;
+
+            StringBuilder userOptionsString = new StringBuilder();
+            StringBuilder commandsString = new StringBuilder();
+
+            for (char c : inputString.toCharArray()) {
+                if (c == 'n' || c == 'N') {
+                    userOptionsString.append("n");
+                } else if (!seedSet && POSSIBLE_DIGITS.indexOf(c) != -1) {
+                    curSeed = addToCurSeed(curSeed, Character.getNumericValue(c));
+                } else {
+                    seedSet = true;
+                    commandsString.append(c);
+
+                }
+            }
+
+            this.userOption = userOptionsString.toString();
+            this.commands = commandsString.toString();
+            this.seed = curSeed;
+
+        }
+
+        /** A helper function to add a digit to a seed.
+         * @param   curSeed     The current seed.
+         * @param   add         The digit to add.
+         * @return  an integer equal to the digits of curSeed followed by add.
+          */
+        private int addToCurSeed(int curSeed, int add) {
+            return curSeed * 10 + add;
         }
 
         /** Return the user option. */

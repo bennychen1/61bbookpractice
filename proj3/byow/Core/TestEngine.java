@@ -87,8 +87,12 @@ public class TestEngine {
     @Test
     public void testInteractWithInputStringStringCall() {
         Engine.StringCall s = new Engine.StringCall("n123s");
-        assertEquals("n", s.userOption);
-        assertEquals(123, s.seed);
+        assertEquals("n", s.getUserOption());
+        assertEquals(123, s.getSeed());
+
+        Engine.StringCall s2 = new Engine.StringCall("N1367532e1");
+        assertEquals("n", s2.getUserOption());
+        assertEquals(1367532, s2.getSeed());
     }
 
 }
