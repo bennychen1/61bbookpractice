@@ -12,14 +12,14 @@ public class TestEngine {
 
     @Test
     public void testDrawTwoRooms() {
-        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 10);
+        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 5);
 
         m.drawWorld();
 
 
         TETile[][] tileArray = m.getTileArray();
         TERenderer t = new TERenderer();
-        t.initialize(70, 31);
+        t.initialize(70, 30);
         t.renderFrame(tileArray);
 
         int i = 0;
@@ -82,6 +82,13 @@ public class TestEngine {
         assertEquals(7, leftUpDiagonal.row);
         assertEquals(6, rightUpDiagonal.col);
         assertEquals(7, rightUpDiagonal.row);
+    }
+
+    @Test
+    public void testInteractWithInputStringStringCall() {
+        Engine.StringCall s = new Engine.StringCall("n123s");
+        assertEquals("n", s.userOption);
+        assertEquals(123, s.seed);
     }
 
 }

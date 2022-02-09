@@ -57,6 +57,9 @@ public class Engine {
         StringCall inputCommands = new StringCall(input);
 
 
+
+
+
         TETile[][] finalWorldFrame = null;
         return finalWorldFrame;
     }
@@ -79,20 +82,38 @@ public class Engine {
     }
 
     /** Stores the information from a user's input string.  */
-    class StringCall {
+    static class StringCall {
 
         /** "N" for new game, "L" for load game*/
-        String userOption;
+        private String userOption;
 
         /** The seed for the randomly generated map. */
-        String seed;
+        private int seed;
 
         /** Movement commands, quit, and/or quit and save */
-        String commands;
+        private String commands;
 
-        StringCall(String inputString) {
+        StringCall(String inputString) throws IllegalArgumentException {
             // regex
             // set variables based on regex grouping
+            // if not valid string, return null;
+            // N and L have different string structure
+            // If N, save the commands to a variable, then Lxx would just add xx to the variable
+        }
+
+        /** Return the user option. */
+        public String getUserOption() {
+            return this.userOption;
+        }
+
+        /** Return the seed.  */
+        public int getSeed() {
+            return this.seed;
+        }
+
+        /** Return the commands.  */
+        public String commands() {
+            return this.commands;
         }
 
 
