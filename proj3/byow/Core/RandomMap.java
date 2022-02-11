@@ -64,7 +64,14 @@ public class RandomMap {
        this(w, l, Tileset.SAND, seed);
     }
 
-    /** Instantiate a w by l map where w is the width and l is the length. Specify default tile type to start with. */
+    /**
+     * Full constructor for RandomMap.
+     * Instantiate a w by l map where w is the width and l is the length. Specify default tile type to start with.
+     * @param   w  The number of columns of the map.
+     * @param   l  The number of rows of the map.
+     * @param   tileType The default tile type.
+     * @param   seed     The seed used for Random number generation.    
+     * */
     RandomMap(int w, int l, TETile tileType, int seed) {
 
         this.roomList = new ArrayList<>();
