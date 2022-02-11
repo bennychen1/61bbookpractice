@@ -3,16 +3,29 @@ package byow.Core;
 /** A Point class to represent a location based on its row index and column index. **/
 public class Point {
 
-        /** The row index of the point. **/
-        int row;
+    /** The row index of the point. **/
+    private int row;
 
-        /** The column index of the point. **/
-        int col;
+    /** The column index of the point. **/
+    private int col;
 
-        Point(int col, int row) {
-            this.row = row;
-            this.col = col;
-        }
+    /**
+     * The full constructor for Point.
+     * @param col   the column index.
+     * @param row   the row index.
+     */
+    Point(int col, int row) {
+        this.row = row;
+        this.col = col;
+    }
+
+    /**
+     * Create a copy of Point p.
+     * @param p A Point object.
+     */
+    Point(Point p) {
+
+    }
 
     /** Returns the horizontal distance between two points.
      * If this point is in column 1 and p1 is in column 3, horizontal distance is 2.
@@ -128,6 +141,16 @@ public class Point {
         } else {
             return null;
         }
+    }
+
+    /** Return the column index of this point. **/
+    public int getCol() {
+        return this.col;
+    }
+
+    /** Return the row index of this point. **/
+    public int getRow() {
+        return this.row;
     }
 
     @Override
