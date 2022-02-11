@@ -70,7 +70,7 @@ public class RandomMap {
      * @param   w  The number of columns of the map.
      * @param   l  The number of rows of the map.
      * @param   tileType The default tile type.
-     * @param   seed     The seed used for Random number generation.    
+     * @param   seed     The seed used for Random number generation.
      * */
     RandomMap(int w, int l, TETile tileType, int seed) {
 
@@ -153,8 +153,8 @@ public class RandomMap {
             return;
         }
 
-        int startRowIndex = r.start.row;
-        int startColIndex = r.start.col;
+        int startRowIndex = r.start.getRow();
+        int startColIndex = r.start.getCol();
 
         for (int curCol = startColIndex; curCol < startColIndex + r.width; curCol = curCol + 1) {
             TETile[] curColArray = this.tileArray[curCol];
@@ -167,10 +167,10 @@ public class RandomMap {
         }
 
 
-        drawHorizontalWalls(r, r.start.row - 1);
-        drawHorizontalWalls(r, r.start.row + r.length);
-        drawVerticalWalls(r, r.start.col - 1);
-        drawVerticalWalls(r, r.start.col + r.width);
+        drawHorizontalWalls(r, r.start.getRow() - 1);
+        drawHorizontalWalls(r, r.start.getRow() + r.length);
+        drawVerticalWalls(r, r.start.getCol() - 1);
+        drawVerticalWalls(r, r.start.getCol() + r.width);
     }
 
     /** Draw a hallway or hallways to connect two rooms at two random points. One room will be chosen
@@ -243,7 +243,7 @@ public class RandomMap {
      * @param wallRow   int, the index of the row to draw the horizontal wall.
      * */
     private void drawHorizontalWalls(Room r, int wallRow) {
-        for (int curCol = r.start.col; curCol < r.start.col + r.width; curCol = curCol + 1) {
+        for (int curCol = r.start.getCol(); curCol < r.start.getCol() + r.width; curCol = curCol + 1) {
             this.tileArray[curCol][wallRow] = Tileset.WALL;
         }
     }
@@ -253,7 +253,7 @@ public class RandomMap {
      * @param wallCol   int, the index of the column to draw the vertical wall.
      * */
     private void drawVerticalWalls(Room r, int wallCol) {
-        for (int curRow = r.start.row - 1; curRow <= r.start.row + r.length; curRow = curRow + 1) {
+        for (int curRow = r.start.getRow() - 1; curRow <= r.start.getRow() + r.length; curRow = curRow + 1) {
             this.tileArray[wallCol][curRow] = Tileset.WALL;
         }
     }
@@ -345,8 +345,8 @@ public class RandomMap {
      * take up.
      * */
     private int helperFindMaxRoomWidth(Point p) {
-        int startRow = p.row;
-        int startCol = p.col;
+        int startRow = p.getRow();
+        int startCol = p.getCol();
 
         int curWidth = 1;
 
@@ -372,8 +372,8 @@ public class RandomMap {
         int curMaxHeight = Integer.MAX_VALUE;
 
         for (int w = 0; w < width; w = w + 1) {
-            TETile[] curCol = this.tileArray[p.col + w];
-            int curColHeight = helperFindColMaxHeight(p.row, curCol);
+            TETile[] curCol = this.tileArray[p.getCol() + w];
+            int curColHeight = helperFindColMaxHeight(p.getRow(), curCol);
             curMaxHeight = Math.min(curMaxHeight, curColHeight);
         }
 
@@ -432,7 +432,7 @@ public class RandomMap {
      * @return  an int representing the corresponding 1d index.
      * */
     public int helper2DIndexConvertor(Point p) {
-        return helper2DIndexConvertor(p.col, p.row);
+        return helper2DIndexConvertor(p.getCol(), p.getRow());
     }
 
     /** Returns the tile at point p.
@@ -440,7 +440,7 @@ public class RandomMap {
      * @return  The type of tile at point p.
      * */
     private TETile helperTileAtPoint(Point p) {
-        return this.tileArray[p.col][p.row];
+        return this.tileArray[p.getCol()][p.getRow()];
     }
 
     /** Pick a random point on the map to draw the initial room . */
@@ -466,7 +466,7 @@ public class RandomMap {
      * @return  A TETile object that represents the tile type at the point in this map.
      * */
     public TETile getTileAt(Point p) {
-        return this.tileArray[p.col][p.row];
+        return this.tileArray[p.getCol()][p.getRow()];
     }
 
     /** Returns the max column index of this map. */
@@ -499,7 +499,7 @@ public class RandomMap {
      * @param   tileType    The type of tile to change the tile to.
      * */
     public void setTileArray(Point p, TETile tileType) {
-        setTileArray(p.col, p.row, tileType);
+        setTileArray(p.getCol(), p.getRow(), tileType);
     }
 
     /** Public method to union two points in this map.

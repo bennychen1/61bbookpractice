@@ -12,7 +12,7 @@ public class TestEngine {
 
     @Test
     public void testDrawTwoRooms() {
-        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 5);
+        RandomMap m = new RandomMap(70, 30, Tileset.SAND, 2);
 
         m.drawWorld();
 
@@ -76,12 +76,12 @@ public class TestEngine {
         Point rightUpDiagonal = p.pointRightUpDiagonal(7, 6);
 
         assertNull(rightNull);
-        assertEquals(4, left.col);
-        assertEquals(6, right.col);
-        assertEquals(4, leftUpDiagonal.col);
-        assertEquals(7, leftUpDiagonal.row);
-        assertEquals(6, rightUpDiagonal.col);
-        assertEquals(7, rightUpDiagonal.row);
+        assertEquals(4, left.getCol());
+        assertEquals(6, right.getCol());
+        assertEquals(4, leftUpDiagonal.getCol());
+        assertEquals(7, leftUpDiagonal.getRow());
+        assertEquals(6, rightUpDiagonal.getCol());
+        assertEquals(7, rightUpDiagonal.getRow());
     }
 
     @Test
@@ -93,6 +93,17 @@ public class TestEngine {
         Engine.StringCall s2 = new Engine.StringCall("N1367532e1");
         assertEquals("n", s2.getUserOption());
         assertEquals(1367532, s2.getSeed());
+    }
+
+    @Test
+    public void testInteractWithInputString() {
+        Engine e = new Engine();
+        RandomMap m = new RandomMap(235);
+
+        TETile[][] actual = e.interactWithInputString("N235s");
+
+        assertArrayEquals(m.getTileArray(), actual);
+
     }
 
 }

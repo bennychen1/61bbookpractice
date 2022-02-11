@@ -15,7 +15,7 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
         Point endPoint;
         Room endRoom;
 
-        if (p1.col < p2.col) {
+        if (p1.getCol() < p2.getCol()) {
             startPoint= p1;
             startRoom = r1;
             endPoint = p2;
@@ -29,8 +29,8 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
         }
 
 
-        int startingCol = startPoint.col;
-        int startingRow = startPoint.row;
+        int startingCol = startPoint.getCol();
+        int startingRow = startPoint.getRow();
 
         int maxWidth = p1.horizontalDistance(p2);
 

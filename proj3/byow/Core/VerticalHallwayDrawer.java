@@ -15,7 +15,7 @@ public class VerticalHallwayDrawer extends HallwayDrawer{
         Point endPoint;
         Room endRoom;
 
-        if (p1.row < p2.row) {
+        if (p1.getRow() < p2.getRow()) {
             startPoint= p1;
             startRoom = r1;
             endPoint = p2;
@@ -29,8 +29,8 @@ public class VerticalHallwayDrawer extends HallwayDrawer{
         }
 
 
-        int startingCol = startPoint.col;
-        int startingRow = startPoint.row;
+        int startingCol = startPoint.getCol();
+        int startingRow = startPoint.getRow();
 
         int maxHeight = p1.verticalDistance(p2);
 
