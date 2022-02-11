@@ -29,9 +29,15 @@ public class Avatar extends TETile {
 
     /** A getter method to get the Point location of the avatar. **/
     public Point getLocation() {
-        return new Point(this.location.)
+        return new Point(this.location.getCol(), this.location.getRow());
     }
 
-    /** A setter method to set
+    /**
+     * A setter method to set the location for this avatar
+     * @param col  the column index to set the location to.
+     * @param row  the row index to set the location to. 
+     */
+    public void setLocation(int col, int row) {
 
+    }
 }
