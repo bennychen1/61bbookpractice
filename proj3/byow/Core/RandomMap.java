@@ -87,7 +87,13 @@ public class RandomMap {
         this.numRooms = 0;
     }
 
+    /**
+     * Create a copy of RandomMap r.
+     * @param r A RandomMap.
+     */
+    RandomMap(RandomMap r) {
 
+    }
 
 
     /** Helper function to populate tile array during instantiation with the specified tile type.
@@ -454,11 +460,7 @@ public class RandomMap {
 
     /** Get a deep copy of this map's tile array. */
     public TETile[][] getTileArray() {
-        TETile[][] toReturn = new TETile[this.width][this.length];
-        for (int i = 0; i <= this.maxColIndex; i = i + 1) {
-            System.arraycopy(this.tileArray[i], 0, toReturn[i], 0, this.length);
-        }
-        return toReturn;
+       return TETile.copyOf(this.tileArray);
     }
 
     /** Returns the TETile at the specified Point.
