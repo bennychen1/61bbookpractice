@@ -100,7 +100,7 @@ public class RandomMap {
         this.width = this.maxColIndex + 1;
         this.length = this.maxRowIndex + 1;
         this.defaultTileType = r.getDefaultTileType();
-        this.roomSets = r.getUnion();
+        this.roomSets = r.getRoomSets();
         this.numRooms = this.roomList.size();
     }
 
@@ -464,6 +464,20 @@ public class RandomMap {
         int rowIndex = RandomUtils.uniform(ran, 1, this.maxRowIndex- 1);
         int colIndex = RandomUtils.uniform(ran, 1, this.maxColIndex - 1);
         return new Point(colIndex, rowIndex);
+    }
+
+    /** Pick a random point on the map that is a floor. */
+    public Point getRandomFloorPoint() {
+
+        Collections.shuffle(this.roomList, this.ran);
+
+        ArrayList<Point> pointsToChooseFrom = this.roomList.get(0).roomPoints;
+
+        Collections.shuffle(pointsToChooseFrom, this.ran);
+
+        return pointsToChooseFrom.get(0);
+
+
     }
 
 
