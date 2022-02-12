@@ -54,13 +54,21 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
+        // two scenarios: either n or l
+        // if (n) { setSeed then do commands}
+        // if (l) {load seed, then do commands}
+
         StringCall inputCommands = new StringCall(input);
 
+        if (inputCommands.userOption.equals("n")) {
+            RandomMap m = new RandomMap(inputCommands.seed);
+            Avatar userIcon = new Avatar('@', m.getRandomFloorPoint());
+            InteractiveMap iMap = new InteractiveMap(m, userIcon);
+        }
 
+        RandomMap m = new RandomMap(inputCommands.seed);
 
-
-
-        TETile[][] finalWorldFrame = null;
+        TETile[][] finalWorldFrame = m.getTileArray();
         return finalWorldFrame;
     }
 
@@ -118,13 +126,16 @@ public class Engine {
                 } else {
                     seedSet = true;
                     commandsString.append(c);
-
                 }
             }
 
             this.userOption = userOptionsString.toString();
             this.commands = commandsString.toString();
             this.seed = curSeed;
+
+            if (this.userOption == "") {
+                throw new IllegalArgumentException("String must start with N");
+            }
 
         }
 
