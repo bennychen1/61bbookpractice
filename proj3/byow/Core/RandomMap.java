@@ -92,7 +92,16 @@ public class RandomMap {
      * @param r A RandomMap.
      */
     RandomMap(RandomMap r) {
-
+        this.roomList = r.getRoomList();
+        this.tileArray = r.getTileArray();
+        this.ran = r.getRan();
+        this.maxRowIndex = r.getMaxRowIndex();
+        this.maxColIndex = r.getMaxColIndex();
+        this.width = this.maxColIndex + 1;
+        this.length = this.maxRowIndex + 1;
+        this.defaultTileType = r.getDefaultTileType();
+        this.roomSets = r.getUnion();
+        this.numRooms = this.roomList.size();
     }
 
 
@@ -484,6 +493,22 @@ public class RandomMap {
     /** Returns the Random Number Generator of this map. */
     public Random getRan() {
         return this.ran;
+    }
+
+    /** Returns the list of rooms of this map. **/
+    public ArrayList<Room> getRoomList() {
+        ArrayList<Room> copy = new ArrayList<>(this.roomList);
+        return copy;
+    }
+
+    /** Returns the default tile type of this map. **/
+    public TETile getDefaultTileType() {
+        return this.defaultTileType;
+    }
+
+    /** Returns the current sets of rooms represented as a union of points. **/
+    public UnionFind getRoomSets() {
+        return this.roomSets;
     }
 
 
