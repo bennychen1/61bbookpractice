@@ -22,11 +22,8 @@ public class TestEngine {
         t.initialize(70, 30);
         t.renderFrame(tileArray);
 
-        int i = 0;
 
-        while (i == 0) {
-            continue;
-        }
+        //displayRenderer();
     }
 
     @Test
@@ -41,11 +38,7 @@ public class TestEngine {
         t.initialize(20, 15);
         t.renderFrame(tileArray);
 
-        int i = 0;
-
-        while (i == 0) {
-            continue;
-        }
+        //displayRenderer();
     }
 
     @Test
@@ -105,5 +98,29 @@ public class TestEngine {
         assertArrayEquals(m.getTileArray(), actual);
 
     }
+
+    @Test
+    public void testInteractiveMap() {
+        RandomMap m = new RandomMap(10, 10, Tileset.GRASS, 2);
+        Avatar a = new Avatar('@', new Point(1, 2));
+
+        InteractiveMap iMap = new InteractiveMap(m, a);
+
+        TERenderer t = new TERenderer();
+        t.initialize(10, 10);
+        t.renderFrame(iMap.getGameMap().getTileArray());
+
+
+        //displayRenderer();
+        assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
+    }
+
+    private void displayRenderer() {
+        while (true) {
+            ;
+        }
+    }
+
+
 
 }
