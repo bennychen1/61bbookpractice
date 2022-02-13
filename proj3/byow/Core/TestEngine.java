@@ -102,7 +102,8 @@ public class TestEngine {
     @Test
     public void testInteractiveMap() {
         RandomMap m = new RandomMap(10, 10, Tileset.GRASS, 2);
-        Avatar a = new Avatar('@', new Point(1, 2));
+        Point originalPoint = new Point(1, 2);
+        Avatar a = new Avatar('@', originalPoint);
 
         InteractiveMap iMap = new InteractiveMap(m, a);
 
@@ -113,6 +114,14 @@ public class TestEngine {
 
         //displayRenderer();
         assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
+
+        Point point1 = new Point(1, 3);
+
+        iMap.moveAvatar(point1);
+
+        assertEquals(Tileset.FLOOR.description(), iMap.getGameMap().getTileAt(originalPoint));
+        assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
+
     }
 
     private void displayRenderer() {
