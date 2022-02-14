@@ -4,6 +4,7 @@ import byow.TileEngine.TETile;
 import jh61b.junit.In;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** A RandomMap that is interactive. **/
 public class InteractiveMap {
@@ -12,7 +13,7 @@ public class InteractiveMap {
     private RandomMap gameMap;
 
     /** A list of avatars. **/
-    private ArrayList<Avatar> avatarList;
+    private List<Avatar> avatarList;
 
 
     /**
@@ -32,7 +33,7 @@ public class InteractiveMap {
         this.gameMap.drawWorld();
         this.avatarList = new ArrayList<>();
         avatarList.add(a);
-
+        this.placeAvatar(a);
     }
 
     /**
@@ -44,6 +45,15 @@ public class InteractiveMap {
         this.avatarList = new ArrayList<>();
     }
 
+    InteractiveMap(RandomMap m, List<Avatar> avatarList) {
+        this.gameMap = m;
+        m.drawWorld();
+        this.avatarList = avatarList;
+
+        for (Avatar a : this.avatarList) {
+            placeAvatar(a);
+        }
+    }
 
     /**
      * Returns true if p is a valid location on the game map.
@@ -67,7 +77,7 @@ public class InteractiveMap {
             return;
         }
 
-        this.originalTile = this.gameMap.getTileAt(a.getLocation());
+        a.setConsumedTile(this.gameMap.getTileAt(a.getLocation()));
         this.gameMap.setTileArray(a.getLocation(), a);
     }
 
