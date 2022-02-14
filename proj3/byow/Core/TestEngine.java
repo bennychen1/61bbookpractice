@@ -106,14 +106,21 @@ public class TestEngine {
 
 
         //displayRenderer();
-        assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
 
         Point point1 = new Point(1, 3);
 
-        iMap.moveAvatar(point1);
+        iMap.moveAvatar(a, point1);
 
-        assertEquals(Tileset.FLOOR.description(), iMap.getGameMap().getTileAt(originalPoint));
-        assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
+        assertEquals(Tileset.FLOOR.description(), iMap.getGameMap().getTileAt(originalPoint).description());
+        assertEquals(Tileset.FLOOR.description(), a.getConsumedTile().description());
+        assertEquals(a, iMap.getGameMap().getTileAt(point1));
+        assertEquals(point1, a.getLocation());
+
+        Point pointOffMap = new Point(1, 12);
+
+        iMap.moveAvatar(a, pointOffMap);
+
+        assertEquals(point1, a.getLocation());
     }
 
     @Test
