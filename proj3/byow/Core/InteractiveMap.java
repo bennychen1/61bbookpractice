@@ -77,8 +77,7 @@ public class InteractiveMap {
             return;
         }
 
-        a.setConsumedTile(this.gameMap.getTileAt(a.getLocation()));
-        this.gameMap.setTileArray(a.getLocation(), a);
+        helperToPlaceAvatar(a, a.getLocation());
     }
 
     /** Move the avatar to the provided point if it is a valid location. Do nothing if not valid.
@@ -92,10 +91,10 @@ public class InteractiveMap {
         }
 
         this.gameMap.setTileArray(a.getLocation(), a.getConsumedTile());
-        this.originalTile = this.gameMap.getTileAt(location);
-        this.gameMap.setTileArray(location, a);
         a.setLocation(location);
+        helperToPlaceAvatar(a, location);
     }
+
 
     /**
      * Move the avatar according the the specified keyboard command.
@@ -138,6 +137,16 @@ public class InteractiveMap {
     public ArrayList<Avatar> getAvatarList() {
         ArrayList<Avatar> copy = new ArrayList<>(this.avatarList);
         return copy;
+    }
+
+    /**
+     * A helper function to set avatar consumed tile and put avatar in the location.
+     * @param a The avatar to update
+     * @param location  The location to move the avatar to.
+     */
+    private void helperToPlaceAvatar(Avatar a, Point location) {
+        a.setConsumedTile(this.gameMap.getTileAt(location));
+        this.gameMap.setTileArray(location, a);
     }
 
 }
