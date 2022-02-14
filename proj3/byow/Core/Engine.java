@@ -9,8 +9,14 @@ import java.awt.*;
 
 public class Engine {
 
-    /** The most recent seed. */
-    int seed;
+    /** The current Interactive Map. **/
+    InteractiveMap iMap;
+
+    /** True if the game is set up (has a seed).*/
+    boolean isGameSetup = false;
+
+    /** True if the user wants to save the game. **/
+    boolean save = false;
 
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -58,15 +64,8 @@ public class Engine {
         // if (n) { setSeed then do commands}
         // if (l) {load seed, then do commands}
 
-        StringCall inputCommands = new StringCall(input);
 
-        if (inputCommands.userOption.equals("n")) {
-            RandomMap m = new RandomMap(inputCommands.seed);
-            Avatar userIcon = new Avatar('@', m.getRandomFloorPoint());
-            InteractiveMap iMap = new InteractiveMap(m, userIcon);
-        }
 
-        RandomMap m = new RandomMap(inputCommands.seed);
 
         TETile[][] finalWorldFrame = m.getTileArray();
         return finalWorldFrame;
@@ -114,6 +113,7 @@ public class Engine {
 
             int curSeed = 0;
             boolean seedSet = false;
+            boolean save = false;
 
             StringBuilder userOptionsString = new StringBuilder();
             StringBuilder commandsString = new StringBuilder();
@@ -123,8 +123,12 @@ public class Engine {
                     userOptionsString.append("n");
                 } else if (!seedSet && POSSIBLE_DIGITS.indexOf(c) != -1) {
                     curSeed = addToCurSeed(curSeed, Character.getNumericValue(c));
-                } else {
-                    seedSet = true;
+                } else if (!seedSet && (c == 's' || c == 'S')) {
+                     seedSet = true;
+                } else if (c == ':') {
+                    save = true;
+                } else if (c == 'q') {
+
                     commandsString.append(c);
                 }
             }
