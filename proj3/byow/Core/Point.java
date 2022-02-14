@@ -158,5 +158,16 @@ public class Point {
         return "Column " + this.col + " Row " + this.row;
     }
 
+    @Override
+    public boolean equals(Object otherPoint) {
+        if (otherPoint.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Point o = (Point) otherPoint;
+
+        return (o.getCol() == this.getCol() && o.getRow() == o.getRow());
+    }
+
 }
 
