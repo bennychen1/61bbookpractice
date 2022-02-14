@@ -3,20 +3,20 @@ package byow.Core;
 import byow.TileEngine.TETile;
 import jh61b.junit.In;
 
+import java.util.ArrayList;
+
 /** A RandomMap that is interactive. **/
 public class InteractiveMap {
 
     /** A RandomMap representing the game map. **/
     private RandomMap gameMap;
 
-    /** The avatar of the user. **/
-    private Avatar userAvatar;
+    /** A list of avatars. **/
+    private ArrayList<Avatar> avatarList;
 
-    /** The original tile that the Avatar took the place of. */
-    private TETile originalTile;
 
     /**
-     * Constructor with a default avatar.
+     * Default constructor for InteractiveMap.
      * @param m The game map.
      */
     InteractiveMap(RandomMap m) {
@@ -30,13 +30,20 @@ public class InteractiveMap {
     InteractiveMap(RandomMap m , Avatar a) {
         this.gameMap = m;
         this.gameMap.drawWorld();
-        this.userAvatar = a;
-        this.originalTile = null;
+        this.avatarList = new ArrayList<>();
+        avatarList.add(a);
 
-        if (isPointValid(this.userAvatar.getLocation())) {
-            placeAvatar();
-        }
     }
+
+    /**
+     *  Create a copy of InteractiveMap i.
+     * @param   i   The InteractiveMap to copy.
+     * **/
+    InteractiveMap(InteractiveMap i) {
+        this.gameMap = i.getGameMap();
+        this.avatarList = new ArrayList<>();
+    }
+
 
     /**
      * Returns true if p is a valid location on the game map.
@@ -51,34 +58,44 @@ public class InteractiveMap {
                 p.getCol() < gameMap.getMaxColIndex());
     }
 
-    /** Put the avatar in its location in the tile array of the game map.  **/
-    public void placeAvatar() {
-        this.originalTile = this.gameMap.getTileAt(this.userAvatar.getLocation());
-        this.gameMap.setTileArray(this.userAvatar.getLocation(), this.userAvatar);
+    /** Put the avatar in its location in the tile array of the game map.
+     * @param a The avatar to place.
+     * **/
+    public void placeAvatar(Avatar a) {
+
+        if (!isPointValid(a.getLocation())) {
+            return;
+        }
+
+        this.originalTile = this.gameMap.getTileAt(a.getLocation());
+        this.gameMap.setTileArray(a.getLocation(), a);
     }
 
     /** Move the avatar to the provided point if it is a valid location. Do nothing if not valid.
+     * @param   a   The avatar to move.
      * @param location  A Point object representing where to move the avatar.
      * **/
-    public void moveAvatar(Point location) {
+    public void moveAvatar(Avatar a, Point location) {
         if (!isPointValid(location)) {
             System.out.println("Location is not valid on game map");
             return;
         }
 
-        this.gameMap.setTileArray(this.userAvatar.getLocation(), this.originalTile);
+        this.gameMap.setTileArray(a.getLocation(), a.getConsumedTile());
         this.originalTile = this.gameMap.getTileAt(location);
-        this.gameMap.setTileArray(location, this.userAvatar);
+        this.gameMap.setTileArray(location, a);
+        a.setLocation(location);
     }
 
     /**
      * Move the avatar according the the specified keyboard command.
      *      W - move up on the map, S move down on the map, A move to the left, D move to the right.
-     * @param dir
+     * @param a  The avatar to move.
+     * @param dir A char for the direction to move the avatar.
      */
-    public void moveAvatarCommand(char dir) {
+    public void moveAvatarCommand(Avatar a, char dir) {
         Point newPoint;
-        Point curPoint = this.userAvatar.getLocation();
+        Point curPoint = a.getLocation();
         switch (dir) {
             case'w':
                 newPoint = curPoint.pointToTop(this.gameMap.getMaxRowIndex());
@@ -96,7 +113,7 @@ public class InteractiveMap {
                 newPoint = null;
         }
 
-        this.moveAvatar(newPoint);
+        this.moveAvatar(a, newPoint);
 
 
     }
@@ -107,9 +124,10 @@ public class InteractiveMap {
         return copy;
     }
 
-    /** Returns the current original tile. **/
-    public TETile getOriginalTile() {
-        return this.originalTile;
+    /** Returns a copy of the avatar list. **/
+    public ArrayList<Avatar> getAvatarList() {
+        ArrayList<Avatar> copy = new ArrayList<>(this.avatarList);
+        return copy;
     }
 
 }
