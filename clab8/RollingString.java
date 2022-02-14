@@ -38,7 +38,8 @@ class RollingString{
         int i = 0;
         for (Character c : s.toCharArray()) {
             this.s.addLast(c);
-            this.hashSum = this.hashSum + ((int) c + (int) Math.pow(UNIQUECHARS, i));
+            int x = (int) c;
+            this.hashSum = this.hashSum + ((int) c * (int) Math.pow(UNIQUECHARS, i));
             i = i + 1;
         }
     }
@@ -51,7 +52,7 @@ class RollingString{
     public void addChar(char c) {
         /* FIX ME */
         char firstChar = this.s.removeFirst();
-        this.hashSum = this.hashSum - (int) firstChar * (int) Math.pow(UNIQUECHARS, 0);
+        this.hashSum = (this.hashSum - (int) firstChar) / UNIQUECHARS;
         this.s.addLast(c);
         this.hashSum = this.hashSum + (int) c * (int) Math.pow(UNIQUECHARS, this.s.size() - 1);
     }
