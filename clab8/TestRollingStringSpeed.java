@@ -53,7 +53,7 @@ public class TestRollingStringSpeed {
             time[i] = s.elapsedTime();
         }
 
-        System.out.println(Arrays.toString(time));
+        System.out.println("Hashcode Speed: " + Arrays.toString(time));
 
 
 
