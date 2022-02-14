@@ -8,12 +8,12 @@ public class Hallway extends Room{
     Hallway(boolean isHorizontal, int size, Point start) {
 
         super(size, size, start);
-        
+
         if (isHorizontal) {
             this.length = 1;
         } else {
             this.width = 1;
         }
-
     }
+
 }

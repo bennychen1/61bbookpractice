@@ -30,5 +30,12 @@ public class Room {
          this(0, 0, new Point(0, 0));
      }
 
+     /** Add Points to this room's point list.
+      * @param  p   The Point object to add.
+      * */
+     public void addPoint(Point p) {
+         this.roomPoints.add(p);
+     }
+
 
 }
