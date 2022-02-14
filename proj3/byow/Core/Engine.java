@@ -18,6 +18,9 @@ public class Engine {
     /** True if the user wants to save the game. **/
     boolean save = false;
 
+    /** A String of possible movements. **/
+    String POSSIBLE_MOVES = "WASD";
+
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -64,10 +67,28 @@ public class Engine {
         // if (n) { setSeed then do commands}
         // if (l) {load seed, then do commands}
 
+        StringCommandInput s = new StringCommandInput(input);
+
+        while(s.hasNextInput()) {
+            char curCommand = s.getNextInput();
+
+            if (!this.isGameSetup && (curCommand == 'n' || curCommand == 'N')) {
+                int curSeed = findSeed(s);
+                RandomMap gameMap = new RandomMap(curSeed);
+                gameMap.drawWorld();
+                Avatar userAvatar = new Avatar('@', gameMap.getRandomFloorPoint());
+                this.iMap = new InteractiveMap(gameMap, userAvatar);
+                this.isGameSetup = true;
+
+            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) != 0) {
+                this.iMap.moveAvatarCommand(curCommand);
+            }
+        }
 
 
 
-        TETile[][] finalWorldFrame = m.getTileArray();
+
+       TETile[][] finalWorldFrame = iMap.getGameMap().getTileArray();
         return finalWorldFrame;
     }
 
@@ -86,6 +107,31 @@ public class Engine {
         StdDraw.text(0.5, 0.4, "New Game (N)");
         StdDraw.text(0.5, 0.36, "Load Game (L)");
         StdDraw.text(0.5, 0.32, "Quit Game (Q)");
+    }
+
+    /** A helper function to find the seed the user wants from the provided string. */
+    private int findSeed(StringCommandInput stringCommand) {
+        int curSeed = 0;
+
+        char curChar = stringCommand.getNextInput();
+
+        curSeed = addToCurSeed(curSeed, curChar);
+
+        while (stringCommand.hasNextInput() && (curChar != 's' || curChar != 'S')) {
+            curChar = stringCommand.getNextInput();
+            curSeed = addToCurSeed(curSeed, curChar);
+        }
+
+        return curSeed;
+    }
+
+    /** A helper function to add a digit to a seed.
+     * @param   curSeed     The current seed.
+     * @param   add         The digit to add.
+     * @return  an integer equal to the digits of curSeed followed by add.
+     */
+    private int addToCurSeed(int curSeed, int add) {
+        return curSeed * 10 + add;
     }
 
     /** Stores the information from a user's input string.  */

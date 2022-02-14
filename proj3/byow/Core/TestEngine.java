@@ -77,25 +77,18 @@ public class TestEngine {
         assertEquals(7, rightUpDiagonal.getRow());
     }
 
-    @Test
-    public void testInteractWithInputStringStringCall() {
-        Engine.StringCall s = new Engine.StringCall("n123s");
-        assertEquals("n", s.getUserOption());
-        assertEquals(123, s.getSeed());
-
-        Engine.StringCall s2 = new Engine.StringCall("N1367532e1");
-        assertEquals("n", s2.getUserOption());
-        assertEquals(1367532, s2.getSeed());
-    }
 
     @Test
     public void testInteractWithInputString() {
         Engine e = new Engine();
-        RandomMap m = new RandomMap(235);
 
-        TETile[][] actual = e.interactWithInputString("N235s");
+        TETile[][] tileArray = e.interactWithInputString("n123s");
 
-        assertArrayEquals(m.getTileArray(), actual);
+        TERenderer t = new TERenderer();
+        t.initialize(30, 30);
+        t.renderFrame(tileArray);
+
+        displayRenderer();
 
     }
 
@@ -121,6 +114,11 @@ public class TestEngine {
 
         assertEquals(Tileset.FLOOR.description(), iMap.getGameMap().getTileAt(originalPoint));
         assertEquals(Tileset.FLOOR.description(), iMap.getOriginalTile().description());
+    }
+
+    @Test
+    public void testIsPointValid() {
+        RandomMap m = new RandomMap(10, 10, Tileset.SAND, 2);
 
     }
 
