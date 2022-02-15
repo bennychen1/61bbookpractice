@@ -21,7 +21,9 @@ public class InteractiveMap {
      * @param m The game map.
      */
     InteractiveMap(RandomMap m) {
-        this(m, new Avatar('@', m.getRandomFloorPoint()));
+        this(m, new Avatar('@', new Point(0, 0)));
+        Avatar a = this.avatarList.get(0);
+        this.moveAvatar(a, this.gameMap.getRandomFloorPoint());
     }
     /**
      * The full constructor for InteractiveMap.
@@ -32,7 +34,7 @@ public class InteractiveMap {
         this.gameMap = m;
         this.gameMap.drawWorld();
         this.avatarList = new ArrayList<>();
-        avatarList.add(a);
+        this.avatarList.add(a);
         this.placeAvatar(a);
     }
 
@@ -42,7 +44,7 @@ public class InteractiveMap {
      * **/
     InteractiveMap(InteractiveMap i) {
         this.gameMap = i.getGameMap();
-        this.avatarList = new ArrayList<>();
+        this.avatarList = i.getAvatarList();
     }
 
     InteractiveMap(RandomMap m, List<Avatar> avatarList) {
@@ -103,19 +105,20 @@ public class InteractiveMap {
      * @param dir A char for the direction to move the avatar.
      */
     public void moveAvatarCommand(Avatar a, char dir) {
+        String directionString = String.valueOf(dir).toLowerCase();
         Point newPoint;
         Point curPoint = a.getLocation();
-        switch (dir) {
-            case'w':
+        switch (directionString) {
+            case"w":
                 newPoint = curPoint.pointToTop(this.gameMap.getMaxRowIndex());
                 break;
-            case 's':
+            case "s":
                 newPoint = curPoint.pointToBottom();
                 break;
-            case 'a':
+            case "a":
                 newPoint = curPoint.pointToLeft();
                 break;
-            case 'd':
+            case "d":
                 newPoint = curPoint.pointToRight(this.gameMap.getMaxColIndex());
                 break;
             default:
@@ -123,8 +126,6 @@ public class InteractiveMap {
         }
 
         this.moveAvatar(a, newPoint);
-
-
     }
 
     /** Return a copy of this game map. **/
@@ -134,7 +135,7 @@ public class InteractiveMap {
     }
 
     /** Returns a copy of the avatar list. **/
-    public ArrayList<Avatar> getAvatarList() {
+    public List<Avatar> getAvatarList() {
         ArrayList<Avatar> copy = new ArrayList<>(this.avatarList);
         return copy;
     }
