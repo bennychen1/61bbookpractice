@@ -3,23 +3,28 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Engine {
 
     /** The current Interactive Map. **/
-    InteractiveMap iMap;
+    private InteractiveMap iMap;
 
     /** True if the game is set up (has a seed).*/
-    boolean isGameSetup = false;
+    private boolean isGameSetup = false;
 
     /** True if the user wants to save the game. **/
-    boolean save = false;
+    private boolean save = false;
 
     /** A String of possible movements. **/
-    String POSSIBLE_MOVES = "WASD";
+    private String POSSIBLE_MOVES = "WASD";
+
+    /** The Random Number Generator. **/
+    private Random ran = new Random(10);
 
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -74,14 +79,15 @@ public class Engine {
 
             if (!this.isGameSetup && (curCommand == 'n' || curCommand == 'N')) {
                 int curSeed = findSeed(s);
-                RandomMap gameMap = new RandomMap(curSeed);
-                gameMap.drawWorld();
-                Avatar userAvatar = new Avatar('@', gameMap.getRandomFloorPoint());
-                this.iMap = new InteractiveMap(gameMap, userAvatar);
+                int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
+                int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
+                RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
+                this.iMap = new InteractiveMap(gameMap);
                 this.isGameSetup = true;
 
             } else if (this.POSSIBLE_MOVES.indexOf(curCommand) != 0) {
-                this.iMap.moveAvatarCommand(curCommand);
+                Avatar userAvatar = this.iMap.getAvatarList().get(0);
+                this.iMap.moveAvatarCommand(userAvatar, curCommand);
             }
         }
 
@@ -115,11 +121,17 @@ public class Engine {
 
         char curChar = stringCommand.getNextInput();
 
-        curSeed = addToCurSeed(curSeed, curChar);
 
-        while (stringCommand.hasNextInput() && (curChar != 's' || curChar != 'S')) {
+        curSeed = addToCurSeed(curSeed, Character.getNumericValue(curChar));
+
+        while (stringCommand.hasNextInput()) {
             curChar = stringCommand.getNextInput();
-            curSeed = addToCurSeed(curSeed, curChar);
+
+            if (curChar == 's' || curChar == 'S') {
+                break;
+            }
+
+            curSeed = addToCurSeed(curSeed, Character.getNumericValue(curChar));
         }
 
         return curSeed;
@@ -132,6 +144,12 @@ public class Engine {
      */
     private int addToCurSeed(int curSeed, int add) {
         return curSeed * 10 + add;
+    }
+
+    /** Get the InteractiveMap. **/
+    public InteractiveMap getiMap() {
+        InteractiveMap copy = new InteractiveMap(this.iMap);
+        return copy;
     }
 
     /** Stores the information from a user's input string.  */
@@ -212,7 +230,6 @@ public class Engine {
         public String commands() {
             return this.commands;
         }
-
 
     }
 
