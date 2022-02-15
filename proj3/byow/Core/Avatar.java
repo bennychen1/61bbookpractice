@@ -56,4 +56,11 @@ public class Avatar extends TETile {
     public TETile getConsumedTile() {
         return this.consumedTile;
     }
+
+    /** Set the consumed tile to the provided tile type.
+     * @param tileType The tiletype to set consumed tile to.
+     * **/
+    public void setConsumedTile(TETile tileType) {
+        this.consumedTile = tileType;
+    }
 }
