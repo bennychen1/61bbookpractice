@@ -144,7 +144,7 @@ public class RandomMap {
      * Add the hallways to the map.
      * */
     private void addHallways() {
-        HashSet<Room> unionedRooms = new HashSet<>();
+        RoomList unionedRooms = new RoomList();
 
         Collections.shuffle(this.roomList, this.ran);
 
