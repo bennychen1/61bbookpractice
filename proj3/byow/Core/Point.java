@@ -153,6 +153,7 @@ public class Point {
         return this.row;
     }
 
+
     @Override
     public String toString() {
         return "Column " + this.col + " Row " + this.row;
