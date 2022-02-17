@@ -127,19 +127,23 @@ public class TestEngine {
     public void testInteractOneMove() {
         Engine e = new Engine();
 
-        e.interactWithInputString("n123");
+        e.interactWithInputString("n123sd");
 
-        //Avatar testAvatar = getFirstAvatar(e);
+        Avatar testAvatar = getFirstAvatar(e);
 
         InteractiveMap iMap = e.getiMap();
 
+
+        Point expectedPoint2 = new Point(3, 1);
+        assertEquals(expectedPoint2, testAvatar.getLocation());
+
+
         t.initialize(iMap.getGameMap().getMaxColIndex() + 1, iMap.getGameMap().getMaxRowIndex() + 1);
         t.renderFrame(iMap.getGameMap().getTileArray());
-        displayRenderer();
+        //displayRenderer();
 
 
-
-        assertEquals(new Point(14, 3), 1);
+        //assertEquals(new Point(14, 3), 1);
 
         /**
         Engine e1 = new Engine();
@@ -147,6 +151,30 @@ public class TestEngine {
         e1.interactWithInputString("n123ss");
         Avatar testAvatar1 = getFirstAvatar(e1);
         assertEquals(new Point(27, 2), testAvatar.getLocation()); **/
+
+    }
+
+    @Test
+    public void testEngineMoveWall() {
+        Engine e = new Engine();
+
+        e.interactWithInputString("n123sw");
+
+        Avatar testAvatar = getFirstAvatar(e);
+
+        System.out.println(testAvatar.getLocation());
+        System.out.println(new Point(2, 1));
+        System.out.println(new Point(2, 1).equals(new Point(2, 2)));
+
+
+
+        assertEquals(new Point(2, 1),testAvatar.getLocation());
+
+        InteractiveMap iMap = e.getiMap();
+        t.initialize(iMap.getGameMap().getMaxColIndex() + 1, iMap.getGameMap().getMaxRowIndex() + 1);
+        t.renderFrame(iMap.getGameMap().getTileArray());
+        displayRenderer();
+
 
     }
 
