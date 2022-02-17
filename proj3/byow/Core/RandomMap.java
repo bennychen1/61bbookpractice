@@ -149,17 +149,12 @@ public class RandomMap {
         Collections.shuffle(this.roomList, this.ran);
 
         Room randomInitialRoom = this.roomList.get(0);
-        unionedRooms.add(randomInitialRoom);
-
-
+        unionedRooms.addRoom(randomInitialRoom);
 
         int i = 0;
 
-        while (i <= 2 && unionedRooms.size() < this.roomList.size()) {
-            System.out.println(i);
+        while (unionedRooms.size() < this.roomList.size()) {
             hallwayBetweenTwoRooms(unionedRooms);
-            //System.out.println(i);
-            i = i + 1;
         }
 
     }
@@ -196,9 +191,9 @@ public class RandomMap {
 
     /** Draw a hallway or hallways to connect two rooms at two random points. One room will be chosen
      * from each of two sets of rooms.
-     * @param   set1      A Set of Rooms that are connected (unioned).
+     * @param   set1      A list of unique Rooms that are connected (unioned).
      * */
-    private void hallwayBetweenTwoRooms(Set set1) {
+    private void hallwayBetweenTwoRooms(RoomList set1) {
         Room r1 = helperRandomRoomFromSet(set1);
         Room r2 = helperRandomRoom();
 
@@ -223,7 +218,7 @@ public class RandomMap {
 
         }
 
-        set1.add(r2);
+        set1.addRoom(r2);
 
     }
 
@@ -242,13 +237,13 @@ public class RandomMap {
 
     /**
      * Returns a randomly selected room from the provided set of rooms.
-     * @param roomSet   A Set of Rooms
+     * @param roomSet   A list of unique rooms.
      * @return  A Room chosen at random.
      */
-    private Room helperRandomRoomFromSet(Set roomSet) {
-        ArrayList<Room> roomsAsList = new ArrayList<>(roomSet);
-        Collections.shuffle(roomsAsList, this.ran);
-        return roomsAsList.get(0);
+    private Room helperRandomRoomFromSet(RoomList roomSet) {
+        ArrayList<Room> roomsToChooseFrom = roomSet.getRoomList();
+        Collections.shuffle(roomsToChooseFrom, this.ran);
+        return roomsToChooseFrom.get(0);
     }
 
     /** Get a random point in a room.
