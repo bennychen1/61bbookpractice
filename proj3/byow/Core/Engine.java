@@ -94,7 +94,7 @@ public class Engine {
 
 
 
-       TETile[][] finalWorldFrame = iMap.getGameMap().getTileArray();
+       TETile[][] finalWorldFrame = this.iMap.getGameMap().getTileArray();
         return finalWorldFrame;
     }
 
