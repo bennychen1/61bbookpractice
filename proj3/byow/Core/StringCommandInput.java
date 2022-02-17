@@ -26,7 +26,7 @@ public class StringCommandInput implements CommandInput{
     }
 
     /**
-     * @return The char that curIndex is pointing at. 
+     * @return The char that curIndex is pointing at.
      */
     @Override
     public char getNextInput() {
