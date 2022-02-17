@@ -7,7 +7,11 @@ import static org.junit.Assert.*;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import java.util.ArrayList;
+
 public class TestEngine {
+
+    private TERenderer t = new TERenderer();
 
 
     @Test
@@ -18,12 +22,11 @@ public class TestEngine {
 
 
         TETile[][] tileArray = m.getTileArray();
-        TERenderer t = new TERenderer();
         t.initialize(70, 30);
         t.renderFrame(tileArray);
 
 
-        //displayRenderer();
+        displayRenderer();
     }
 
     @Test
@@ -34,11 +37,10 @@ public class TestEngine {
 
 
         TETile[][] tileArray = m.getTileArray();
-        TERenderer t = new TERenderer();
         t.initialize(20, 15);
         t.renderFrame(tileArray);
 
-        //displayRenderer();
+        displayRenderer();
     }
 
     @Test
@@ -84,7 +86,6 @@ public class TestEngine {
 
         TETile[][] tileArray = e.interactWithInputString("n123s");
 
-        TERenderer t = new TERenderer();
         t.initialize(30, 30);
         t.renderFrame(tileArray);
 
@@ -100,7 +101,6 @@ public class TestEngine {
 
         InteractiveMap iMap = new InteractiveMap(m, a);
 
-        TERenderer t = new TERenderer();
         t.initialize(10, 10);
         t.renderFrame(iMap.getGameMap().getTileArray());
 
@@ -124,9 +124,42 @@ public class TestEngine {
     }
 
     @Test
-    public void testIsPointValid() {
-        RandomMap m = new RandomMap(10, 10, Tileset.SAND, 2);
+    public void testInteractOneMove() {
+        Engine e = new Engine();
 
+        e.interactWithInputString("n123");
+
+        //Avatar testAvatar = getFirstAvatar(e);
+
+        InteractiveMap iMap = e.getiMap();
+
+        t.initialize(iMap.getGameMap().getMaxColIndex() + 1, iMap.getGameMap().getMaxRowIndex() + 1);
+        t.renderFrame(iMap.getGameMap().getTileArray());
+        displayRenderer();
+
+
+
+        assertEquals(new Point(14, 3), 1);
+
+        /**
+        Engine e1 = new Engine();
+
+        e1.interactWithInputString("n123ss");
+        Avatar testAvatar1 = getFirstAvatar(e1);
+        assertEquals(new Point(27, 2), testAvatar.getLocation()); **/
+
+    }
+
+
+    private Avatar getFirstAvatar(Engine e) {
+
+        InteractiveMap iMap = e.getiMap();
+
+        ArrayList<Avatar> avatarList = (ArrayList<Avatar>) iMap.getAvatarList();
+
+        Avatar testAvatar = avatarList.get(0);
+
+        return testAvatar;
     }
 
     private void displayRenderer() {
@@ -134,6 +167,8 @@ public class TestEngine {
             ;
         }
     }
+
+
 
 
 
