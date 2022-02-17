@@ -12,6 +12,7 @@ public class VerticalHallwayDrawer extends HallwayDrawer{
         Point startPoint;
         Room startRoom;
 
+
         Point endPoint;
         Room endRoom;
 
@@ -35,7 +36,6 @@ public class VerticalHallwayDrawer extends HallwayDrawer{
         int maxHeight = p1.verticalDistance(p2);
 
         int numTiles = helperNumTiles(m, maxHeight);
-
 
         Point curPoint = startPoint;
 

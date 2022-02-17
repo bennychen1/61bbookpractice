@@ -9,6 +9,7 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
     public FinishHallwayInformation draw(RandomMap m, Room r1, Point p1,
                      Room r2, Point p2) {
 
+
         Point startPoint;
         Room startRoom;
 
@@ -35,8 +36,7 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
         int maxWidth = p1.horizontalDistance(p2);
 
         int numTiles = helperNumTiles(m, maxWidth);
-
-
+        
         Point curPoint = startPoint;
 
         for (int curCol = startingCol; curCol < startingCol + numTiles; curCol = curCol + 1) {
