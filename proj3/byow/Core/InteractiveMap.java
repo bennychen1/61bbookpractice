@@ -1,5 +1,6 @@
 package byow.Core;
 
+import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import jh61b.junit.In;
 
