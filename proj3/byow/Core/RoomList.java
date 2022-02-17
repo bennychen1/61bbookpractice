@@ -37,15 +37,7 @@ public class RoomList extends ArrayList<Room>{
     public ArrayList<Room> getRoomList() {
         return new ArrayList<>(this.listOfRooms);
     }
-
-    /**
-     *  Set the list of rooms to the provided list.
-     * @param otherList Another list of rooms.
-     */
-    public void setListOfRooms(ArrayList<Room> otherList) {
-        this.listOfRooms = otherList;
-        this.setOfRooms = new HashSet<>(this.listOfRooms);
-    }
+    
 
     @Override
     /** Returns the number of rooms in the RoomList. **/
