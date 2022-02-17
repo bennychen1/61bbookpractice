@@ -14,7 +14,6 @@ public class RandomMap {
     /** The number of rooms in the map. */
     private int numRooms;
 
-
     /** The tile array that represents this map. */
     private TETile[][] tileArray;
 
@@ -97,8 +96,8 @@ public class RandomMap {
         this.ran = r.getRan();
         this.maxRowIndex = r.getMaxRowIndex();
         this.maxColIndex = r.getMaxColIndex();
-        this.width = this.maxColIndex + 1;
-        this.length = this.maxRowIndex + 1;
+        this.width = r.getMaxColIndex() + 1;
+        this.length = r.getMaxRowIndex() + 1;
         this.defaultTileType = r.getDefaultTileType();
         this.roomSets = r.getRoomSets();
         this.numRooms = this.roomList.size();
@@ -152,8 +151,15 @@ public class RandomMap {
         Room randomInitialRoom = this.roomList.get(0);
         unionedRooms.add(randomInitialRoom);
 
-        while (unionedRooms.size() < this.roomList.size()) {
+
+
+        int i = 0;
+
+        while (i <= 2 && unionedRooms.size() < this.roomList.size()) {
+            System.out.println(i);
             hallwayBetweenTwoRooms(unionedRooms);
+            //System.out.println(i);
+            i = i + 1;
         }
 
     }
