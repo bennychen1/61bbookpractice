@@ -167,7 +167,7 @@ public class Point {
 
         Point o = (Point) otherPoint;
 
-        return (o.getCol() == this.getCol() && o.getRow() == o.getRow());
+        return o.getCol() == this.getCol() && o.getRow() == this.getRow();
     }
 
 }
