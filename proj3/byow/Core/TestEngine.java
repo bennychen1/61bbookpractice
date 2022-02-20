@@ -105,7 +105,7 @@ public class TestEngine {
         t.renderFrame(iMap.getGameMap().getTileArray());
 
 
-        //displayRenderer();
+        displayRenderer();
 
         Point point1 = new Point(1, 3);
 
@@ -184,6 +184,13 @@ public class TestEngine {
         assertEquals(point1, getFirstAvatar(e).getLocation());
         //(15, 16)
         renderAndDisplay(e);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testInvalidAvatar() {
+        RandomMap m = new RandomMap(10, 10, 2);
+        Avatar a = new Avatar('@', new Point(11, 5));
+        InteractiveMap iMap = new InteractiveMap(m, a);
     }
 
 
