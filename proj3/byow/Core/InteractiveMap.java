@@ -82,10 +82,10 @@ public class InteractiveMap {
     /** Put the avatar in its location in the tile array of the game map.
      * @param a The avatar to place.
      * **/
-    public void placeAvatar(Avatar a) {
+    public void placeAvatar(Avatar a) throws IllegalArgumentException {
 
         if (!isPointValid(a.getLocation())) {
-            return;
+            throw new IllegalArgumentException("Avatar needs to be located on the map");
         }
 
         helperToPlaceAvatar(a, a.getLocation());
