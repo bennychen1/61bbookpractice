@@ -37,7 +37,7 @@ public class RoomList extends ArrayList<Room>{
     public ArrayList<Room> getRoomList() {
         return new ArrayList<>(this.listOfRooms);
     }
-    
+
 
     @Override
     /** Returns the number of rooms in the RoomList. **/
