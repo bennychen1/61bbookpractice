@@ -36,7 +36,7 @@ public class HorizontalHallwayDrawer extends HallwayDrawer{
         int maxWidth = p1.horizontalDistance(p2);
 
         int numTiles = helperNumTiles(m, maxWidth);
-        
+
         Point curPoint = startPoint;
 
         for (int curCol = startingCol; curCol < startingCol + numTiles; curCol = curCol + 1) {
