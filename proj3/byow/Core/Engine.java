@@ -79,6 +79,7 @@ public class Engine {
 
             if (!this.isGameSetup && (curCommand == 'n' || curCommand == 'N')) {
                 int curSeed = findSeed(s);
+                this.ran = new Random(curSeed);
                 int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
                 int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
                 RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
