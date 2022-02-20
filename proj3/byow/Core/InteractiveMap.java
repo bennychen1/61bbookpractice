@@ -2,6 +2,7 @@ package byow.Core;
 
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import byow.TileEngine.Tileset;
 import jh61b.junit.In;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class InteractiveMap {
     InteractiveMap(RandomMap m) {
         this(m, new Avatar('@', new Point(0, 0)));
         Avatar a = this.avatarList.get(0);
+        a.setConsumedTile(this.gameMap.getTileAt(a.getLocation()));
         this.moveAvatar(a, this.gameMap.getRandomFloorPoint());
     }
     /**
@@ -67,6 +69,12 @@ public class InteractiveMap {
         if (p == null) {
             return false;
         }
+
+        if (this.gameMap.getTileAt(p) == null
+                || this.gameMap.getTileAt(p).description() != Tileset.FLOOR.description()) {
+            return false;
+        }
+
         return (p.getRow() >= 0 && p.getCol() >= 0) && (p.getRow() < gameMap.getMaxRowIndex() &&
                 p.getCol() < gameMap.getMaxColIndex());
     }
@@ -89,7 +97,12 @@ public class InteractiveMap {
      * **/
     public void moveAvatar(Avatar a, Point location) {
         if (!isPointValid(location)) {
-            System.out.println("Location is not valid on game map");
+            TETile tileAtLocation = this.gameMap.getTileAt(location);
+            if (tileAtLocation != null) {
+                System.out.println("Cannot move into a wall");
+            } else {
+                System.out.println("Location is not valid on game map");
+            }
             return;
         }
 
