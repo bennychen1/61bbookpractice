@@ -107,7 +107,7 @@ public class TestEngine {
         t.renderFrame(iMap.getGameMap().getTileArray());
 
 
-        displayRenderer();
+        //displayRenderer();
 
         Point point1 = new Point(1, 3);
 
@@ -205,6 +205,15 @@ public class TestEngine {
     }
 
     @Test
+    public void testCommandWithQ() {
+        Engine e = new Engine();
+        e.interactWithInputString("n1ssq");
+
+        Point expectedPoint = new Point(23, 9);
+        assertEquals(expectedPoint, getFirstAvatar(e).getLocation());
+    }
+
+    @Test
     public void testNoSave() {
         Engine e = new Engine();
         e.interactWithInputString("N1sasq");
@@ -228,7 +237,7 @@ public class TestEngine {
 
         Engine secondEngine = new Engine();
         secondEngine.interactWithInputString("N1saaA:q");
-        secondEngine.interactWithInputString("lwWwwwddds");
+        secondEngine.interactWithInputString("lwWwwwddDs");
 
         Point expectedPoint = new Point(23, 14);
         assertEquals(getFirstAvatar(firstEngine).getLocation(), getFirstAvatar(secondEngine).getLocation());
