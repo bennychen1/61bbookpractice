@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.*;
+import java.util.Locale;
 import java.util.Random;
 
 public class Engine {
@@ -20,8 +21,11 @@ public class Engine {
     /** True if the user wants to save the game. **/
     private boolean save = false;
 
+    /** The saved game map. **/
+    private InteractiveMap savedMap;
+
     /** A String of possible movements. **/
-    private String POSSIBLE_MOVES = "WASD";
+    private String POSSIBLE_MOVES = "wasd";
 
     /** The Random Number Generator. **/
     private Random ran = new Random(10);
@@ -76,9 +80,9 @@ public class Engine {
         StringCommandInput s = new StringCommandInput(input);
 
         while(s.hasNextInput()) {
-            char curCommand = s.getNextInput();
+            String curCommand = String.valueOf(s.getNextInput()).toLowerCase();
 
-            if (!this.isGameSetup && (curCommand == 'n' || curCommand == 'N')) {
+            if (!this.isGameSetup && (curCommand.equals("n"))) {
                 int curSeed = findSeed(s);
                 this.ran = new Random(curSeed);
                 int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
@@ -87,14 +91,23 @@ public class Engine {
                 this.iMap = new InteractiveMap(gameMap);
                 this.isGameSetup = true;
 
-            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) != 0) {
+            } else if (curCommand.equals("l")) {
+                continue;
+
+            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
                 InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
                 this.iMap.moveAvatarCommand(userAvatar, curCommand);
-            } //else if ()
+            } else if (curCommand.equals(":")) {
+                this.save = true;
+            } else {
+                break;
+            }
+
+            if (!save) {
+                this.isGameSetup = false;
+            }
+
         }
-
-
-
 
        TETile[][] finalWorldFrame = this.iMap.getGameMap().getTileArray();
         return finalWorldFrame;

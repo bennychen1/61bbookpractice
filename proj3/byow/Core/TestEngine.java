@@ -168,7 +168,7 @@ public class TestEngine {
 
         Avatar testAvatar = getFirstAvatar(e);
 
-        //assertEquals(new Point(23, 10),testAvatar.getLocation());
+        assertEquals(new Point(23, 10),testAvatar.getLocation());
 
 
         Engine e1 = new Engine();
@@ -176,9 +176,9 @@ public class TestEngine {
 
         Avatar testAvatar1 = getFirstAvatar(e1);
 
-        //assertEquals(new Point(22, 10), testAvatar1.getLocation());
+        assertEquals(new Point(22, 10), testAvatar1.getLocation());
 
-        renderAndDisplay(e);
+        //renderAndDisplay(e);
         //renderAndDisplay(e1);
     }
 
@@ -186,10 +186,15 @@ public class TestEngine {
     public void testNotCaseSensitive() {
         Engine e = new Engine();
         e.interactWithInputString("N20SAwD");
+        //(15, 16)
         Point point1 = new Point(15, 17);
         assertEquals(point1, getFirstAvatar(e).getLocation());
-        //(15, 16)
-        renderAndDisplay(e);
+        //renderAndDisplay(e);
+
+        Engine e1 = new Engine();
+        e1.interactWithInputString("n20saWd");
+        //renderAndDisplay(e1);
+        assertEquals(getFirstAvatar(e).getLocation(), getFirstAvatar(e1).getLocation());
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -200,9 +205,33 @@ public class TestEngine {
     }
 
     @Test
+    public void testNoSave() {
+        Engine e = new Engine();
+        e.interactWithInputString("N1sasq");
+        e.interactWithInputString("n1sa");
+
+        //renderAndDisplay(e);
+
+        Point expectedPoint = new Point(22, 10);
+        assertEquals(expectedPoint, getFirstAvatar(e).getLocation());
+
+
+    }
+
+    @Test
     public void testSaving() {
         Engine firstEngine = new Engine();
-        firstEngine.interactWithInputString("N1s");
+        //(23, 10)
+        firstEngine.interactWithInputString("N1saaAwWwwwddds");
+        //(23,14)
+        //renderAndDisplay(firstEngine);
+
+        Engine secondEngine = new Engine();
+        secondEngine.interactWithInputString("N1saaA:q");
+        secondEngine.interactWithInputString("lwWwwwddds");
+
+        Point expectedPoint = new Point(23, 14);
+        assertEquals(getFirstAvatar(firstEngine).getLocation(), getFirstAvatar(secondEngine).getLocation());
     }
 
 
