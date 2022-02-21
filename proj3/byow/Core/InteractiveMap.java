@@ -18,17 +18,13 @@ public class InteractiveMap {
     /** A list of avatars. **/
     private List<Avatar> avatarList;
 
-
-    /**
-     * Default constructor for InteractiveMap.
-     * @param m The game map.
-     */
     InteractiveMap(RandomMap m) {
-        this(m, new Avatar('@', new Point(0, 0)));
-        Avatar a = this.avatarList.get(0);
-        a.setConsumedTile(this.gameMap.getTileAt(a.getLocation()));
-        this.moveAvatar(a, this.gameMap.getRandomFloorPoint());
+        this.gameMap = m;
+        this.gameMap.drawWorld();
+        this.avatarList = new ArrayList<>();
+        this.addUserAvatar();
     }
+
     /**
      * The full constructor for InteractiveMap.
      * @param m A RandomMap object representing the game map.
@@ -59,6 +55,15 @@ public class InteractiveMap {
         for (Avatar a : this.avatarList) {
             placeAvatar(a);
         }
+    }
+
+    /**
+     * Add a avatar at a random floor point.
+     */
+    public void addUserAvatar() {
+        Avatar a = new Avatar('@', this.gameMap.getRandomFloorPoint());
+        this.placeAvatar(a);
+        this.avatarList.add(a);
     }
 
     /**
@@ -112,15 +117,15 @@ public class InteractiveMap {
      * @param location  A Point object representing where to move the avatar.
      * **/
     public void moveAvatar(Avatar a, Point location) {
-        if (isPointValid(location)) {
-            TETile tileAtLocation = this.gameMap.getTileAt(location);
-            if (tileAtLocation != null) {
-                System.out.println("Cannot move into a wall");
-            } else {
-                System.out.println("Location is not valid on game map");
-            }
-            return;
-        }
+       if (!this.gameMap.isPointOnMap(location)) {
+           System.out.println("Location " + location.toString() + " not on map");
+           return;
+       }
+
+       if (!this.gameMap.isPointFloor(location)) {
+           System.out.println(location.toString() + " is not a floor point");
+           return;
+       }
 
         this.gameMap.setTileArray(a.getLocation(), a.getConsumedTile());
         a.setLocation(location);
