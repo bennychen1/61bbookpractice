@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import byow.Core.InteractiveMap.Avatar;
+
 import java.util.ArrayList;
 
 public class TestEngine {
@@ -97,7 +99,7 @@ public class TestEngine {
     public void testInteractiveMap() {
         RandomMap m = new RandomMap(10, 10, Tileset.GRASS, 2);
         Point originalPoint = new Point(1, 2);
-        Avatar a = new Avatar('@', originalPoint);
+        InteractiveMap.Avatar a = new InteractiveMap.Avatar('@', originalPoint);
 
         InteractiveMap iMap = new InteractiveMap(m, a);
 
@@ -137,20 +139,24 @@ public class TestEngine {
 
 
         Point expectedPoint2 = new Point(23, 9);
-        //assertEquals(expectedPoint2, testAvatar.getLocation());
+        assertEquals(expectedPoint2, testAvatar.getLocation());
 
 
-        renderAndDisplay(e);
+        //renderAndDisplay(e);
 
 
         //assertEquals(new Point(14, 3), 1);
 
-        /**
+
         Engine e1 = new Engine();
 
-        e1.interactWithInputString("n123ss");
+        //(9, 32)
+        e1.interactWithInputString("n123sd");
         Avatar testAvatar1 = getFirstAvatar(e1);
-        assertEquals(new Point(27, 2), testAvatar.getLocation()); **/
+        //System.out.println(testAvatar1.getLocation());
+
+        //renderAndDisplay(e1);
+        assertEquals(new Point(10, 32), testAvatar1.getLocation());
 
     }
 
@@ -162,7 +168,7 @@ public class TestEngine {
 
         Avatar testAvatar = getFirstAvatar(e);
 
-        assertEquals(new Point(23, 10),testAvatar.getLocation());
+        //assertEquals(new Point(23, 10),testAvatar.getLocation());
 
 
         Engine e1 = new Engine();
@@ -170,10 +176,10 @@ public class TestEngine {
 
         Avatar testAvatar1 = getFirstAvatar(e1);
 
-        assertEquals(new Point(22, 10), testAvatar1.getLocation());
+        //assertEquals(new Point(22, 10), testAvatar1.getLocation());
 
-        //renderAndDisplay(e);
-        renderAndDisplay(e1);
+        renderAndDisplay(e);
+        //renderAndDisplay(e1);
     }
 
     @Test
@@ -191,6 +197,12 @@ public class TestEngine {
         RandomMap m = new RandomMap(10, 10, 2);
         Avatar a = new Avatar('@', new Point(11, 5));
         InteractiveMap iMap = new InteractiveMap(m, a);
+    }
+
+    @Test
+    public void testSaving() {
+        Engine firstEngine = new Engine();
+        firstEngine.interactWithInputString("N1s");
     }
 
 

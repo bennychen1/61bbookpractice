@@ -36,6 +36,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+
     }
 
     /**
@@ -87,9 +88,9 @@ public class Engine {
                 this.isGameSetup = true;
 
             } else if (this.POSSIBLE_MOVES.indexOf(curCommand) != 0) {
-                Avatar userAvatar = this.iMap.getAvatarList().get(0);
+                InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
                 this.iMap.moveAvatarCommand(userAvatar, curCommand);
-            }
+            } //else if ()
         }
 
 
