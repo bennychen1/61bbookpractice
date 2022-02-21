@@ -137,9 +137,9 @@ public class InteractiveMap {
      * Move the avatar according the the specified keyboard command.
      *      W - move up on the map, S move down on the map, A move to the left, D move to the right.
      * @param a  The avatar to move.
-     * @param dir A char for the direction to move the avatar.
+     * @param dir A String for the direction to move the avatar.
      */
-    public void moveAvatarCommand(Avatar a, char dir) {
+    public void moveAvatarCommand(Avatar a, String dir) {
         String directionString = String.valueOf(dir).toLowerCase();
         Point newPoint;
         Point curPoint = a.getLocation();
