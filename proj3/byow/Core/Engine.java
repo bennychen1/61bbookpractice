@@ -30,6 +30,9 @@ public class Engine {
     /** The Random Number Generator. **/
     private Random ran = new Random(10);
 
+    /** The seed. **/
+    private int seed;
+
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -130,8 +133,45 @@ public class Engine {
         StdDraw.text(0.5, 0.32, "Quit Game (Q)");
     }
 
+    /**
+     * Process user commands.
+     * @param commands Instructions to be processed such as "n123aswd".
+     */
+    private void processCommands(CommandInput commands) {
+        while(commands.hasNextInput()) {
+            String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
+
+            if (!this.isGameSetup && (curCommand.equals("n"))) {
+                int curSeed = findSeed(commands);
+                this.ran = new Random(curSeed);
+                int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
+                int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
+                RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
+                this.iMap = new InteractiveMap(gameMap);
+                this.isGameSetup = true;
+
+            } else if (curCommand.equals("l")) {
+                continue;
+
+            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
+                InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
+                this.iMap.moveAvatarCommand(userAvatar, curCommand);
+            } else if (curCommand.equals(":")) {
+                this.save = true;
+            } else {
+                break;
+            }
+
+            if (!save) {
+                this.isGameSetup = false;
+            }
+
+
+        }
+    }
+
     /** A helper function to find the seed the user wants from the provided string. */
-    private int findSeed(StringCommandInput stringCommand) {
+    private int findSeed(CommandInput stringCommand) {
         int curSeed = 0;
 
         char curChar = stringCommand.getNextInput();
@@ -167,86 +207,8 @@ public class Engine {
         return copy;
     }
 
-    /** Stores the information from a user's input string.  */
-    static class StringCall {
-
-        /** "N" for new game, "L" for load game*/
-        private String userOption;
-
-        /** The seed for the randomly generated map. */
-        private int seed;
-
-        /** Movement commands, quit, and/or quit and save */
-        private String commands;
-
-        /** A String with all possible digits. */
-        private final String POSSIBLE_DIGITS = "0123456789";
-
-        StringCall(String inputString) throws IllegalArgumentException {
-            // regex
-            // set variables based on regex grouping
-            // if not valid string, return null;
-            // N and L have different string structure
-            // If N, save the commands to a variable, then Lxx would just add xx to the variable
 
 
-            int curSeed = 0;
-            boolean seedSet = false;
-            boolean save = false;
-
-            StringBuilder userOptionsString = new StringBuilder();
-            StringBuilder commandsString = new StringBuilder();
-
-            for (char c : inputString.toCharArray()) {
-                if (c == 'n' || c == 'N') {
-                    userOptionsString.append("n");
-                } else if (!seedSet && POSSIBLE_DIGITS.indexOf(c) != -1) {
-                    curSeed = addToCurSeed(curSeed, Character.getNumericValue(c));
-                } else if (!seedSet && (c == 's' || c == 'S')) {
-                     seedSet = true;
-                } else if (c == ':') {
-                    save = true;
-                } else if (c == 'q') {
-
-                    commandsString.append(c);
-                }
-            }
-
-            this.userOption = userOptionsString.toString();
-            this.commands = commandsString.toString();
-            this.seed = curSeed;
-
-            if (this.userOption == "") {
-                throw new IllegalArgumentException("String must start with N");
-            }
-
-        }
-
-        /** A helper function to add a digit to a seed.
-         * @param   curSeed     The current seed.
-         * @param   add         The digit to add.
-         * @return  an integer equal to the digits of curSeed followed by add.
-          */
-        private int addToCurSeed(int curSeed, int add) {
-            return curSeed * 10 + add;
-        }
-
-        /** Return the user option. */
-        public String getUserOption() {
-            return this.userOption;
-        }
-
-        /** Return the seed.  */
-        public int getSeed() {
-            return this.seed;
-        }
-
-        /** Return the commands.  */
-        public String commands() {
-            return this.commands;
-        }
-
-    }
 
 
     public static void main(String[] args) {
