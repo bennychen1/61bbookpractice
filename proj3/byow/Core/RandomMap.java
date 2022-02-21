@@ -489,10 +489,44 @@ public class RandomMap {
 
     /** Returns the TETile at the specified Point.
      * @param   p   A Point object
-     * @return  A TETile object that represents the tile type at the point in this map.
+     * @return  A TETile object that represents the tile type at the point in this map. Return null
+     * if Point is not on map.
      * */
     public TETile getTileAt(Point p) {
+        if (!this.isPointOnMap(p)) {
+            return null;
+        }
         return this.tileArray[p.getCol()][p.getRow()];
+    }
+
+    /**
+     * Check if point is on the map.
+     * @param p
+     * @return True if point is located on the map, false otherwise.
+     */
+    public boolean isPointOnMap(Point p) {
+        return (p.getRow() >= 0 && p.getCol() >= 0) && (p.getRow() < this.maxRowIndex &&
+                p.getCol() < this.maxColIndex);
+    }
+
+    /**
+     * Check if the tile at p is a floor tile.
+     * @param p The Point representing the location to check.
+     * @return True if the point is a floor tile, false otherwise.
+     */
+    public boolean isPointFloor(Point p) {
+        if (p == null || !this.isPointOnMap(p)) {
+            return false;
+        }
+
+        TETile tileTypeAtPoint = this.getTileAt(p);
+
+        if (tileTypeAtPoint != null
+                && tileTypeAtPoint.description().equals(Tileset.FLOOR.description())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** Returns the max column index of this map. */
