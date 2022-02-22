@@ -1,6 +1,8 @@
 package byow.Core;
 
-import edu.princeton.cs.algs4.StdDraw;
+import byow.TileEngine.TERenderer;
+import byow.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
 
 /** Commands typed in from the keyboard. **/
 public class KeyboardCommandInput implements CommandInput {
@@ -22,8 +24,22 @@ public class KeyboardCommandInput implements CommandInput {
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 this.curCommand = StdDraw.nextKeyTyped();
+                return this.curCommand;
             }
-            return this.curCommand;
         }
+
+        //System.out.println("a");
+        //return Character.MIN_VALUE;
     }
+
+    @Override
+    public void initializeTERenderer(TERenderer t, int width, int height) {
+        t.initialize(width, height);
+    }
+
+    @Override
+    public void displayTileArray(TERenderer t, TETile[][] tileArray) {
+        t.renderFrame(tileArray);
+    };
+
 }
