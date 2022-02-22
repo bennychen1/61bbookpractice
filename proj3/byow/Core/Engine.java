@@ -60,13 +60,11 @@ public class Engine {
                     StdDraw.setFont(optionsFont);
                     StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
                     StdDraw.pause(5000);
-                    this.ran = new Random(curSeed);
-                    int randomWidth = RandomUtils.uniform(this.ran, 5, 50);
-                    int randomHeight = RandomUtils.uniform(this.ran, 5, 50);
-                    t.initialize(randomWidth, randomHeight);
-                    RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
-                    this.iMap = new InteractiveMap(gameMap);
-                    this.isGameSetup = true;
+
+                    int[] mapDimensions = helperCreateMap(curSeed);
+
+                    t.initialize(mapDimensions[0], mapDimensions[1]);
+
                 } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
                     InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
                     this.iMap.moveAvatarCommand(userAvatar, curCommand);
@@ -119,13 +117,7 @@ public class Engine {
 
             if (!this.isGameSetup && (curCommand.equals("n"))) {
                 int curSeed = findSeed(s);
-                this.ran = new Random(curSeed);
-                int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
-                int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
-                RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
-                this.iMap = new InteractiveMap(gameMap);
-                this.isGameSetup = true;
-
+                this.helperCreateMap(curSeed);
             } else if (curCommand.equals("l")) {
                 continue;
 
@@ -211,9 +203,24 @@ public class Engine {
             if (!save) {
                 this.isGameSetup = false;
             }
-
-
         }
+
+
+    }
+
+    /** A helper function to create an interactive map using the provided seed.
+     * @param curSeed   An int representing the seed.
+     * @return  An length 2 int array with the randomly chosen width and height.
+     * **/
+    private int[] helperCreateMap(int curSeed) {
+        this.ran = new Random(curSeed);
+        int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
+        int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
+        RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
+        this.iMap = new InteractiveMap(gameMap);
+        this.isGameSetup = true;
+
+        return new int[]{randomWidth, randomHeight};
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
