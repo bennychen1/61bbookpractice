@@ -4,7 +4,7 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 import java.util.Locale;
@@ -49,17 +49,29 @@ public class Engine {
 
         while(true) {
             while (k.hasNextInput()) {
+
+                TERenderer t = new TERenderer();
                 String curCommand = String.valueOf(k.getNextInput()).toLowerCase();
 
                 if (curCommand.equals("n")) {
                     seedScreen();
                     int curSeed = findSeed(k);
+                    Font optionsFont = new Font("Impact", Font.PLAIN, 15);
+                    StdDraw.setFont(optionsFont);
+                    StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
+                    StdDraw.pause(5000);
                     this.ran = new Random(curSeed);
-                    int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
-                    int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
+                    int randomWidth = RandomUtils.uniform(this.ran, 5, 50);
+                    int randomHeight = RandomUtils.uniform(this.ran, 5, 50);
+                    t.initialize(randomWidth, randomHeight);
                     RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
                     this.iMap = new InteractiveMap(gameMap);
                     this.isGameSetup = true;
+                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
+                    InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
+                    this.iMap.moveAvatarCommand(userAvatar, curCommand);
+                    t.renderFrame(this.iMap.getGameMap().getTileArray());
+
                 }
             }
         }
