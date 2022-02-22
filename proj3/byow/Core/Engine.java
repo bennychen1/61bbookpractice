@@ -43,36 +43,18 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+
+        boolean keepPlaying = true;
+
         mainMenu();
 
         KeyboardCommandInput k = new KeyboardCommandInput();
+        processCommands(k);
 
-        while(true) {
-            while (k.hasNextInput()) {
-
-                TERenderer t = new TERenderer();
-                String curCommand = String.valueOf(k.getNextInput()).toLowerCase();
-
-                if (curCommand.equals("n")) {
-                    seedScreen();
-                    int curSeed = findSeed(k);
-                    Font optionsFont = new Font("Impact", Font.PLAIN, 15);
-                    StdDraw.setFont(optionsFont);
-                    StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
-                    StdDraw.pause(5000);
-
-                    int[] mapDimensions = helperCreateMap(curSeed);
-
-                    t.initialize(mapDimensions[0], mapDimensions[1]);
-
-                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                    InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
-                    this.iMap.moveAvatarCommand(userAvatar, curCommand);
-                    t.renderFrame(this.iMap.getGameMap().getTileArray());
-
-                }
-            }
+        while (keepPlaying) {
+            StdDraw.clear();
         }
+
 
     }
 
@@ -165,9 +147,13 @@ public class Engine {
         Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
         StdDraw.setFont(mainFont);
         StdDraw.text(0.5, 0.75, "Please enter the game seed");
+    }
 
-
-
+    private void drawSeedToScreen(int curSeed) {
+        Font optionsFont = new Font("Impact", Font.PLAIN, 15);
+        StdDraw.setFont(optionsFont);
+        StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
+        StdDraw.pause(1000);
     }
 
     /**
@@ -176,32 +162,35 @@ public class Engine {
      */
     private void processCommands(CommandInput commands) {
 
+        TERenderer t = new TERenderer();
+
         while(commands.hasNextInput()) {
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
             if (!this.isGameSetup && (curCommand.equals("n"))) {
+                seedScreen();
                 int curSeed = findSeed(commands);
-                this.ran = new Random(curSeed);
-                int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
-                int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
-                RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
-                this.iMap = new InteractiveMap(gameMap);
-                this.isGameSetup = true;
+                this.drawSeedToScreen(curSeed);
+                int[] mapDimensions = this.helperCreateMap(curSeed);
+                commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
 
             } else if (curCommand.equals("l")) {
                 continue;
 
             } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
-                this.iMap.moveAvatarCommand(userAvatar, curCommand);
+                this.helperMoveAvatar(this.iMap, curCommand);
+                commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
+
             } else if (curCommand.equals(":")) {
                 this.save = true;
-            } else {
+            } else if (curCommand.equals("q")) {
+                if (!save) {
+                    this.isGameSetup = false;
+                }
+                mainMenu();
                 break;
-            }
-
-            if (!save) {
-                this.isGameSetup = false;
+            } else {
+                continue;
             }
         }
 
@@ -221,6 +210,16 @@ public class Engine {
         this.isGameSetup = true;
 
         return new int[]{randomWidth, randomHeight};
+    }
+
+    /**
+     *  A helper method to process a command to move the avatar.
+     * @param iMap The InteractiveMap that has the avatar.
+     * @param curCommand    A String representing the movement direction.
+     */
+    public void helperMoveAvatar(InteractiveMap iMap, String curCommand) {
+        InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
+        this.iMap.moveAvatarCommand(userAvatar, curCommand);
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
