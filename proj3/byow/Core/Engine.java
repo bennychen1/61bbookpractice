@@ -43,6 +43,26 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        mainMenu();
+
+        KeyboardCommandInput k = new KeyboardCommandInput();
+
+        while(true) {
+            while (k.hasNextInput()) {
+                String curCommand = String.valueOf(k.getNextInput()).toLowerCase();
+
+                if (curCommand.equals("n")) {
+                    seedScreen();
+                    int curSeed = findSeed(k);
+                    this.ran = new Random(curSeed);
+                    int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
+                    int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
+                    RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
+                    this.iMap = new InteractiveMap(gameMap);
+                    this.isGameSetup = true;
+                }
+            }
+        }
 
     }
 
@@ -133,11 +153,25 @@ public class Engine {
         StdDraw.text(0.5, 0.32, "Quit Game (Q)");
     }
 
+    /** The screen where the user will enter the seed. **/
+    private void seedScreen() {
+        StdDraw.clear();
+        StdDraw.clear(StdDraw.BLACK);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
+        StdDraw.setFont(mainFont);
+        StdDraw.text(0.5, 0.75, "Please enter the game seed");
+
+
+
+    }
+
     /**
      * Process user commands.
      * @param commands Instructions to be processed such as "n123aswd".
      */
     private void processCommands(CommandInput commands) {
+
         while(commands.hasNextInput()) {
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
