@@ -43,6 +43,7 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+       // StdDraw.enableDoubleBuffering();
 
         boolean keepPlaying = true;
 
@@ -51,9 +52,9 @@ public class Engine {
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
 
-        while (keepPlaying) {
-            StdDraw.clear();
-        }
+        mainMenu();
+
+        interactWithKeyboard();
 
 
     }
@@ -126,6 +127,7 @@ public class Engine {
      * A helper function to generate a main menu.
      */
     private void mainMenu() {
+        StdDraw.setCanvasSize();
         StdDraw.clear(StdDraw.BLACK);
         StdDraw.setPenColor(StdDraw.WHITE);
         Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
@@ -137,6 +139,7 @@ public class Engine {
         StdDraw.text(0.5, 0.4, "New Game (N)");
         StdDraw.text(0.5, 0.36, "Load Game (L)");
         StdDraw.text(0.5, 0.32, "Quit Game (Q)");
+        StdDraw.show();
     }
 
     /** The screen where the user will enter the seed. **/
@@ -147,13 +150,15 @@ public class Engine {
         Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
         StdDraw.setFont(mainFont);
         StdDraw.text(0.5, 0.75, "Please enter the game seed");
+        StdDraw.show();
     }
 
     private void drawSeedToScreen(int curSeed) {
         Font optionsFont = new Font("Impact", Font.PLAIN, 15);
         StdDraw.setFont(optionsFont);
         StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
-        StdDraw.pause(1000);
+        StdDraw.show();
+        StdDraw.pause(5000);
     }
 
     /**
@@ -193,6 +198,8 @@ public class Engine {
                 continue;
             }
         }
+
+        System.out.println("a");
 
 
     }
