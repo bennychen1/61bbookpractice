@@ -224,6 +224,10 @@ public class TestEngine {
         Point expectedPoint = new Point(22, 10);
         assertEquals(expectedPoint, getFirstAvatar(e).getLocation());
 
+        Engine e2 = new Engine();
+        e2.interactWithInputString("n1sas");
+        assertEquals(expectedPoint, getFirstAvatar(e).getLocation());
+
 
     }
 
@@ -241,6 +245,27 @@ public class TestEngine {
 
         Point expectedPoint = new Point(23, 14);
         assertEquals(getFirstAvatar(firstEngine).getLocation(), getFirstAvatar(secondEngine).getLocation());
+    }
+
+    @Test
+    public void testTwoSaves() {
+        Engine firstEngine = new Engine();
+        //(23, 10)
+        firstEngine.interactWithInputString("N1saaAwWwwwddds");
+
+        Engine secondEngine = new Engine();
+        secondEngine.interactWithInputString("N1saaA:q");
+        secondEngine.interactWithInputString("lwWwwwddD:q");
+        secondEngine.interactWithInputString("ls");
+
+        assertEquals(getFirstAvatar(firstEngine).getLocation(), getFirstAvatar(secondEngine).getLocation());
+
+    }
+
+   @Test
+    public void testKeyboard() {
+        Engine e = new Engine();
+        e.interactWithKeyboard();
     }
 
 
