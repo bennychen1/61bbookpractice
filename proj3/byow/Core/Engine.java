@@ -193,7 +193,7 @@ public class Engine {
                     this.isGameSetup = false;
                 }
                 mainMenu();
-                break;
+
             } else {
                 continue;
             }
