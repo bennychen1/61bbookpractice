@@ -45,17 +45,10 @@ public class Engine {
     public void interactWithKeyboard() {
        // StdDraw.enableDoubleBuffering();
 
-        boolean keepPlaying = true;
-
         mainMenu();
 
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
-
-        mainMenu();
-
-        interactWithKeyboard();
-
 
     }
 
@@ -95,29 +88,7 @@ public class Engine {
 
         StringCommandInput s = new StringCommandInput(input);
 
-        while(s.hasNextInput()) {
-            String curCommand = String.valueOf(s.getNextInput()).toLowerCase();
-
-            if (!this.isGameSetup && (curCommand.equals("n"))) {
-                int curSeed = findSeed(s);
-                this.helperCreateMap(curSeed);
-            } else if (curCommand.equals("l")) {
-                continue;
-
-            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
-                this.iMap.moveAvatarCommand(userAvatar, curCommand);
-            } else if (curCommand.equals(":")) {
-                this.save = true;
-            } else {
-                break;
-            }
-
-            if (!save) {
-                this.isGameSetup = false;
-            }
-
-        }
+        processCommands(s);
 
        TETile[][] finalWorldFrame = this.iMap.getGameMap().getTileArray();
         return finalWorldFrame;
@@ -169,17 +140,24 @@ public class Engine {
 
         TERenderer t = new TERenderer();
 
+        int curSeed = 0;
+        int height = 0;
+        int width = 0;
+
         while(commands.hasNextInput()) {
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
             if (!this.isGameSetup && (curCommand.equals("n"))) {
                 seedScreen();
-                int curSeed = findSeed(commands);
+                curSeed = findSeed(commands);
                 this.drawSeedToScreen(curSeed);
                 int[] mapDimensions = this.helperCreateMap(curSeed);
+                width = mapDimensions[0];
+                height = mapDimensions[1];
                 commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
 
             } else if (curCommand.equals("l")) {
+                t.initialize(width, height);
                 continue;
 
             } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
@@ -198,9 +176,6 @@ public class Engine {
                 continue;
             }
         }
-
-        System.out.println("a");
-
 
     }
 
