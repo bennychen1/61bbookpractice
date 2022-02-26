@@ -152,7 +152,8 @@ public class Engine {
         while(commands.hasNextInput()) {
 
             if (this.isGameSetup) {
-                commands.mouseDisplay(this);
+                //commands.mouseDisplay(this);
+                commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
             }
 
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
@@ -172,7 +173,7 @@ public class Engine {
 
             } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
                 this.helperMoveAvatar(this.iMap, curCommand);
-                commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
+                commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
 
             } else if (curCommand.equals(":")) {
                 this.save = true;
