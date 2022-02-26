@@ -145,6 +145,8 @@ public class Engine {
 
         TERenderer t = new TERenderer();
 
+        this.ter = t;
+
         int curSeed = 0;
         int height = 0;
         int width = 0;
@@ -152,9 +154,9 @@ public class Engine {
         while(commands.hasNextInput()) {
 
             if (this.isGameSetup) {
-                //commands.mouseDisplay(this);
-                commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
+                commands.mouseDisplay(this);
             }
+
 
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
@@ -166,6 +168,7 @@ public class Engine {
                 width = mapDimensions[0];
                 height = mapDimensions[1];
                 commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
+                commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
 
             } else if (curCommand.equals("l")) {
                 commands.initializeTERenderer(t,width, height);
