@@ -241,6 +241,32 @@ public class Engine {
         return copy;
     }
 
+    /** For storing the mouse coordinates. **/
+    static class MouseLocation {
+
+        /** The x-coordinate. **/
+        double mouseX;
+
+        /** The y-coordinate. **/
+        double mouseY;
+
+        MouseLocation(double mouseX, double mouseY) {
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !o.getClass().toString().equals(this.getClass().toString())) {
+                return false;
+            }
+
+            MouseLocation otherMouseLocation = (MouseLocation) o;
+
+            return this.mouseY == otherMouseLocation.mouseY && this.mouseX == otherMouseLocation.mouseX;
+        }
+    }
+
 
 
 
