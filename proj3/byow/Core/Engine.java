@@ -33,6 +33,9 @@ public class Engine {
     /** The seed. **/
     private int seed;
 
+    /** The most recent position of the mouse. **/
+    private MouseLocation mouseLoc;
+
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -46,6 +49,8 @@ public class Engine {
        // StdDraw.enableDoubleBuffering();
 
         mainMenu();
+
+        this.mouseLoc = new MouseLocation(Double.MIN_VALUE, Double.MIN_VALUE);
 
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
@@ -145,6 +150,11 @@ public class Engine {
         int width = 0;
 
         while(commands.hasNextInput()) {
+
+            if (this.isGameSetup) {
+                commands.mouseDisplay(this);
+            }
+
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
             if (!this.isGameSetup && (curCommand.equals("n"))) {
@@ -239,6 +249,21 @@ public class Engine {
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
+    }
+
+    /** Get the most recent mouse location. **/
+    public MouseLocation getMouseLoc() {
+        return this.mouseLoc;
+    }
+
+    /** Set the MouseLocation to m. **/
+    public void setMouseLoc(MouseLocation m) {
+        this.mouseLoc = m;
+    }
+
+    /** Create a MouseLocation object with the current location of the mouse. **/
+    public static MouseLocation createMouseLocation() {
+        return new MouseLocation(StdDraw.mouseX(), StdDraw.mouseY());
     }
 
     /** For storing the mouse coordinates. **/
