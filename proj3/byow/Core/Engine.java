@@ -33,6 +33,9 @@ public class Engine {
     /** The seed. **/
     private int seed;
 
+    /** The last recorded mouse position. **/
+    MouseLocation mousePosition;
+
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -45,7 +48,10 @@ public class Engine {
     public void interactWithKeyboard() {
        // StdDraw.enableDoubleBuffering();
 
+        this.mousePosition = new MouseLocation(Double.MIN_VALUE, Double.MIN_VALUE);
+
         mainMenu();
+
 
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
@@ -140,43 +146,66 @@ public class Engine {
 
         TERenderer t = new TERenderer();
 
+
         int curSeed = 0;
         int height = 0;
         int width = 0;
 
-        while(commands.hasNextInput()) {
-            String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
+        while (true) {
 
-            if (!this.isGameSetup && (curCommand.equals("n"))) {
-                seedScreen();
-                curSeed = findSeed(commands);
-                this.drawSeedToScreen(curSeed);
-                int[] mapDimensions = this.helperCreateMap(curSeed);
-                width = mapDimensions[0];
-                height = mapDimensions[1];
-                commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
+            mouseDisplay();
+            if (commands.hasNextInput()) {
 
-            } else if (curCommand.equals("l")) {
-                t.initialize(width, height);
-                continue;
+                String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
-            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                this.helperMoveAvatar(this.iMap, curCommand);
-                commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
+                if (!this.isGameSetup && (curCommand.equals("n"))) {
+                    seedScreen();
+                    curSeed = findSeed(commands);
+                    this.drawSeedToScreen(curSeed);
+                    int[] mapDimensions = this.helperCreateMap(curSeed);
+                    width = mapDimensions[0];
+                    height = mapDimensions[1];
+                    Thread t1 = new Engine.MouseThread(t, mapDimensions[0], mapDimensions[1]);
+                    commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
+                    t1.start();
 
-            } else if (curCommand.equals(":")) {
-                this.save = true;
-            } else if (curCommand.equals("q")) {
-                if (!save) {
-                    this.isGameSetup = false;
+                } else if (curCommand.equals("l")) {
+                    t.initialize(width, height);
+                    continue;
+
+                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
+                    this.helperMoveAvatar(this.iMap, curCommand);
+                    commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
+
+                } else if (curCommand.equals(":")) {
+                    this.save = true;
+                } else if (curCommand.equals("q")) {
+                    if (!save) {
+                        this.isGameSetup = false;
+                    }
+                    mainMenu();
+
+                } else {
+                    continue;
                 }
-                mainMenu();
 
-            } else {
-                continue;
+
             }
         }
 
+    }
+
+
+    private void mouseDisplay() {
+        double mouseX = StdDraw.mouseX();
+        double mouseY = StdDraw.mouseY();
+
+
+        Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
+        StdDraw.setFont(mainFont);
+
+        StdDraw.text(0.5, 0.9, String.valueOf(mouseX));
+        StdDraw.show();
     }
 
     /** A helper function to create an interactive map using the provided seed.
@@ -239,6 +268,56 @@ public class Engine {
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
+    }
+
+    class MouseThread extends Thread{
+        TERenderer ter;
+        int w;
+        int h;
+
+        MouseThread(TERenderer ter, int w, int h) {
+            this.ter = ter;
+            this.w = w;
+            this.h = h;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                mouseDisplay();
+            }
+        }
+    }
+
+    class KeyboardThread extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                KeyboardCommandInput k = new KeyboardCommandInput();
+                processCommands(k);
+            }
+        }
+    }
+
+    static class MouseLocation {
+        double mouseX;
+        double mouseY;
+
+        MouseLocation(double x, double y) {
+            this.mouseX = x;
+            this.mouseY = y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !o.getClass().toString().equals(this.getClass().toString())) {
+                return false;
+            }
+
+            MouseLocation other = (MouseLocation) o;
+
+            return other.mouseY == this.mouseY && other.mouseX == this.mouseX;
+        }
     }
 
 
