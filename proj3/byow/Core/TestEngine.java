@@ -262,10 +262,12 @@ public class TestEngine {
 
     }
 
-   @Test
+    @Test
     public void testKeyboard() {
         Engine e = new Engine();
+
         e.interactWithKeyboard();
+
     }
 
 
