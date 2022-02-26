@@ -154,6 +154,7 @@ public class Engine {
         while (true) {
 
             mouseDisplay();
+
             if (commands.hasNextInput()) {
 
                 String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
@@ -165,9 +166,7 @@ public class Engine {
                     int[] mapDimensions = this.helperCreateMap(curSeed);
                     width = mapDimensions[0];
                     height = mapDimensions[1];
-                    Thread t1 = new Engine.MouseThread(t, mapDimensions[0], mapDimensions[1]);
                     commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
-                    t1.start();
 
                 } else if (curCommand.equals("l")) {
                     t.initialize(width, height);
@@ -197,15 +196,22 @@ public class Engine {
 
 
     private void mouseDisplay() {
+
         double mouseX = StdDraw.mouseX();
         double mouseY = StdDraw.mouseY();
 
+        MouseLocation newLocation = new MouseLocation(mouseX, mouseY);
 
-        Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
-        StdDraw.setFont(mainFont);
+        //if (!newLocation.equals(this.mousePosition)) {
+            this.mousePosition = newLocation;
+            StdDraw.text(0.7, 0.9, "                     ");
+            Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
+            StdDraw.setFont(mainFont);
 
-        StdDraw.text(0.5, 0.9, String.valueOf(mouseX));
-        StdDraw.show();
+            StdDraw.text(0.7, 0.9, String.valueOf((int) mouseX));
+            StdDraw.show();
+      //  }
+
     }
 
     /** A helper function to create an interactive map using the provided seed.
@@ -268,35 +274,6 @@ public class Engine {
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
-    }
-
-    class MouseThread extends Thread{
-        TERenderer ter;
-        int w;
-        int h;
-
-        MouseThread(TERenderer ter, int w, int h) {
-            this.ter = ter;
-            this.w = w;
-            this.h = h;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                mouseDisplay();
-            }
-        }
-    }
-
-    class KeyboardThread extends Thread {
-        @Override
-        public void run() {
-            while (true) {
-                KeyboardCommandInput k = new KeyboardCommandInput();
-                processCommands(k);
-            }
-        }
     }
 
     static class MouseLocation {
