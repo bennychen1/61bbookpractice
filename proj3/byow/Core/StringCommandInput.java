@@ -1,5 +1,8 @@
 package byow.Core;
 
+import byow.TileEngine.TERenderer;
+import byow.TileEngine.TETile;
+
 public class StringCommandInput implements CommandInput{
 
     /** The String command. **/
@@ -34,6 +37,16 @@ public class StringCommandInput implements CommandInput{
         this.curIndex = this.curIndex + 1;
         return toReturn;
     }
+
+    @Override
+    public void initializeTERenderer(TERenderer t, int width, int height) {
+        ;
+    }
+
+    @Override
+    public void displayTileArray(TERenderer t, TETile[][] tileArray) {
+        ;
+    };
 
 
 }
