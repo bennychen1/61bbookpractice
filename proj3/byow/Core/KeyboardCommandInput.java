@@ -43,7 +43,6 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public void displayTileArray(Engine e, TERenderer t, TETile[][] tileArray) {
-        mouseDisplay(e);
         t.renderFrame(tileArray);
     };
 

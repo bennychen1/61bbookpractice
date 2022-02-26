@@ -262,13 +262,7 @@ public class TestEngine {
 
     }
 
-    @Test
-    public void testKeyboard() {
-        Engine e = new Engine();
 
-        e.interactWithKeyboard();
-
-    }
 
 
     private Avatar getFirstAvatar(Engine e) {
