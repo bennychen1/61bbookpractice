@@ -49,12 +49,15 @@ public class KeyboardCommandInput implements CommandInput {
     @Override
     public void mouseDisplay(Engine e) {
         Engine.MouseLocation curMouseLocation = createMouseLocation();
-        while (!e.getMouseLoc().equals(curMouseLocation)) {
+        while (!StdDraw.hasNextKeyTyped()) {
+            StdDraw.clear();
             e.setMouseLoc(curMouseLocation);
-            StdDraw.text(0.5, 0.9, String.valueOf(curMouseLocation.mouseX));
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(3, 0.9, "                           ");
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.text(3, 0.9, String.valueOf(curMouseLocation.mouseX));
             curMouseLocation = createMouseLocation();
             StdDraw.show();
-            StdDraw.pause(2);
         }
     }
 
