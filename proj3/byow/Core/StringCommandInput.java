@@ -56,5 +56,10 @@ public class StringCommandInput implements CommandInput{
         ;
     }
 
+    @Override
+    public void displayNoMouse(Engine e,TETile[][] tileArray) {
+        ;
+    }
+
 
 }

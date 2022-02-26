@@ -38,7 +38,7 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public void initializeTERenderer(TERenderer t, int width, int height) {
-        t.initialize(width, height);
+        t.initialize(width, height + 1);
     }
 
     @Override
@@ -48,12 +48,17 @@ public class KeyboardCommandInput implements CommandInput {
     };
 
     @Override
+    public void displayNoMouse(Engine e, TETile[][] tileArray ) {
+        e.ter.renderFrame(tileArray);
+    }
+
+    @Override
     public void mouseDisplay(Engine e) {
         while (!StdDraw.hasNextKeyTyped()) {
             StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.filledRectangle(1, 22, 30, 1);
+            StdDraw.filledRectangle(1, e.ter.getHeight(), e.ter.getWidth(), 1);
             StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.text(2, 22, String.valueOf(StdDraw.mouseX()));
+            StdDraw.text(2, e.ter.getHeight() - 0.5, String.valueOf(StdDraw.mouseX()));
             StdDraw.show();
         }
     }

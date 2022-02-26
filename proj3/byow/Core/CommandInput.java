@@ -10,4 +10,5 @@ public interface CommandInput {
     public void initializeTERenderer(TERenderer t, int width, int height);
     public void displayTileArray(Engine e, TERenderer t, TETile[][] tileArray);
     public void mouseDisplay(Engine e);
+    public void displayNoMouse(Engine e,TETile[][] tileArray);
 }
