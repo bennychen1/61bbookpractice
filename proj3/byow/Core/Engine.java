@@ -33,9 +33,6 @@ public class Engine {
     /** The seed. **/
     private int seed;
 
-    /** The last recorded mouse position. **/
-    MouseLocation mousePosition;
-
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
@@ -48,10 +45,7 @@ public class Engine {
     public void interactWithKeyboard() {
        // StdDraw.enableDoubleBuffering();
 
-        this.mousePosition = new MouseLocation(Double.MIN_VALUE, Double.MIN_VALUE);
-
         mainMenu();
-
 
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
@@ -135,7 +129,7 @@ public class Engine {
         StdDraw.setFont(optionsFont);
         StdDraw.text(0.5, 0.6, String.valueOf(curSeed));
         StdDraw.show();
-        StdDraw.pause(5000);
+        //StdDraw.pause(1000);
     }
 
     /**
@@ -146,71 +140,42 @@ public class Engine {
 
         TERenderer t = new TERenderer();
 
-
         int curSeed = 0;
         int height = 0;
         int width = 0;
 
-        while (true) {
+        while(commands.hasNextInput()) {
+            String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
-            mouseDisplay();
+            if (!this.isGameSetup && (curCommand.equals("n"))) {
+                seedScreen();
+                curSeed = findSeed(commands);
+                this.drawSeedToScreen(curSeed);
+                int[] mapDimensions = this.helperCreateMap(curSeed);
+                width = mapDimensions[0];
+                height = mapDimensions[1];
+                commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
 
-            if (commands.hasNextInput()) {
+            } else if (curCommand.equals("l")) {
+                commands.initializeTERenderer(t,width, height);
+                continue;
 
-                String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
+            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
+                this.helperMoveAvatar(this.iMap, curCommand);
+                commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
 
-                if (!this.isGameSetup && (curCommand.equals("n"))) {
-                    seedScreen();
-                    curSeed = findSeed(commands);
-                    this.drawSeedToScreen(curSeed);
-                    int[] mapDimensions = this.helperCreateMap(curSeed);
-                    width = mapDimensions[0];
-                    height = mapDimensions[1];
-                    commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
-
-                } else if (curCommand.equals("l")) {
-                    t.initialize(width, height);
-                    continue;
-
-                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                    this.helperMoveAvatar(this.iMap, curCommand);
-                    commands.displayTileArray(t, this.iMap.getGameMap().getTileArray());
-
-                } else if (curCommand.equals(":")) {
-                    this.save = true;
-                } else if (curCommand.equals("q")) {
-                    if (!save) {
-                        this.isGameSetup = false;
-                    }
-                    mainMenu();
-
-                } else {
-                    continue;
+            } else if (curCommand.equals(":")) {
+                this.save = true;
+            } else if (curCommand.equals("q")) {
+                if (!save) {
+                    this.isGameSetup = false;
                 }
+                mainMenu();
 
-
+            } else {
+                continue;
             }
         }
-
-    }
-
-
-    private void mouseDisplay() {
-
-        double mouseX = StdDraw.mouseX();
-        double mouseY = StdDraw.mouseY();
-
-        MouseLocation newLocation = new MouseLocation(mouseX, mouseY);
-
-        //if (!newLocation.equals(this.mousePosition)) {
-            this.mousePosition = newLocation;
-            StdDraw.text(0.7, 0.9, "                     ");
-            Font mainFont = new Font("Times New Roman", Font.PLAIN, 30);
-            StdDraw.setFont(mainFont);
-
-            StdDraw.text(0.7, 0.9, String.valueOf((int) mouseX));
-            StdDraw.show();
-      //  }
 
     }
 
@@ -274,27 +239,6 @@ public class Engine {
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
-    }
-
-    static class MouseLocation {
-        double mouseX;
-        double mouseY;
-
-        MouseLocation(double x, double y) {
-            this.mouseX = x;
-            this.mouseY = y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || !o.getClass().toString().equals(this.getClass().toString())) {
-                return false;
-            }
-
-            MouseLocation other = (MouseLocation) o;
-
-            return other.mouseY == this.mouseY && other.mouseX == this.mouseX;
-        }
     }
 
 
