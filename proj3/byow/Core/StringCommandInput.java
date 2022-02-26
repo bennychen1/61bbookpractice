@@ -47,7 +47,7 @@ public class StringCommandInput implements CommandInput{
     }
 
     @Override
-    public void displayTileArray(TERenderer t, TETile[][] tileArray) {
+    public void displayTileArray(Engine e, TERenderer t, TETile[][] tileArray) {
         ;
     }
 

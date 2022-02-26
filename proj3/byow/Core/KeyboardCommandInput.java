@@ -42,21 +42,18 @@ public class KeyboardCommandInput implements CommandInput {
     }
 
     @Override
-    public void displayTileArray(TERenderer t, TETile[][] tileArray) {
+    public void displayTileArray(Engine e, TERenderer t, TETile[][] tileArray) {
+        mouseDisplay(e);
         t.renderFrame(tileArray);
     };
 
     @Override
     public void mouseDisplay(Engine e) {
-        Engine.MouseLocation curMouseLocation = createMouseLocation();
         while (!StdDraw.hasNextKeyTyped()) {
-            StdDraw.clear();
-            e.setMouseLoc(curMouseLocation);
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.filledRectangle(1, 22, 30, 1);
             StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.text(3, 0.9, "                           ");
-            StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.text(3, 0.9, String.valueOf(curMouseLocation.mouseX));
-            curMouseLocation = createMouseLocation();
+            StdDraw.text(2, 22, String.valueOf(StdDraw.mouseX()));
             StdDraw.show();
         }
     }
