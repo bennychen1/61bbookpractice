@@ -4,6 +4,8 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 
+import java.awt.*;
+
 /** Commands typed in from the keyboard. **/
 public class KeyboardCommandInput implements CommandInput {
 
