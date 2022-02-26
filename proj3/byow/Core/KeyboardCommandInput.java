@@ -6,6 +6,8 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 
+import static byow.Core.Engine.createMouseLocation;
+
 /** Commands typed in from the keyboard. **/
 public class KeyboardCommandInput implements CommandInput {
 
@@ -43,5 +45,18 @@ public class KeyboardCommandInput implements CommandInput {
     public void displayTileArray(TERenderer t, TETile[][] tileArray) {
         t.renderFrame(tileArray);
     };
+
+    @Override
+    public void mouseDisplay(Engine e) {
+        Engine.MouseLocation curMouseLocation = createMouseLocation();
+        while (!e.getMouseLoc().equals(curMouseLocation)) {
+            e.setMouseLoc(curMouseLocation);
+            StdDraw.text(0.5, 0.9, String.valueOf(curMouseLocation.mouseX));
+            curMouseLocation = createMouseLocation();
+            StdDraw.show();
+            StdDraw.pause(2);
+        }
+    }
+
 
 }

@@ -9,4 +9,5 @@ public interface CommandInput {
     public char getNextInput();
     public void initializeTERenderer(TERenderer t, int width, int height);
     public void displayTileArray(TERenderer t, TETile[][] tileArray);
+    public void mouseDisplay(Engine e);
 }

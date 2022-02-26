@@ -2,6 +2,9 @@ package byow.Core;
 
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import edu.princeton.cs.introcs.StdDraw;
+
+import static byow.Core.Engine.createMouseLocation;
 
 public class StringCommandInput implements CommandInput{
 
@@ -46,7 +49,12 @@ public class StringCommandInput implements CommandInput{
     @Override
     public void displayTileArray(TERenderer t, TETile[][] tileArray) {
         ;
-    };
+    }
+
+    @Override
+    public void mouseDisplay(Engine e) {
+        ;
+    }
 
 
 }
