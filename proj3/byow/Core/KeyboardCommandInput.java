@@ -2,6 +2,7 @@ package byow.Core;
 
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import edu.princeton.cs.algs4.RandomSeq;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
@@ -57,7 +58,22 @@ public class KeyboardCommandInput implements CommandInput {
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.filledRectangle(1, e.ter.getHeight(), e.ter.getWidth(), 1);
             StdDraw.setPenColor(StdDraw.WHITE);
+            /**
             StdDraw.text(2, e.ter.getHeight() - 0.5, String.valueOf(StdDraw.mouseX()));
+            StdDraw.text(5, e.ter.getHeight() - 0.5, String.valueOf(StdDraw.mouseY())); **/
+
+            RandomMap gameMap = e.getiMap().getGameMap();
+
+            int xInt = (int) StdDraw.mouseX();
+            int yInt = (int) StdDraw.mouseY();
+
+            Point p = new Point(xInt, yInt);
+
+            if (e.getiMap().getGameMap().isPointOnMap(p)) {
+                StdDraw.text(2, e.ter.getHeight() - 0.5, gameMap.getTileAt(p).description());
+            }
+            
+
             StdDraw.show();
         }
     }
