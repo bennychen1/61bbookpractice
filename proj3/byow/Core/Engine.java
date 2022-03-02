@@ -37,9 +37,16 @@ public class Engine {
     private MouseLocation mouseLoc;
 
     TERenderer ter = new TERenderer();
+
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
+    private static final int WIDTH = 80;
+    private static final int HEIGHT = 30;
+
+    /** The width of the map. **/
+    private int mapWidth;
+
+    /** The height of the map. **/
+    private int mapHeight;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -148,8 +155,7 @@ public class Engine {
         this.ter = t;
 
         int curSeed = 0;
-        int height = 0;
-        int width = 0;
+
 
         while(commands.hasNextInput()) {
 
@@ -165,19 +171,17 @@ public class Engine {
                 curSeed = findSeed(commands);
                 this.drawSeedToScreen(curSeed);
                 int[] mapDimensions = this.helperCreateMap(curSeed);
-                width = mapDimensions[0];
-                height = mapDimensions[1];
-                commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
-                commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
+                this.mapWidth = mapDimensions[0];
+                this.mapHeight = mapDimensions[1];
+                this.helperDisplayTERenderer(commands);
 
             } else if (this.isGameSetup) {
                 if (curCommand.equals("l")) {
                     this.save = false;
-                    commands.initializeTERenderer(t, width, height);
-                    commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
-                    continue;
-                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                    this.helperMoveAvatar(this.iMap, curCommand);
+                    this.helperDisplayTERenderer(commands);
+
+                } else if (this.POSSIBLE_MOVES.contains(curCommand)) {
+                    this.helperMoveAvatar(curCommand);
                     commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
                 } else if (curCommand.equals(":")) {
                     this.save = true;
@@ -212,12 +216,17 @@ public class Engine {
 
     /**
      *  A helper method to process a command to move the avatar.
-     * @param iMap The InteractiveMap that has the avatar.
      * @param curCommand    A String representing the movement direction.
      */
-    public void helperMoveAvatar(InteractiveMap iMap, String curCommand) {
+    public void helperMoveAvatar(String curCommand) {
         InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
         this.iMap.moveAvatarCommand(userAvatar, curCommand);
+    }
+
+    /** A helper function to initialize the TERenderer and display it on screen. **/
+    public void helperDisplayTERenderer(CommandInput commands) {
+        commands.initializeTERenderer(this.ter, this.mapWidth, this.mapHeight);
+        commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
