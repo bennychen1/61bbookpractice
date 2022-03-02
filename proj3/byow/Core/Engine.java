@@ -188,12 +188,11 @@ public class Engine {
                     }
                     mainMenu();
                 } else if (curCommand.equals("x")) {
+                    // temporarily exit this loop to yes/no screen;
+                    confirmNewMap(commands);
                     this.seed = RandomUtils.uniform(this.ran, 1, 1000);
                     createMapAndDisplay(commands, this.seed);
                 }
-
-            } else {
-                continue;
             }
         }
 
@@ -218,7 +217,7 @@ public class Engine {
      *  A helper method to process a command to move the avatar.
      * @param curCommand    A String representing the movement direction.
      */
-    public void helperMoveAvatar(String curCommand) {
+    private void helperMoveAvatar(String curCommand) {
         InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
         this.iMap.moveAvatarCommand(userAvatar, curCommand);
     }
@@ -226,7 +225,7 @@ public class Engine {
     /** A helper function to initialize the TERenderer and display it on screen.
      * @param commands  The commands inputted by the user.
      * **/
-    public void helperDisplayTERenderer(CommandInput commands) {
+    private void helperDisplayTERenderer(CommandInput commands) {
         commands.initializeTERenderer(this.ter, this.mapWidth, this.mapHeight);
         commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
     }
@@ -235,11 +234,26 @@ public class Engine {
      * @param   curSeed    Integer representing the seed.
      * @param   commands   The commands inputted by the user.
      */
-    public void createMapAndDisplay(CommandInput commands, int curSeed) {
+    private void createMapAndDisplay(CommandInput commands, int curSeed) {
         int[] mapDimensions = this.helperCreateMap(curSeed);
         this.mapWidth = mapDimensions[0];
         this.mapHeight = mapDimensions[1];
         this.helperDisplayTERenderer(commands);
+    }
+
+    /**
+     * Have user confirm if they want a new map. If yes, create and display new map.
+     * If no, go back to current map.
+     * @param commands The commands inputted by the user. 
+     */
+    private void confirmNewMap(CommandInput commands) {
+        while (true) {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.filledRectangle(this.mapWidth * 0.5, this.mapHeight * 0.5,
+                    this.mapWidth * 0.3, this.mapHeight * 0.3);
+            StdDraw.show();
+        }
+
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
