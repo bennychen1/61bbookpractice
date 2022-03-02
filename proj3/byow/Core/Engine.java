@@ -170,21 +170,23 @@ public class Engine {
                 commands.initializeTERenderer(t, mapDimensions[0], mapDimensions[1]);
                 commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
 
-            } else if (curCommand.equals("l")) {
-                commands.initializeTERenderer(t,width, height);
-                continue;
-
-            } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
-                this.helperMoveAvatar(this.iMap, curCommand);
-                commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
-
-            } else if (curCommand.equals(":")) {
-                this.save = true;
-            } else if (curCommand.equals("q")) {
-                if (!save) {
-                    this.isGameSetup = false;
+            } else if (this.isGameSetup) {
+                if (curCommand.equals("l")) {
+                    this.save = false;
+                    commands.initializeTERenderer(t, width, height);
+                    commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
+                    continue;
+                } else if (this.POSSIBLE_MOVES.indexOf(curCommand) >= 0) {
+                    this.helperMoveAvatar(this.iMap, curCommand);
+                    commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
+                } else if (curCommand.equals(":")) {
+                    this.save = true;
+                } else if (curCommand.equals("q")) {
+                    if (!save) {
+                        this.isGameSetup = false;
+                    }
+                    mainMenu();
                 }
-                mainMenu();
 
             } else {
                 continue;
