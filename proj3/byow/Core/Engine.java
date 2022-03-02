@@ -170,10 +170,7 @@ public class Engine {
                 seedScreen();
                 curSeed = findSeed(commands);
                 this.drawSeedToScreen(curSeed);
-                int[] mapDimensions = this.helperCreateMap(curSeed);
-                this.mapWidth = mapDimensions[0];
-                this.mapHeight = mapDimensions[1];
-                this.helperDisplayTERenderer(commands);
+                createMapAndDisplay(commands, curSeed);
 
             } else if (this.isGameSetup) {
                 if (curCommand.equals("l")) {
@@ -190,6 +187,9 @@ public class Engine {
                         this.isGameSetup = false;
                     }
                     mainMenu();
+                } else if (curCommand.equals("x")) {
+                    this.seed = RandomUtils.uniform(this.ran, 1, 1000);
+                    createMapAndDisplay(commands, this.seed);
                 }
 
             } else {
@@ -223,10 +223,23 @@ public class Engine {
         this.iMap.moveAvatarCommand(userAvatar, curCommand);
     }
 
-    /** A helper function to initialize the TERenderer and display it on screen. **/
+    /** A helper function to initialize the TERenderer and display it on screen.
+     * @param commands  The commands inputted by the user.
+     * **/
     public void helperDisplayTERenderer(CommandInput commands) {
         commands.initializeTERenderer(this.ter, this.mapWidth, this.mapHeight);
         commands.displayNoMouse(this, this.iMap.getGameMap().getTileArray());
+    }
+
+    /** A helper function to create and display a map with the provided seed.
+     * @param   curSeed    Integer representing the seed.
+     * @param   commands   The commands inputted by the user.
+     */
+    public void createMapAndDisplay(CommandInput commands, int curSeed) {
+        int[] mapDimensions = this.helperCreateMap(curSeed);
+        this.mapWidth = mapDimensions[0];
+        this.mapHeight = mapDimensions[1];
+        this.helperDisplayTERenderer(commands);
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
