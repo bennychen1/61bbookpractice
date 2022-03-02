@@ -189,9 +189,11 @@ public class Engine {
                     mainMenu();
                 } else if (curCommand.equals("x")) {
                     // temporarily exit this loop to yes/no screen;
-                    confirmNewMap(commands);
-                    this.seed = RandomUtils.uniform(this.ran, 1, 1000);
-                    createMapAndDisplay(commands, this.seed);
+                    drawConfirmationScreen();
+                    if(confirmNewMap(commands)) {
+                        this.seed = RandomUtils.uniform(this.ran, 1, 1000);
+                        createMapAndDisplay(commands, this.seed);
+                    }
                 }
             }
         }
@@ -244,16 +246,47 @@ public class Engine {
     /**
      * Have user confirm if they want a new map. If yes, create and display new map.
      * If no, go back to current map.
-     * @param commands The commands inputted by the user. 
+     * @param commands The commands inputted by the user.
+     * @return Boolean, either true is y or n is pressed, false otherwise.
      */
-    private void confirmNewMap(CommandInput commands) {
-        while (true) {
-            StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.filledRectangle(this.mapWidth * 0.5, this.mapHeight * 0.5,
-                    this.mapWidth * 0.3, this.mapHeight * 0.3);
-            StdDraw.show();
+    private boolean confirmNewMap(CommandInput commands) {
+        while (commands.hasNextInput()) {
+            String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
+
+            if (curCommand.equals("y")) {
+                return true;
+            }
+
+            if (curCommand.equals("n")) {
+                helperDisplayTERenderer(commands);
+                return false;
+            }
+
+
+            drawConfirmationScreen();
         }
 
+        return false;
+    }
+
+    /** Draws the new map confirmation screen. **/
+    private void drawConfirmationScreen() {
+        StdDraw.setPenColor(StdDraw.BLUE);
+
+        double drawWidth = Math.min(this.mapWidth * 0.3, 5);
+        double drawHeight = Math.min(this.mapHeight * 0.3, 5);
+
+        double textX = this.mapWidth * 0.5 - 0.2;
+        double textY = this.mapHeight * 0.5 + 1;
+
+        StdDraw.filledRectangle(this.mapWidth * 0.5, this.mapHeight * 0.5,
+                drawWidth, drawHeight);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.text(textX, textY,
+                "Draw new map?");
+        StdDraw.text(textX, textY - 1, "Y to confirm");
+        StdDraw.text(textX, textY - 2, "N return to map");
+        StdDraw.show();
     }
 
     /** A helper function to find the seed the user wants from the provided string. */
