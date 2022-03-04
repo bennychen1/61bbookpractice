@@ -301,8 +301,7 @@ public class Engine {
         char nextKey = commands.getNextInput();
 
         while (commands.hasNextInput()) {
-
-            System.out.println(commands.getNextInput());
+            
 
             if (nextKey == 'q' || nextKey== 'Q') {
                 mainMenu();
