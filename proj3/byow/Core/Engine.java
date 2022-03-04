@@ -182,6 +182,9 @@ public class Engine {
                     commands.displayTileArray(this, t, this.iMap.getGameMap().getTileArray());
                 } else if (curCommand.equals(":")) {
                     this.save = true;
+
+                    quitSaveScreen(commands);
+
                 } else if (curCommand.equals("q")) {
                     if (!save) {
                         this.isGameSetup = false;
@@ -282,10 +285,51 @@ public class Engine {
         StdDraw.filledRectangle(this.mapWidth * 0.5, this.mapHeight * 0.5,
                 drawWidth, drawHeight);
         StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.text(textX, textY,
-                "Draw new map?");
+        StdDraw.text(textX, textY, "Draw new map?");
         StdDraw.text(textX, textY - 1, "Y to confirm");
         StdDraw.text(textX, textY - 2, "N return to map");
+        StdDraw.show();
+    }
+
+    /** The screen after the user types ":"
+     * @param commands The commands inputted by the user.
+     * **/
+    private void quitSaveScreen(CommandInput commands) {
+
+        drawText("Press Q to close the window");
+
+        char nextKey = commands.getNextInput();
+
+        while (commands.hasNextInput()) {
+
+            System.out.println(commands.getNextInput());
+
+            if (nextKey == 'q' || nextKey== 'Q') {
+                mainMenu();
+            }
+
+            drawText("Press Q to close the window");
+            nextKey = commands.getNextInput();
+        }
+    }
+
+    /**
+     * Draws a rectangle in the middle of the screen with the provided text.
+     * @param text A String that the user wants to display.
+     */
+    private void drawText(String text) {
+        StdDraw.setPenColor(StdDraw.BLUE);
+
+        double drawWidth = Math.min(this.mapWidth * 0.3, 5);
+        double drawHeight = Math.min(this.mapHeight * 0.3, 5);
+
+        double textX = this.mapWidth * 0.5 - 0.2;
+        double textY = this.mapHeight * 0.5 + 1;
+
+        StdDraw.filledRectangle(this.mapWidth * 0.5, this.mapHeight * 0.5,
+                drawWidth, drawHeight);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.text(textX, textY, text);
         StdDraw.show();
     }
 
