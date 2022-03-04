@@ -166,12 +166,16 @@ public class Engine {
 
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
-            if (!this.isGameSetup && (curCommand.equals("n"))) {
-                seedScreen();
-                curSeed = findSeed(commands);
-                this.drawSeedToScreen(curSeed);
-                createMapAndDisplay(commands, curSeed);
-
+            if (!this.isGameSetup) {
+                if (curCommand.equals("n")) {
+                    seedScreen();
+                    curSeed = findSeed(commands);
+                    this.drawSeedToScreen(curSeed);
+                    createMapAndDisplay(commands, curSeed);
+                } else if (curCommand.equals("l")) {
+                    this.save = false;
+                    this.helperDisplayTERenderer(commands);
+                }
             } else if (this.isGameSetup) {
                 if (curCommand.equals("l")) {
                     this.save = false;
@@ -301,7 +305,7 @@ public class Engine {
         char nextKey = commands.getNextInput();
 
         while (commands.hasNextInput()) {
-            
+
 
             if (nextKey == 'q' || nextKey== 'Q') {
                 mainMenu();
