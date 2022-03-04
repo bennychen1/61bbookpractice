@@ -172,14 +172,11 @@ public class Engine {
                     curSeed = findSeed(commands);
                     this.drawSeedToScreen(curSeed);
                     createMapAndDisplay(commands, curSeed);
-                } else if (curCommand.equals("l")) {
+                } else if (curCommand.equals("l"))  { // add extra condition here
                     this.save = false;
                     this.helperDisplayTERenderer(commands);
+                    this.isGameSetup = true;
                 }
-            } else if (this.isGameSetup) {
-                if (curCommand.equals("l")) {
-                    this.save = false;
-                    this.helperDisplayTERenderer(commands);
 
                 } else if (this.POSSIBLE_MOVES.contains(curCommand)) {
                     this.helperMoveAvatar(curCommand);
@@ -187,12 +184,12 @@ public class Engine {
                 } else if (curCommand.equals(":")) {
                     this.save = true;
 
+                    this.isGameSetup = false;
+
                     quitSaveScreen(commands);
 
                 } else if (curCommand.equals("q")) {
-                    if (!save) {
-                        this.isGameSetup = false;
-                    }
+                    this.isGameSetup = false;
                     mainMenu();
                 } else if (curCommand.equals("x")) {
                     // temporarily exit this loop to yes/no screen;
@@ -204,8 +201,6 @@ public class Engine {
                 }
             }
         }
-
-    }
 
     /** A helper function to create an interactive map using the provided seed.
      * @param curSeed   An int representing the seed.
