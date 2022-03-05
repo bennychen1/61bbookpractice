@@ -11,4 +11,6 @@ public interface CommandInput {
     public void displayTileArray(Engine e, TERenderer t, TETile[][] tileArray);
     public void mouseDisplay(Engine e);
     public void displayNoMouse(Engine e,TETile[][] tileArray);
+    public boolean isThereSavedFile();
+    public void load();
 }
