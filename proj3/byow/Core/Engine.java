@@ -7,6 +7,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
@@ -154,8 +156,9 @@ public class Engine {
 
         this.ter = t;
 
-        int curSeed = 0;
+        int curSeed;
 
+        ArrayList<String> keysPressed = new ArrayList<>();
 
         while(commands.hasNextInput()) {
 
@@ -163,8 +166,12 @@ public class Engine {
                 commands.mouseDisplay(this);
             }
 
+            System.out.println(this.isGameSetup);
+
 
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
+
+            keysPressed.add(curCommand);
 
             if (!this.isGameSetup) {
                 if (curCommand.equals("n")) {
@@ -172,8 +179,9 @@ public class Engine {
                     curSeed = findSeed(commands);
                     this.drawSeedToScreen(curSeed);
                     createMapAndDisplay(commands, curSeed);
-                } else if (curCommand.equals("l"))  { // add extra condition here
+                } else if (commands.isThereSavedFile() && curCommand.equals("l"))  { // add extra condition here hasSavedFile
                     this.save = false;
+                    commands.load();
                     this.helperDisplayTERenderer(commands);
                     this.isGameSetup = true;
                 }
@@ -187,6 +195,10 @@ public class Engine {
                     this.isGameSetup = false;
 
                     quitSaveScreen(commands);
+
+                    // write each item in the keysPressed arraylist to a file - each command is one line
+
+                    return;
 
                 } else if (curCommand.equals("q")) {
                     this.isGameSetup = false;
@@ -303,7 +315,7 @@ public class Engine {
 
 
             if (nextKey == 'q' || nextKey== 'Q') {
-                mainMenu();
+                return;
             }
 
             drawText("Press Q to close the window");
@@ -368,15 +380,8 @@ public class Engine {
         return copy;
     }
 
-    /** Get the most recent mouse location. **/
-    public MouseLocation getMouseLoc() {
-        return this.mouseLoc;
-    }
 
-    /** Set the MouseLocation to m. **/
-    public void setMouseLoc(MouseLocation m) {
-        this.mouseLoc = m;
-    }
+
 
     /** Create a MouseLocation object with the current location of the mouse. **/
     public static MouseLocation createMouseLocation() {
