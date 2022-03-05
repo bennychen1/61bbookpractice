@@ -61,5 +61,15 @@ public class StringCommandInput implements CommandInput{
         ;
     }
 
+    @Override
+    public boolean isThereSavedFile() {
+        return true;
+    }
+
+    @Override
+    public void load() {
+        ;
+    }
+
 
 }

@@ -6,6 +6,8 @@ import edu.princeton.cs.algs4.RandomSeq;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Path;
 
 import static byow.Core.Engine.createMouseLocation;
 
@@ -72,10 +74,26 @@ public class KeyboardCommandInput implements CommandInput {
             if (e.getiMap().getGameMap().isPointOnMap(p)) {
                 StdDraw.text(2, e.ter.getHeight() - 0.5, gameMap.getTileAt(p).description());
             }
-            
 
             StdDraw.show();
         }
+    }
+
+    @Override
+    public boolean isThereSavedFile() {
+        return checkIfSavedFiles();
+    }
+
+    @Override
+    public void load() {
+        if (checkIfSavedFiles()) {
+            
+        }
+    }
+
+    /** Check if there is a savedGame folder with files in it. **/
+    private boolean checkIfSavedFiles() {
+        return new File(System.getProperty("user.dir") + "/savedGames").exists();
     }
 
 
