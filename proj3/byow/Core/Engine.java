@@ -9,10 +9,7 @@ import edu.princeton.cs.introcs.StdDraw;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.reflect.Array;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 
 public class Engine {
@@ -26,8 +23,6 @@ public class Engine {
     /** True if the user wants to save the game. **/
     private boolean save = false;
 
-    /** The saved game map. **/
-    private InteractiveMap savedMap;
 
     /** A String of possible movements. **/
     private String POSSIBLE_MOVES = "wasd";
@@ -38,7 +33,7 @@ public class Engine {
     /** The seed. **/
     private int seed;
 
-    TERenderer ter = new TERenderer();
+    private TERenderer ter;
 
     /* Feel free to change the width and height. */
     private static final int WIDTH = 80;
@@ -51,10 +46,10 @@ public class Engine {
     private int mapHeight;
 
     /** The project directory. **/
-    private final String GAME_DIR = System.getProperty("user.dir") + "\\byow\\core";
+    public static final String GAME_DIR = System.getProperty("user.dir") + "\\byow\\core";
 
     /** The project directory. **/
-    private final String COMMAND_FILE_PATH = System.getProperty("user.dir") + "\\byow\\core\\savedGames\\userInput.txt";
+    public static final String COMMAND_FILE_PATH = System.getProperty("user.dir") + "\\byow\\core\\savedGames\\userInput.txt";
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -352,13 +347,6 @@ public class Engine {
     private int findSeed(ArrayList<String> keysPressed, CommandInput stringCommand) {
         int curSeed = 0;
 
-       // char curChar = stringCommand.getNextInput();
-
-        //keysPressed.add(String.valueOf(curChar));
-
-
-       // curSeed = addToCurSeed(curSeed, Character.getNumericValue(curChar));
-
         while (stringCommand.hasNextInput()) {
             char curChar = stringCommand.getNextInput();
             keysPressed.add(String.valueOf(curChar));
@@ -431,6 +419,10 @@ public class Engine {
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
+    }
+
+    public TERenderer getTer() {
+        return this.ter;
     }
 
     public static void main(String[] args) {
