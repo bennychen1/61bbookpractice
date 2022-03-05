@@ -6,6 +6,7 @@ import edu.princeton.cs.algs4.RandomSeq;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Path;
 
@@ -87,7 +88,9 @@ public class KeyboardCommandInput implements CommandInput {
     @Override
     public void load() {
         if (checkIfSavedFiles()) {
-            
+            // read in the file
+            // record key presses using Robot class
+
         }
     }
 

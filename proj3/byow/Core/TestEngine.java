@@ -8,6 +8,7 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
 import byow.Core.InteractiveMap.Avatar;
+import org.junit.runner.JUnitCore;
 
 import java.util.ArrayList;
 
