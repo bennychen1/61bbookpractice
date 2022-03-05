@@ -166,8 +166,6 @@ public class Engine {
                 commands.mouseDisplay(this);
             }
 
-            System.out.println(this.isGameSetup);
-
 
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
@@ -196,13 +194,15 @@ public class Engine {
 
                     quitSaveScreen(commands);
 
+
+
                     // write each item in the keysPressed arraylist to a file - each command is one line
 
                     return;
 
                 } else if (curCommand.equals("q")) {
                     this.isGameSetup = false;
-                    mainMenu();
+                    return;
                 } else if (curCommand.equals("x")) {
                     // temporarily exit this loop to yes/no screen;
                     drawConfirmationScreen();
@@ -211,6 +211,8 @@ public class Engine {
                         createMapAndDisplay(commands, this.seed);
                     }
                 }
+
+                keysPressed.add(curCommand);
             }
         }
 

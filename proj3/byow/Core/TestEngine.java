@@ -263,6 +263,20 @@ public class TestEngine {
 
     }
 
+    @Test
+    public void saveNewMap() {
+        //n1saaawxyxyxyd:ql
+        //(14,9)
+
+        Engine e = new Engine();
+        e.interactWithInputString("n1saaawxyxyxy:qld");
+
+        Avatar a = getFirstAvatar(e);
+        Point expectedPoint = new Point(14, 9);
+
+        assertEquals(expectedPoint, a.getLocation());
+    }
+
 
 
 
