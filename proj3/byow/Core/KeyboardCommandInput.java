@@ -7,10 +7,11 @@ import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Path;
-
-import static byow.Core.Engine.createMouseLocation;
 
 /** Commands typed in from the keyboard. **/
 public class KeyboardCommandInput implements CommandInput {
@@ -52,14 +53,14 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public void displayNoMouse(Engine e, TETile[][] tileArray ) {
-        e.ter.renderFrame(tileArray);
+        e.getTer().renderFrame(tileArray);
     }
 
     @Override
     public void mouseDisplay(Engine e) {
         while (!StdDraw.hasNextKeyTyped()) {
             StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.filledRectangle(1, e.ter.getHeight(), e.ter.getWidth(), 1);
+            StdDraw.filledRectangle(1, e.getTer().getHeight(), e.getTer().getWidth(), 1);
             StdDraw.setPenColor(StdDraw.WHITE);
             /**
             StdDraw.text(2, e.ter.getHeight() - 0.5, String.valueOf(StdDraw.mouseX()));
@@ -73,7 +74,7 @@ public class KeyboardCommandInput implements CommandInput {
             Point p = new Point(xInt, yInt);
 
             if (e.getiMap().getGameMap().isPointOnMap(p)) {
-                StdDraw.text(2, e.ter.getHeight() - 0.5, gameMap.getTileAt(p).description());
+                StdDraw.text(2, e.getTer().getHeight() - 0.5, gameMap.getTileAt(p).description());
             }
 
             StdDraw.show();
@@ -87,7 +88,30 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public void load() {
-        if (checkIfSavedFiles()) {
+        File commandsFile = new File(Engine.COMMAND_FILE_PATH);
+        if (commandsFile.exists()) {
+
+            try {
+                BufferedReader commandReader = new BufferedReader(new FileReader(commandsFile));
+
+
+                String curCommand = commandReader.readLine();
+                Robot r = new Robot();
+
+                while (curCommand != null) {
+
+                    System.out.println(curCommand);
+
+                    r.keyPress(curCommand.charAt(0));
+                    r.keyRelease(curCommand.charAt(0));
+                    curCommand = commandReader.readLine();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
             // read in the file
             // record key presses using Robot class
 

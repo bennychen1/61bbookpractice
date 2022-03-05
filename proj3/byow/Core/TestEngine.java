@@ -269,7 +269,8 @@ public class TestEngine {
         //(14,9)
 
         Engine e = new Engine();
-        e.interactWithInputString("n1saaawxyxyxy:qld");
+        e.interactWithInputString("n1saaawxyxyxy:q");
+        e.interactWithInputString("ld");
 
         Avatar a = getFirstAvatar(e);
         Point expectedPoint = new Point(14, 9);
