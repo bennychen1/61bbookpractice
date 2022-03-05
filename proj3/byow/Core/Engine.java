@@ -53,6 +53,9 @@ public class Engine {
     /** The project directory. **/
     private final String GAME_DIR = System.getProperty("user.dir") + "\\byow\\core";
 
+    /** The project directory. **/
+    private final String COMMAND_FILE_PATH = System.getProperty("user.dir") + "\\byow\\core\\savedGames\\userInput.txt";
+
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
@@ -175,7 +178,7 @@ public class Engine {
             if (!this.isGameSetup) {
                 if (curCommand.equals("n")) {
                     seedScreen();
-                    curSeed = findSeed(commands);
+                    curSeed = findSeed(keysPressed, commands);
                     this.drawSeedToScreen(curSeed);
                     createMapAndDisplay(commands, curSeed);
                 } else if (commands.isThereSavedFile() && curCommand.equals("l"))  { // add extra condition here hasSavedFile
@@ -212,8 +215,6 @@ public class Engine {
                         createMapAndDisplay(commands, this.seed);
                     }
                 }
-
-                keysPressed.add(curCommand);
             }
         }
 
@@ -346,17 +347,22 @@ public class Engine {
         StdDraw.show();
     }
 
-    /** A helper function to find the seed the user wants from the provided string. */
-    private int findSeed(CommandInput stringCommand) {
+    /** A helper function to find the seed the user wants from the provided string.
+     * Adds the keys pressed to the recorded list of commands keysPressed. */
+    private int findSeed(ArrayList<String> keysPressed, CommandInput stringCommand) {
         int curSeed = 0;
 
-        char curChar = stringCommand.getNextInput();
+       // char curChar = stringCommand.getNextInput();
+
+        //keysPressed.add(String.valueOf(curChar));
 
 
-        curSeed = addToCurSeed(curSeed, Character.getNumericValue(curChar));
+       // curSeed = addToCurSeed(curSeed, Character.getNumericValue(curChar));
 
         while (stringCommand.hasNextInput()) {
-            curChar = stringCommand.getNextInput();
+            char curChar = stringCommand.getNextInput();
+            keysPressed.add(String.valueOf(curChar));
+
 
             if (curChar == 's' || curChar == 'S') {
                 break;
@@ -393,7 +399,7 @@ public class Engine {
             savedGameDir.mkdir();
         }
 
-        File commandsText = new File(pathToSavedFolder + "\\userInput.txt");
+        File commandsText = new File(this.COMMAND_FILE_PATH);
 
         if (commandsText.exists()) {
             commandsText.delete();
@@ -402,20 +408,21 @@ public class Engine {
 
         try {
 
-            commandsText.createNewFile();
 
-            FileWriter fw = new FileWriter(commandsText, true);
+            if (commandsText.createNewFile()) {
+                FileWriter fw = new FileWriter(commandsText, true);
 
-            for (int i = 0; i < commands.size() - 1; i = i + 1) {
-                String s = commands.get(i);
-                fw.write(s + "\n");
+                for (int i = 0; i < commands.size() - 1; i = i + 1) {
+                    String s = commands.get(i);
+                    fw.write(s + "\n");
+                }
+
+                fw.close();
             }
 
-            fw.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
 
 
     }
