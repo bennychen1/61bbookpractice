@@ -4,7 +4,6 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 
-import static byow.Core.Engine.createMouseLocation;
 
 public class StringCommandInput implements CommandInput{
 
