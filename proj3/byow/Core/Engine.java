@@ -7,6 +7,9 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -35,9 +38,6 @@ public class Engine {
     /** The seed. **/
     private int seed;
 
-    /** The most recent position of the mouse. **/
-    private MouseLocation mouseLoc;
-
     TERenderer ter = new TERenderer();
 
     /* Feel free to change the width and height. */
@@ -50,6 +50,9 @@ public class Engine {
     /** The height of the map. **/
     private int mapHeight;
 
+    /** The project directory. **/
+    private final String GAME_DIR = System.getProperty("user.dir") + "\\byow\\core";
+
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
@@ -58,8 +61,6 @@ public class Engine {
        // StdDraw.enableDoubleBuffering();
 
         mainMenu();
-
-        this.mouseLoc = new MouseLocation(Double.MIN_VALUE, Double.MIN_VALUE);
 
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
@@ -194,7 +195,7 @@ public class Engine {
 
                     quitSaveScreen(commands);
 
-
+                    writeCommandsToFile(keysPressed);
 
                     // write each item in the keysPressed arraylist to a file - each command is one line
 
@@ -376,49 +377,54 @@ public class Engine {
         return curSeed * 10 + add;
     }
 
+
+    /**
+     * Write the commands from this run of engine to the savedGames folder.
+     * Overwrite if a set of commands is already saved.
+     * @param commands An ArrayList containing the keys pressed.
+     */
+    private void writeCommandsToFile(ArrayList<String> commands) {
+
+        String pathToSavedFolder = this.GAME_DIR + "\\savedGames";
+
+        File savedGameDir = new File(pathToSavedFolder);
+
+        if (!savedGameDir.exists()) {
+            savedGameDir.mkdir();
+        }
+
+        File commandsText = new File(pathToSavedFolder + "\\userInput.txt");
+
+        if (commandsText.exists()) {
+            commandsText.delete();
+        }
+
+
+        try {
+
+            commandsText.createNewFile();
+
+            FileWriter fw = new FileWriter(commandsText, true);
+
+            for (int i = 0; i < commands.size() - 1; i = i + 1) {
+                String s = commands.get(i);
+                fw.write(s + "\n");
+            }
+
+            fw.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     /** Get the InteractiveMap. **/
     public InteractiveMap getiMap() {
         InteractiveMap copy = new InteractiveMap(this.iMap);
         return copy;
     }
-
-
-
-
-    /** Create a MouseLocation object with the current location of the mouse. **/
-    public static MouseLocation createMouseLocation() {
-        return new MouseLocation(StdDraw.mouseX(), StdDraw.mouseY());
-    }
-
-    /** For storing the mouse coordinates. **/
-    static class MouseLocation {
-
-        /** The x-coordinate. **/
-        double mouseX;
-
-        /** The y-coordinate. **/
-        double mouseY;
-
-        MouseLocation(double mouseX, double mouseY) {
-            this.mouseX = mouseX;
-            this.mouseY = mouseY;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || !o.getClass().toString().equals(this.getClass().toString())) {
-                return false;
-            }
-
-            MouseLocation otherMouseLocation = (MouseLocation) o;
-
-            return this.mouseY == otherMouseLocation.mouseY && this.mouseX == otherMouseLocation.mouseX;
-        }
-    }
-
-
-
-
 
     public static void main(String[] args) {
         Engine e = new Engine();
