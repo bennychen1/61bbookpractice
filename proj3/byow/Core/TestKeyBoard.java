@@ -11,10 +11,5 @@ public class TestKeyBoard {
 
     }
 
-    @Test
-    public void testKeyBoardReader() {
-        KeyboardCommandInput k = new KeyboardCommandInput();
-        k.load();
-    }
 
 }

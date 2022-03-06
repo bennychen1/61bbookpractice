@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /** Commands typed in from the keyboard. **/
 public class KeyboardCommandInput implements CommandInput {
@@ -19,8 +21,13 @@ public class KeyboardCommandInput implements CommandInput {
     /** The current command **/
     char curCommand;
 
+    /** Previous user commands from a saved game. **/
+    LinkedList<String> loadedCommands;
+
+
     KeyboardCommandInput() {
         this.curCommand = Character.MIN_VALUE;
+        this.loadedCommands = new LinkedList<>();
     }
 
     @Override
@@ -30,6 +37,11 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public char getNextInput() {
+
+        if (!this.loadedCommands.isEmpty()) {
+            return this.loadedCommands.pop().charAt(0);
+        }
+
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 this.curCommand = StdDraw.nextKeyTyped();
@@ -87,7 +99,7 @@ public class KeyboardCommandInput implements CommandInput {
     }
 
     @Override
-    public void load() {
+    public void load(Engine e) {
         File commandsFile = new File(Engine.COMMAND_FILE_PATH);
         if (commandsFile.exists()) {
 
@@ -96,19 +108,15 @@ public class KeyboardCommandInput implements CommandInput {
 
 
                 String curCommand = commandReader.readLine();
-                Robot r = new Robot();
+
 
                 while (curCommand != null) {
-
-                    System.out.println(curCommand);
-
-                    r.keyPress(curCommand.charAt(0));
-                    r.keyRelease(curCommand.charAt(0));
+                    this.loadedCommands.add(curCommand);
                     curCommand = commandReader.readLine();
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception exc) {
+                exc.printStackTrace();
             }
 
 
@@ -120,7 +128,7 @@ public class KeyboardCommandInput implements CommandInput {
 
     /** Check if there is a savedGame folder with files in it. **/
     private boolean checkIfSavedFiles() {
-        return new File(System.getProperty("user.dir") + "/savedGames").exists();
+        return new File(Engine.COMMAND_FILE_PATH).exists();
     }
 
 
