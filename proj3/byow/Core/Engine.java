@@ -178,9 +178,9 @@ public class Engine {
                     createMapAndDisplay(commands, curSeed);
                 } else if (commands.isThereSavedFile() && curCommand.equals("l"))  { // add extra condition here hasSavedFile
                     this.save = false;
-                    commands.load();
-                    this.helperDisplayTERenderer(commands);
-                    this.isGameSetup = true;
+                    commands.load(this);
+                    //this.helperDisplayTERenderer(commands);
+                    //this.isGameSetup = true;
                 }
 
                 } else if (this.POSSIBLE_MOVES.contains(curCommand)) {
@@ -423,6 +423,11 @@ public class Engine {
 
     public TERenderer getTer() {
         return this.ter;
+    }
+
+    /** Set isGameSetUp to true. **/
+    public void setGameSetup() {
+        this.isGameSetup = true;
     }
 
     public static void main(String[] args) {

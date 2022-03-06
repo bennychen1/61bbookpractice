@@ -12,5 +12,5 @@ public interface CommandInput {
     public void mouseDisplay(Engine e);
     public void displayNoMouse(Engine e,TETile[][] tileArray);
     public boolean isThereSavedFile();
-    public void load();
+    public void load(Engine e);
 }

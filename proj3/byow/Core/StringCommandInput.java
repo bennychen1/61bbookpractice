@@ -66,8 +66,8 @@ public class StringCommandInput implements CommandInput{
     }
 
     @Override
-    public void load() {
-        ;
+    public void load(Engine e) {
+        e.setGameSetup();
     }
 
 
