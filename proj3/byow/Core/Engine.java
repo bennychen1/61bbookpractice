@@ -25,7 +25,7 @@ public class Engine {
 
 
     /** A String of possible movements. **/
-    private String POSSIBLE_MOVES = "wasd";
+    public static final String POSSIBLE_MOVES = "wasd";
 
     /** The Random Number Generator. **/
     private Random ran = new Random(10);
