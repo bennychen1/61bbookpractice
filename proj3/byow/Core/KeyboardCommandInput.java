@@ -70,7 +70,7 @@ public class KeyboardCommandInput implements CommandInput {
 
     @Override
     public void mouseDisplay(Engine e) {
-        while (!StdDraw.hasNextKeyTyped()) {
+        while (!StdDraw.hasNextKeyTyped() && this.loadedCommands.isEmpty()) {
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.filledRectangle(1, e.getTer().getHeight(), e.getTer().getWidth(), 1);
             StdDraw.setPenColor(StdDraw.WHITE);

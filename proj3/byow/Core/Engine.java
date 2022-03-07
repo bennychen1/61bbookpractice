@@ -176,9 +176,11 @@ public class Engine {
                     curSeed = findSeed(keysPressed, commands);
                     this.drawSeedToScreen(curSeed);
                     createMapAndDisplay(commands, curSeed);
+                    this.isGameSetup = true;
                 } else if (commands.isThereSavedFile() && curCommand.equals("l"))  { // add extra condition here hasSavedFile
                     this.save = false;
                     commands.load(this);
+                    keysPressed.remove("l");
                     //this.helperDisplayTERenderer(commands);
                     //this.isGameSetup = true;
                 }
