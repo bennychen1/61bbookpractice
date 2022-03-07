@@ -505,8 +505,8 @@ public class RandomMap {
      * @return True if point is located on the map, false otherwise.
      */
     public boolean isPointOnMap(Point p) {
-        return (p.getRow() >= 0 && p.getCol() >= 0) && (p.getRow() < this.maxRowIndex &&
-                p.getCol() < this.maxColIndex);
+        return (p.getRow() >= 0 && p.getCol() >= 0) && (p.getRow() <= this.maxRowIndex &&
+                p.getCol() <= this.maxColIndex);
     }
 
     /**
