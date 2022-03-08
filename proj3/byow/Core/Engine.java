@@ -207,7 +207,7 @@ public class Engine {
                 } else if (curCommand.equals("x")) {
                     // temporarily exit this loop to yes/no screen;
                     drawConfirmationScreen();
-                    if(confirmNewMap(commands)) {
+                    if(confirmNewMap(keysPressed, commands)) {
                         this.seed = RandomUtils.uniform(this.ran, 1, 1000);
                         createMapAndDisplay(commands, this.seed);
                     }
@@ -261,18 +261,21 @@ public class Engine {
     /**
      * Have user confirm if they want a new map. If yes, create and display new map.
      * If no, go back to current map.
+     * @param keysPressed The keys entered by the user.
      * @param commands The commands inputted by the user.
      * @return Boolean, either true is y or n is pressed, false otherwise.
      */
-    private boolean confirmNewMap(CommandInput commands) {
+    private boolean confirmNewMap(ArrayList<String> keysPressed, CommandInput commands) {
         while (commands.hasNextInput()) {
             String curCommand = String.valueOf(commands.getNextInput()).toLowerCase();
 
             if (curCommand.equals("y")) {
+                keysPressed.add(curCommand);
                 return true;
             }
 
             if (curCommand.equals("n")) {
+                keysPressed.add(curCommand);
                 helperDisplayTERenderer(commands);
                 return false;
             }
