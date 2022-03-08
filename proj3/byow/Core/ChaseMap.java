@@ -50,7 +50,8 @@ public class ChaseMap extends InteractiveMap {
      * Check if the chase object has caught the user avatar.
      * @return True if the chase avatar has the same location as the user avatar.
      */
-    public boolean caught() {
+    @Override
+    public boolean isPlaying() {
         return this.chaser.getLocation().equals(this.userAvatar.getLocation());
     }
 
