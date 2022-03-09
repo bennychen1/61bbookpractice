@@ -15,7 +15,7 @@ import java.util.Random;
 public class Engine {
 
     /** The current Interactive Map. **/
-    private InteractiveMap iMap;
+    private GameMap iMap;
 
     /** True if the game is set up (has a seed).*/
     private boolean isGameSetup = false;
@@ -63,6 +63,11 @@ public class Engine {
         KeyboardCommandInput k = new KeyboardCommandInput();
         processCommands(k);
 
+    }
+
+    /** Play chasing game. **/
+    public void interactWithKeyboardChaseMap() {
+        ;
     }
 
     /**
@@ -421,9 +426,8 @@ public class Engine {
     }
 
     /** Get the InteractiveMap. **/
-    public InteractiveMap getiMap() {
-        InteractiveMap copy = new InteractiveMap(this.iMap);
-        return copy;
+    public GameMap getiMap() {
+        return this.iMap.copy(this.iMap);
     }
 
     public TERenderer getTer() {

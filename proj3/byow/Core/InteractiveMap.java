@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** A RandomMap that is interactive. **/
-public class InteractiveMap {
+public class InteractiveMap implements GameMap{
 
     /** A RandomMap representing the game map. **/
     private RandomMap gameMap;
@@ -183,6 +183,20 @@ public class InteractiveMap {
     private void helperToPlaceAvatar(Avatar a, Point location) {
         a.setConsumedTile(this.gameMap.getTileAt(location));
         this.gameMap.setTileArray(location, a);
+    }
+
+    /** Returns true to keep game going. **/
+    @Override
+    public boolean isPlaying() {
+        return true;
+    }
+
+    @Override
+    public InteractiveMap copy(GameMap otherMap) {
+        if (!otherMap.getClass().toString().equals(this.getClass().toString())) {
+            return null;
+        }
+        return new InteractiveMap((InteractiveMap) otherMap);
     }
 
     /** The object representing the player/players. **/
