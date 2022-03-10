@@ -47,6 +47,14 @@ public class ChaseMap extends InteractiveMap {
         super.placeAvatar(this.chaser);
     }
 
+    /** Create a copy of another Chase Map. **/
+    ChaseMap(ChaseMap otherMap) {
+        super();
+        this.gameMap = otherMap.gameMap;
+        this.chaser = otherMap.chaser;
+        this.userAvatar = otherMap.userAvatar;
+    }
+
     /**
      * Check if the chase object has caught the user avatar.
      * @return True if the chase avatar has the same location as the user avatar.
@@ -54,6 +62,19 @@ public class ChaseMap extends InteractiveMap {
     @Override
     public boolean isPlaying() {
         return this.chaser.getLocation().equals(this.userAvatar.getLocation());
+    }
+
+    /**
+     * Create a copy of another Chase Map.
+     * @param otherMap The InteractiveMap to create a copy of.
+     * @return A copy of the other ChaseMap. Null if the other map is not a ChaseMap.
+     */
+    @Override
+    public InteractiveMap copy(GameMap otherMap) {
+        if (!otherMap.getClass().toString().equals(this.getClass().toString())) {
+            return null;
+        }
+        return new ChaseMap((ChaseMap) otherMap);
     }
 
 
