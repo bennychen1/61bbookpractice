@@ -11,5 +11,15 @@ public class TestKeyBoard {
 
     }
 
+    @Test
+    public void testChaseMap() {
+        Engine e = new Engine();
+        e.interactWithKeyboardChaseMap();
+
+        ChaseMap c = new ChaseMap(new RandomMap(5));
+
+        c.getAvatarList();
+    }
+
 
 }

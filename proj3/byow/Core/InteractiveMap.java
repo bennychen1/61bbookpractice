@@ -18,6 +18,10 @@ public class InteractiveMap implements GameMap{
     /** A list of avatars. **/
     private List<Avatar> avatarList;
 
+    InteractiveMap() {
+        this(new RandomMap(5));
+    }
+
     InteractiveMap(RandomMap m) {
         this.gameMap = m;
         this.gameMap.drawWorld();
@@ -194,7 +198,7 @@ public class InteractiveMap implements GameMap{
     /**
      * Create a copy of another InteractiveMap.
      * @param otherMap The InteractiveMap to create a copy of.
-     * @return A copy of the other map.
+     * @return A copy of the other map. Null if the other map is not an InteractiveMap.
      */
     @Override
     public InteractiveMap copy(GameMap otherMap) {

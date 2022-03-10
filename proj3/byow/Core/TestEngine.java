@@ -136,7 +136,7 @@ public class TestEngine {
 
         Avatar testAvatar = getFirstAvatar(e);
 
-        InteractiveMap iMap = e.getiMap();
+        InteractiveMap iMap = (InteractiveMap) e.getiMap();
 
 
         Point expectedPoint2 = new Point(23, 9);
@@ -283,7 +283,7 @@ public class TestEngine {
 
     private Avatar getFirstAvatar(Engine e) {
 
-        InteractiveMap iMap = e.getiMap();
+        InteractiveMap iMap = (InteractiveMap) e.getiMap();
 
         ArrayList<Avatar> avatarList = (ArrayList<Avatar>) iMap.getAvatarList();
 
@@ -299,7 +299,7 @@ public class TestEngine {
     }
 
     private void renderAndDisplay(Engine e) {
-        InteractiveMap iMap = e.getiMap();
+        InteractiveMap iMap = (InteractiveMap) e.getiMap();
         t.initialize(iMap.getGameMap().getMaxColIndex() + 1, iMap.getGameMap().getMaxRowIndex() + 1);
         t.renderFrame(iMap.getGameMap().getTileArray());
         displayRenderer();
