@@ -51,12 +51,16 @@ public class Engine {
     /** The project directory. **/
     public static final String COMMAND_FILE_PATH = System.getProperty("user.dir") + "\\byow\\core\\savedGames\\userInput.txt";
 
+    private MapCreator mapCreator;
+
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
        // StdDraw.enableDoubleBuffering();
+
+        this.mapCreator = new IMapCreator();
 
         mainMenu();
 
@@ -67,6 +71,12 @@ public class Engine {
 
     /** Play chasing game. **/
     public void interactWithKeyboardChaseMap() {
+        mainMenu();
+
+        this.mapCreator = new ChaseMapCreator();
+
+        KeyboardCommandInput k = new KeyboardCommandInput();
+        processCommands(k);
         ;
     }
 
@@ -103,6 +113,8 @@ public class Engine {
         // two scenarios: either n or l
         // if (n) { setSeed then do commands}
         // if (l) {load seed, then do commands}
+
+        this.mapCreator = new IMapCreator();
 
         StringCommandInput s = new StringCommandInput(input);
 
@@ -229,7 +241,7 @@ public class Engine {
         int randomWidth = RandomUtils.uniform(this.ran, 5, 100);
         int randomHeight = RandomUtils.uniform(this.ran, 5, 100);
         RandomMap gameMap = new RandomMap(randomWidth, randomHeight, curSeed);
-        this.iMap = new InteractiveMap(gameMap);
+        this.iMap = this.mapCreator.createMap(gameMap);
         this.isGameSetup = true;
 
         return new int[]{randomWidth, randomHeight};
