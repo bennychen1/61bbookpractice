@@ -44,6 +44,7 @@ public class ChaseMap extends InteractiveMap {
         }
 
         this.chaser = new Avatar('<', randomPoint);
+        super.placeAvatar(this.chaser);
     }
 
     /**
@@ -54,6 +55,8 @@ public class ChaseMap extends InteractiveMap {
     public boolean isPlaying() {
         return this.chaser.getLocation().equals(this.userAvatar.getLocation());
     }
+
+
 
     /** Get the user Avatar. **/
     public Avatar getUserAvatar() {
