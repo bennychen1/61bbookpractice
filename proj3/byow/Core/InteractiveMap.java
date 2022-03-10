@@ -191,6 +191,11 @@ public class InteractiveMap implements GameMap{
         return true;
     }
 
+    /**
+     * Create a copy of another InteractiveMap.
+     * @param otherMap The InteractiveMap to create a copy of.
+     * @return A copy of the other map.
+     */
     @Override
     public InteractiveMap copy(GameMap otherMap) {
         if (!otherMap.getClass().toString().equals(this.getClass().toString())) {
