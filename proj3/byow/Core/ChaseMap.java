@@ -1,6 +1,5 @@
 package byow.Core;
 
-import byow.Core.InteractiveMap.Avatar;
 
 
 import java.util.Random;

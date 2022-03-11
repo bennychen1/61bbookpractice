@@ -252,7 +252,7 @@ public class Engine {
      * @param curCommand    A String representing the movement direction.
      */
     private void helperMoveAvatar(String curCommand) {
-        InteractiveMap.Avatar userAvatar = this.iMap.getAvatarList().get(0);
+        Avatar userAvatar = this.iMap.getAvatarList().get(0);
         this.iMap.moveAvatarCommand(userAvatar, curCommand);
     }
 

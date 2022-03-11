@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
-import byow.Core.InteractiveMap.Avatar;
 import org.junit.runner.JUnitCore;
 
 import java.util.ArrayList;
@@ -100,7 +99,7 @@ public class TestEngine {
     public void testInteractiveMap() {
         RandomMap m = new RandomMap(10, 10, Tileset.GRASS, 2);
         Point originalPoint = new Point(1, 2);
-        InteractiveMap.Avatar a = new InteractiveMap.Avatar('@', originalPoint);
+        Avatar a = new Avatar('@', originalPoint);
 
         InteractiveMap iMap = new InteractiveMap(m, a);
 

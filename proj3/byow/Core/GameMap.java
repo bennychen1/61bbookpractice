@@ -6,8 +6,8 @@ import java.util.List;
 public interface GameMap {
     public boolean isPlaying();
     public RandomMap getGameMap();
-    public List<InteractiveMap.Avatar> getAvatarList();
-    public void moveAvatarCommand(InteractiveMap.Avatar userAvatar, String curCommand);
+    public List<Avatar> getAvatarList();
+    public void moveAvatarCommand(Avatar userAvatar, String curCommand);
     public GameMap copy(GameMap otherMap);
 
 }
