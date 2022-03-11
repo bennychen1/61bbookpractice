@@ -229,6 +229,13 @@ public class Engine {
                         createMapAndDisplay(commands, this.seed);
                     }
                 }
+
+                if (isGameSetup) {
+                    if (!this.iMap.isPlaying()) {
+                        this.iMap.displayFinish();
+                        break;
+                    }
+                }
             }
         }
 
@@ -333,7 +340,6 @@ public class Engine {
         char nextKey = commands.getNextInput();
 
         while (commands.hasNextInput()) {
-
 
             if (nextKey == 'q' || nextKey== 'Q') {
                 return;

@@ -2,6 +2,8 @@ package byow.Core;
 
 
 
+import edu.princeton.cs.introcs.StdDraw;
+
 import java.util.Random;
 
 /** The user must try to escape from a chase object for as long as possible - count by number of turns. **/
@@ -60,7 +62,22 @@ public class ChaseMap extends InteractiveMap {
      */
     @Override
     public boolean isPlaying() {
-        return this.chaser.getLocation().equals(this.userAvatar.getLocation());
+        return !this.chaser.getLocation().equals(this.userAvatar.getLocation());
+    }
+
+    @Override
+    public void displayFinish() {
+        while (true) {
+            StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
+
+            double rectangleX = this.gameMap.getMaxColIndex() * 0.5;
+            double rectangleY = this.gameMap.getMaxRowIndex() * 0.5;
+
+            //StdDraw.filledRectangle(rectangleX, rectangleY, this.gameMap.getMaxColIndex() * 0.3, this.gameMap.getMaxRowIndex() * 0.3);
+            StdDraw.setPenColor(StdDraw.WHITE);
+            StdDraw.text(rectangleX - 5, rectangleY, "Chaser is caught");
+            StdDraw.show();
+        }
     }
 
     /**
@@ -107,18 +124,45 @@ public class ChaseMap extends InteractiveMap {
      * @param dir A String for the direction to move the avatar.
      */
     @Override
-    public void moveAvatarCommand(Avatar a, String dir) {
-        super.moveAvatarCommand(a, dir);
+    public Point moveAvatarCommand(Avatar a, String dir) {
+
+        Point userMoveLocation = super.moveAvatarCommand(a, dir);
+
+        this.moveAvatar(a, userMoveLocation);
 
         int randomDirIndex = RandomUtils.uniform(this.ran, 0, 4);
 
-        System.out.println(randomDirIndex);
-
         String randomDir = String.valueOf(Engine.POSSIBLE_MOVES.charAt(randomDirIndex));
 
-        super.moveAvatarCommand(this.chaser, randomDir);
+        Point chaserMoveLocation = super.moveAvatarCommand(this.chaser, randomDir);
+
+        this.moveAvatar(this.chaser, chaserMoveLocation);
 
         this.numTurns = this.numTurns + 1;
 
+        return userMoveLocation;
+
+
+    }
+
+    /** Move the avatar to the provided point if it is a valid location. Do nothing if not valid.
+     * @param   a   The avatar to move.
+     * @param location  A Point object representing where to move the avatar.
+     * **/
+    public void moveAvatar(Avatar a, Point location) {
+        if (!this.gameMap.isPointOnMap(location)) {
+            System.out.println("Location " + location.toString() + " not on map");
+            return;
+        }
+
+        if (!this.gameMap.isPointFloor(location)
+                && !this.gameMap.getTileAt(location).description().equals("avatar")) {
+            System.out.println(location.toString() + " is not a floor point");
+            return;
+        }
+
+        this.gameMap.setTileArray(a.getLocation(), a.getConsumedTile());
+        a.setLocation(location);
+        super.helperToPlaceAvatar(a, location);
     }
 }

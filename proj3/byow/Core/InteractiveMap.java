@@ -143,7 +143,7 @@ public class InteractiveMap implements GameMap{
      * @param a  The avatar to move.
      * @param dir A String for the direction to move the avatar.
      */
-    public void moveAvatarCommand(Avatar a, String dir) {
+    public Point moveAvatarCommand(Avatar a, String dir) {
         String directionString = String.valueOf(dir).toLowerCase();
         Point newPoint;
         Point curPoint = a.getLocation();
@@ -165,6 +165,8 @@ public class InteractiveMap implements GameMap{
         }
 
         this.moveAvatar(a, newPoint);
+
+        return newPoint;
     }
 
     /** Return a copy of this game map. **/
@@ -185,8 +187,15 @@ public class InteractiveMap implements GameMap{
      * @param a The avatar to update
      * @param location  The location to move the avatar to.
      */
-    private void helperToPlaceAvatar(Avatar a, Point location) {
-        a.setConsumedTile(this.gameMap.getTileAt(location));
+    void helperToPlaceAvatar(Avatar a, Point location) {
+
+        TETile tileAtLocation = this.gameMap.getTileAt(location);
+
+        if (tileAtLocation.description().equals("avatar")) {
+            a.setConsumedTile(((Avatar) tileAtLocation).getConsumedTile());
+        } else {
+            a.setConsumedTile(this.gameMap.getTileAt(location));
+        }
         this.gameMap.setTileArray(location, a);
     }
 
@@ -194,6 +203,11 @@ public class InteractiveMap implements GameMap{
     @Override
     public boolean isPlaying() {
         return true;
+    }
+
+    @Override
+    public void displayFinish() {
+        ;
     }
 
     /**

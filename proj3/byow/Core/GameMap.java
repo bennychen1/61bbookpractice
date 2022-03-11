@@ -7,7 +7,8 @@ public interface GameMap {
     public boolean isPlaying();
     public RandomMap getGameMap();
     public List<Avatar> getAvatarList();
-    public void moveAvatarCommand(Avatar userAvatar, String curCommand);
+    public Point moveAvatarCommand(Avatar userAvatar, String curCommand);
     public GameMap copy(GameMap otherMap);
+    public void displayFinish();
 
 }
