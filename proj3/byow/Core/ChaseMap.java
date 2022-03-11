@@ -70,11 +70,18 @@ public class ChaseMap extends InteractiveMap {
      * @return A copy of the other ChaseMap. Null if the other map is not a ChaseMap.
      */
     @Override
-    public InteractiveMap copy(GameMap otherMap) {
+    public ChaseMap copy(GameMap otherMap) {
         if (!otherMap.getClass().toString().equals(this.getClass().toString())) {
             return null;
         }
         return new ChaseMap((ChaseMap) otherMap);
+    }
+
+    @Override
+    /** Return a copy of this game map. **/
+    public RandomMap getGameMap() {
+        RandomMap copy = new RandomMap(this.gameMap);
+        return copy;
     }
 
 
@@ -104,7 +111,9 @@ public class ChaseMap extends InteractiveMap {
     public void moveAvatarCommand(Avatar a, String dir) {
         super.moveAvatarCommand(a, dir);
 
-        int randomDirIndex = RandomUtils.uniform(this.ran, 0, 3);
+        int randomDirIndex = RandomUtils.uniform(this.ran, 0, 4);
+
+        System.out.println(randomDirIndex);
 
         String randomDir = String.valueOf(Engine.POSSIBLE_MOVES.charAt(randomDirIndex));
 
