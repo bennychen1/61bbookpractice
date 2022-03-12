@@ -25,7 +25,8 @@ public class ChaseMap extends InteractiveMap {
     /** The RandomNumberGenerator. **/
     private Random ran;
 
-    /** A list of valid moves. **/
+    /** The text to display when the game ends. **/
+    private String finishString;
 
 
     ChaseMap(RandomMap m) {
@@ -66,7 +67,7 @@ public class ChaseMap extends InteractiveMap {
     }
 
     @Override
-    public void displayFinish() {
+    public void displayFinish(String finishText) {
         while (true) {
             StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
 
@@ -75,10 +76,16 @@ public class ChaseMap extends InteractiveMap {
 
             //StdDraw.filledRectangle(rectangleX, rectangleY, this.gameMap.getMaxColIndex() * 0.3, this.gameMap.getMaxRowIndex() * 0.3);
             StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.text(rectangleX - 5, rectangleY, "Chaser is caught");
+            StdDraw.text(rectangleX - 5, rectangleY, finishText);
             StdDraw.show();
         }
     }
+
+    @Override
+    public String finishText() {
+        return this.finishString;
+    }
+
 
     /**
      * Create a copy of another Chase Map.
@@ -130,7 +137,16 @@ public class ChaseMap extends InteractiveMap {
 
         this.moveAvatar(a, userMoveLocation);
 
+        if (!isPlaying()) {
+            this.finishString = "User has caught the chaser.";
+            return userMoveLocation;
+        }
+
         this.helperMoveChaser();
+
+        if (!isPlaying()) {
+            this.finishString = "Chaser has caught the user.";
+        }
 
         this.numTurns = this.numTurns + 1;
 
@@ -147,8 +163,6 @@ public class ChaseMap extends InteractiveMap {
         int randomDirIndex = RandomUtils.uniform(this.ran, 0, 4);
 
         String randomDir = String.valueOf(Engine.POSSIBLE_MOVES.charAt(randomDirIndex));
-
-        System.out.println(randomDir);
 
         Point chaserMoveLocation = super.moveAvatarCommand(this.chaser, randomDir);
 
