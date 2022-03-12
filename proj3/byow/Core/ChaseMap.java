@@ -130,19 +130,33 @@ public class ChaseMap extends InteractiveMap {
 
         this.moveAvatar(a, userMoveLocation);
 
+        this.helperMoveChaser();
+
+        this.numTurns = this.numTurns + 1;
+
+        return userMoveLocation;
+    }
+
+    /**
+     * Move the chase avatar.
+     */
+    private void helperMoveChaser() {
+
+        Point currentLocation = this.chaser.getLocation();
+
         int randomDirIndex = RandomUtils.uniform(this.ran, 0, 4);
 
         String randomDir = String.valueOf(Engine.POSSIBLE_MOVES.charAt(randomDirIndex));
+
+        System.out.println(randomDir);
 
         Point chaserMoveLocation = super.moveAvatarCommand(this.chaser, randomDir);
 
         this.moveAvatar(this.chaser, chaserMoveLocation);
 
-        this.numTurns = this.numTurns + 1;
-
-        return userMoveLocation;
-
-
+        while (this.chaser.getLocation().equals(currentLocation)) {
+            this.helperMoveChaser();
+        }
     }
 
     /** Move the avatar to the provided point if it is a valid location. Do nothing if not valid.
