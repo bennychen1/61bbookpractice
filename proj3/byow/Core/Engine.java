@@ -232,7 +232,7 @@ public class Engine {
 
                 if (isGameSetup) {
                     if (!this.iMap.isPlaying()) {
-                        this.iMap.displayFinish();
+                        this.iMap.displayFinish(this.iMap.finishText());
                         break;
                     }
                 }
