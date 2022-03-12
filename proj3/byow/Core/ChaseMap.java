@@ -4,6 +4,7 @@ package byow.Core;
 
 import edu.princeton.cs.introcs.StdDraw;
 
+import java.awt.*;
 import java.util.Random;
 
 /** The user must try to escape from a chase object for as long as possible - count by number of turns. **/
@@ -55,6 +56,7 @@ public class ChaseMap extends InteractiveMap {
         this.gameMap = otherMap.gameMap;
         this.chaser = otherMap.chaser;
         this.userAvatar = otherMap.userAvatar;
+        this.numTurns = otherMap.getNumTurns();
     }
 
     /**
@@ -68,15 +70,27 @@ public class ChaseMap extends InteractiveMap {
 
     @Override
     public void displayFinish(String finishText) {
+
+        int mapWidth = this.gameMap.getMaxColIndex();
+        int mapHeight = this.gameMap.getMaxRowIndex();
+
+        double rectangleX = mapWidth * 0.1;
+        double rectangleY = mapHeight * 0.9;
+
         while (true) {
             StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
 
-            double rectangleX = this.gameMap.getMaxColIndex() * 0.5;
-            double rectangleY = this.gameMap.getMaxRowIndex() * 0.5;
-
-            //StdDraw.filledRectangle(rectangleX, rectangleY, this.gameMap.getMaxColIndex() * 0.3, this.gameMap.getMaxRowIndex() * 0.3);
+            StdDraw.filledRectangle(rectangleX, rectangleY,
+                    mapWidth * 0.35, mapHeight * 0.1);
             StdDraw.setPenColor(StdDraw.WHITE);
-            StdDraw.text(rectangleX - 5, rectangleY, finishText);
+            Font font1 = new Font("SansSerif", Font.PLAIN, 15);
+            StdDraw.setFont(font1);
+            StdDraw.text(rectangleX + mapWidth * 0.111, rectangleY + mapHeight * 0.05, finishText);
+            StdDraw.text(rectangleX + mapWidth * 0.112,
+                    rectangleY + mapHeight * 0.01, "in");
+
+            StdDraw.text(rectangleX + mapWidth * 0.111,
+                    rectangleY - mapHeight * 0.03, String.valueOf(this.numTurns) + " turns");
             StdDraw.show();
         }
     }
@@ -84,6 +98,12 @@ public class ChaseMap extends InteractiveMap {
     @Override
     public String finishText() {
         return this.finishString;
+    }
+
+    @Override
+    public void displayTurns(Engine e) {
+        StdDraw.text(e.getTer().getWidth() - 0.5,
+                e.getTer().getHeight() - 0.5, String.valueOf(this.numTurns));
     }
 
 
@@ -133,25 +153,27 @@ public class ChaseMap extends InteractiveMap {
     @Override
     public Point moveAvatarCommand(Avatar a, String dir) {
 
+        this.numTurns = this.numTurns + 1;
+
         Point userMoveLocation = super.moveAvatarCommand(a, dir);
 
         this.moveAvatar(a, userMoveLocation);
 
         if (!isPlaying()) {
-            this.finishString = "User has caught the chaser.";
+            this.finishString = "User has caught the chaser" + " in ";
             return userMoveLocation;
         }
 
         this.helperMoveChaser();
 
         if (!isPlaying()) {
-            this.finishString = "Chaser has caught the user.";
+            this.finishString = "Chaser has caught the user";
         }
 
-        this.numTurns = this.numTurns + 1;
 
         return userMoveLocation;
     }
+
 
     /**
      * Move the chase avatar.
