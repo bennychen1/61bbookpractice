@@ -11,5 +11,6 @@ public interface GameMap {
     public GameMap copy(GameMap otherMap);
     public void displayFinish(String finishText);
     public String finishText();
+    public void displayTurns(Engine e);
 
 }
