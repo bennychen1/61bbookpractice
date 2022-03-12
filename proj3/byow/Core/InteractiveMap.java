@@ -206,8 +206,13 @@ public class InteractiveMap implements GameMap{
     }
 
     @Override
-    public void displayFinish() {
+    public void displayFinish(String finishText) {
         ;
+    }
+
+    @Override
+    public String finishText() {
+        return "";
     }
 
     /**
