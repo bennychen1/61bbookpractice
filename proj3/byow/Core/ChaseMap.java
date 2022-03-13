@@ -5,14 +5,14 @@ package byow.Core;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 /** The user must try to escape from a chase object for as long as possible - count by number of turns. **/
 
 public class ChaseMap extends InteractiveMap {
-
-    /** The chasing object. Can't be modified after instantiation.  **/
-    private final Avatar chaser;
 
     /** The user's avatar. Can't be modified after instantiation. **/
     private final Avatar userAvatar;
@@ -29,6 +29,15 @@ public class ChaseMap extends InteractiveMap {
     /** The text to display when the game ends. **/
     private String finishString;
 
+    /** List of chasers. **/
+    private List<Avatar> chaserList;
+
+    /** The number of chasers. **/
+    private int numChasers;
+
+    /** Chaser starting locations. **/
+    private HashSet<Point> chaserStartingLocations;
+
 
     ChaseMap(RandomMap m) {
 
@@ -40,23 +49,59 @@ public class ChaseMap extends InteractiveMap {
 
         this.userAvatar = super.getAvatarList().get(0);
 
+        this.numChasers = 1;
+
+        this.chaserStartingLocations = new HashSet<>();
+
+        this.chaserList = new ArrayList<>();
+
         Point randomPoint = m.getRandomFloorPoint();
 
         while (randomPoint.equals(this.userAvatar.getLocation())) {
             randomPoint = m.getRandomFloorPoint();
         }
 
-        this.chaser = new Avatar('<', randomPoint);
-        super.placeAvatar(this.chaser);
+        Avatar chaser = new Avatar('<', randomPoint);
+
+        this.chaserStartingLocations.add(randomPoint);
+
+        this.chaserList.add(chaser);
+
+        super.placeAvatar(chaser);
     }
 
     /** Create a copy of another Chase Map. **/
     ChaseMap(ChaseMap otherMap) {
         super();
         this.gameMap = otherMap.gameMap;
-        this.chaser = otherMap.chaser;
         this.userAvatar = otherMap.userAvatar;
         this.numTurns = otherMap.getNumTurns();
+    }
+
+    /**
+     *  Create a ChaseMap with the specified number of chasers.
+     * @param m A RandomMap for the game map.
+     * @param numChasers  The number of chasers - maximum 5.
+     */
+    ChaseMap(RandomMap m, int numChasers) throws IllegalArgumentException {
+
+        this(m);
+
+
+        if (numChasers < 1 || numChasers > 5) {
+            throw new IllegalArgumentException("Must have between 1 and 5 chasers.");
+        }
+
+        this.numChasers = numChasers;
+
+        int numRemainingChasers = numChasers - 1;
+
+        for (int i = 0; i < numRemainingChasers; i = i + 1) {
+
+            this.helperCreateChaser();
+
+        }
+
     }
 
     /**
@@ -65,7 +110,14 @@ public class ChaseMap extends InteractiveMap {
      */
     @Override
     public boolean isPlaying() {
-        return !this.chaser.getLocation().equals(this.userAvatar.getLocation());
+
+        for (Avatar chaser : this.chaserList) {
+            if (chaser.getLocation().equals(this.userAvatar.getLocation())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -134,10 +186,6 @@ public class ChaseMap extends InteractiveMap {
         return this.userAvatar;
     }
 
-    /** Get the chase object. **/
-    public Avatar getChaser() {
-        return this.chaser;
-    }
 
     /** Get the number of turns. **/
     public int getNumTurns() {
@@ -164,7 +212,9 @@ public class ChaseMap extends InteractiveMap {
             return userMoveLocation;
         }
 
-        this.helperMoveChaser();
+        for (Avatar chaser : this.chaserList) {
+            this.helperMoveChaser(chaser);
+        }
 
         if (!isPlaying()) {
             this.finishString = "Chaser has caught the user";
@@ -178,20 +228,20 @@ public class ChaseMap extends InteractiveMap {
     /**
      * Move the chase avatar.
      */
-    private void helperMoveChaser() {
+    private void helperMoveChaser(Avatar chaser) {
 
-        Point currentLocation = this.chaser.getLocation();
+        Point currentLocation = chaser.getLocation();
 
         int randomDirIndex = RandomUtils.uniform(this.ran, 0, 4);
 
         String randomDir = String.valueOf(Engine.POSSIBLE_MOVES.charAt(randomDirIndex));
 
-        Point chaserMoveLocation = super.moveAvatarCommand(this.chaser, randomDir);
+        Point chaserMoveLocation = super.moveAvatarCommand(chaser, randomDir);
 
-        this.moveAvatar(this.chaser, chaserMoveLocation);
+        this.moveAvatar(chaser, chaserMoveLocation);
 
-        while (this.chaser.getLocation().equals(currentLocation)) {
-            this.helperMoveChaser();
+        while (chaser.getLocation().equals(currentLocation)) {
+            this.helperMoveChaser(chaser);
         }
     }
 
@@ -214,5 +264,24 @@ public class ChaseMap extends InteractiveMap {
         this.gameMap.setTileArray(a.getLocation(), a.getConsumedTile());
         a.setLocation(location);
         super.helperToPlaceAvatar(a, location);
+    }
+
+    /**
+     * Create and place a chaser at a random floor point on the map.
+     */
+    private void helperCreateChaser() {
+        Point randomPoint = this.gameMap.getRandomFloorPoint();
+
+        while (randomPoint.equals(this.userAvatar.getLocation())
+                || this.chaserStartingLocations.contains(randomPoint)) {
+            randomPoint = this.gameMap.getRandomFloorPoint();
+        }
+
+        Avatar chaser = new Avatar('<', randomPoint);
+
+        this.chaserList.add(chaser);
+        this.chaserStartingLocations.add(randomPoint);
+
+        super.placeAvatar(chaser);
     }
 }
