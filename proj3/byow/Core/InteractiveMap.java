@@ -215,6 +215,11 @@ public class InteractiveMap implements GameMap{
         return "";
     }
 
+    @Override
+    public void displayTurns(Engine e) {
+        ;
+    }
+
     /**
      * Create a copy of another InteractiveMap.
      * @param otherMap The InteractiveMap to create a copy of.
